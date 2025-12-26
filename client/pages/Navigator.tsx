@@ -36,9 +36,24 @@ export default function Navigator() {
     roads: true,
     boundary: true,
   });
+  const [routePanel, setRoutePanel] = useState({
+    isOpen: false,
+    distance: 0,
+    estimatedTime: 0,
+  });
 
   const handleLocationSelect = (location: Building) => {
     setSelectedLocation(location);
+
+    // If user location exists, calculate route
+    if (userLocation) {
+      const route = calculateRoute(userLocation.coords, location.coords);
+      setRoutePanel({
+        isOpen: true,
+        distance: route.distance,
+        estimatedTime: route.estimatedTime,
+      });
+    }
   };
 
   const handleGeolocation = () => {
