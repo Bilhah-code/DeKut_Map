@@ -1,7 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import L from "leaflet";
-import { Button } from "@/components/ui/button";
-import { Satellite, Map as MapIcon, Crosshair } from "lucide-react";
 
 // Sample campus buildings data
 const CAMPUS_BUILDINGS = [
