@@ -74,9 +74,14 @@ export default function CampusMap({
       mapRef.current = L.map("map").setView(defaultCenter, defaultZoom);
     }
 
+    // Remove previous layer if it exists
+    if (layerRef.current) {
+      mapRef.current.removeLayer(layerRef.current);
+    }
+
     // Add base layer
     if (baseLayerKey === "openstreetmap") {
-      L.tileLayer(
+      layerRef.current = L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
           attribution:
@@ -85,7 +90,7 @@ export default function CampusMap({
         }
       ).addTo(mapRef.current);
     } else {
-      L.tileLayer(
+      layerRef.current = L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastered/{z}/{x}/{y}.png",
         {
           attribution:
