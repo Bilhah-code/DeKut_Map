@@ -1,0 +1,118 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Main Corridor",
+        "type": "pedestrian_path",
+        "width": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [37.0093, -0.3603],
+          [37.0093, -0.3605],
+          [37.0095, -0.3605],
+          [37.0095, -0.3608]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "East Path",
+        "type": "pedestrian_path",
+        "width": 3
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [37.0098, -0.3608],
+          [37.0100, -0.3610],
+          [37.0100, -0.3612]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "West Road",
+        "type": "road",
+        "width": 6
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [37.0093, -0.3603],
+          [37.0090, -0.3603],
+          [37.0085, -0.3600]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "North Campus Path",
+        "type": "pedestrian_path",
+        "width": 3
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [37.0090, -0.3610],
+          [37.0095, -0.3608],
+          [37.0100, -0.3608]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "South Access Road",
+        "type": "road",
+        "width": 6
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [37.0090, -0.3615],
+          [37.0095, -0.3615],
+          [37.0100, -0.3615]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Central Hub Path",
+        "type": "pedestrian_path",
+        "width": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [37.0091, -0.3602],
+          [37.0091, -0.3607],
+          [37.0091, -0.3612]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sports Complex Access",
+        "type": "pedestrian_path",
+        "width": 3
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [37.0085, -0.3600],
+          [37.0088, -0.3602],
+          [37.0091, -0.3602]
+        ]
+      }
+    }
+  ]
+}
