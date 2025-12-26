@@ -3,22 +3,30 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SpatialSearch from "./SpatialSearch";
 
+interface Building {
+  id: string;
+  name: string;
+  coords: [number, number];
+  character: string;
+  descriptio: string;
+}
+
 interface Location {
   id: number;
   name: string;
   coords: [number, number];
-  type: "building" | "entrance" | "facility";
-  description: string;
 }
 
 interface MapToolbarProps {
-  onLocationSelect?: (location: Location) => void;
-  selectedLocation?: Location | null;
+  onLocationSelect?: (location: Building) => void;
+  selectedLocation?: Building | Location | null;
+  buildings?: Building[];
 }
 
 export default function MapToolbar({
   onLocationSelect,
   selectedLocation,
+  buildings = [],
 }: MapToolbarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,13 +52,14 @@ export default function MapToolbar({
               onLocationSelect={onLocationSelect}
               isOpen={searchOpen}
               onClose={() => setSearchOpen(false)}
+              buildings={buildings}
             />
           </div>
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            {selectedLocation && (
-              <div className="text-sm text-muted-foreground hidden sm:block">
+            {selectedLocation && "name" in selectedLocation && (
+              <div className="text-sm text-muted-foreground hidden sm:block max-w-xs truncate">
                 {selectedLocation.name}
               </div>
             )}
@@ -97,11 +106,12 @@ export default function MapToolbar({
                 setSearchOpen(false);
                 setMobileMenuOpen(false);
               }}
+              buildings={buildings}
             />
           </div>
 
           {/* Selected Location Display */}
-          {selectedLocation && (
+          {selectedLocation && "name" in selectedLocation && (
             <div className="mt-3 p-2 bg-muted rounded text-sm">
               <p className="text-muted-foreground">Selected:</p>
               <p className="font-medium text-foreground">
