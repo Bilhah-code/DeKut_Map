@@ -141,30 +141,6 @@ export default function CampusMap({
     }
   }, [baseLayerKey, selectedLocation, userLocation, onLocationSelect]);
 
-  const toggleBaseLayer = (key: "openstreetmap" | "satellite") => {
-    setBaseLayerKey(key);
-    // Clear the map layers
-    mapRef.current?.eachLayer((layer) => {
-      if (layer instanceof L.TileLayer) {
-        mapRef.current?.removeLayer(layer);
-      }
-    });
-  };
-
-  const handleGeolocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          mapRef.current?.setView([latitude, longitude], 17);
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-        }
-      );
-    }
-  };
-
   return (
     <div className="relative w-full h-full flex flex-col bg-white overflow-hidden">
       {/* Map Container */}
@@ -173,41 +149,6 @@ export default function CampusMap({
         className="flex-1 relative w-full"
         style={{ height: "100%" }}
       />
-
-      {/* Map Controls - Top Right */}
-      <div className="fixed top-20 right-6 flex flex-col gap-2 z-50 pointer-events-auto">
-        {/* Basemap Toggle */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-border">
-          <Button
-            variant={baseLayerKey === "openstreetmap" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => toggleBaseLayer("openstreetmap")}
-            className="w-12 h-12 rounded-none flex items-center justify-center"
-            title="OpenStreetMap"
-          >
-            <MapIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={baseLayerKey === "satellite" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => toggleBaseLayer("satellite")}
-            className="w-12 h-12 rounded-none flex items-center justify-center border-t border-border"
-            title="Satellite"
-          >
-            <Satellite className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Geolocation Button */}
-        <Button
-          onClick={handleGeolocation}
-          size="sm"
-          className="w-12 h-12 rounded-lg shadow-md p-0 flex items-center justify-center"
-          title="Get My Location"
-        >
-          <Crosshair className="h-4 w-4" />
-        </Button>
-      </div>
     </div>
   );
 }
