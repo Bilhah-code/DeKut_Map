@@ -9,6 +9,12 @@ interface Building {
   descriptio: string;
 }
 
+interface Route {
+  start: [number, number];
+  end: [number, number];
+  path: [number, number][];
+}
+
 interface CampusMapProps {
   selectedLocation?: {
     id: number;
@@ -23,6 +29,7 @@ interface CampusMapProps {
   baseLayerKey?: "openstreetmap" | "satellite";
   onBaseLayerChange?: (key: "openstreetmap" | "satellite") => void;
   onBuildingsLoaded?: (buildings: Building[]) => void;
+  route?: Route;
 }
 
 export default function CampusMap({
@@ -32,9 +39,11 @@ export default function CampusMap({
   baseLayerKey = "openstreetmap",
   onBaseLayerChange,
   onBuildingsLoaded,
+  route,
 }: CampusMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.TileLayer | null>(null);
+  const routeLayerRef = useRef<L.Polyline | null>(null);
   const geojsonLayersRef = useRef<{
     buildings: L.GeoJSON | null;
     roads: L.GeoJSON | null;
