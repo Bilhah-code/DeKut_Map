@@ -9,6 +9,12 @@ interface Building {
   descriptio: string;
 }
 
+interface Route {
+  start: [number, number];
+  end: [number, number];
+  path: [number, number][];
+}
+
 interface CampusMapProps {
   selectedLocation?: {
     id: number;
@@ -23,6 +29,7 @@ interface CampusMapProps {
   baseLayerKey?: "openstreetmap" | "satellite";
   onBaseLayerChange?: (key: "openstreetmap" | "satellite") => void;
   onBuildingsLoaded?: (buildings: Building[]) => void;
+  route?: Route;
 }
 
 export default function CampusMap({
@@ -32,9 +39,11 @@ export default function CampusMap({
   baseLayerKey = "openstreetmap",
   onBaseLayerChange,
   onBuildingsLoaded,
+  route,
 }: CampusMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.TileLayer | null>(null);
+  const routeLayerRef = useRef<L.Polyline | null>(null);
   const geojsonLayersRef = useRef<{
     buildings: L.GeoJSON | null;
     roads: L.GeoJSON | null;
@@ -255,6 +264,57 @@ export default function CampusMap({
 
     mapRef.current.setView(selectedLocation.coords, 17);
   }, [selectedLocation]);
+
+  // Handle route visualization
+  useEffect(() => {
+    if (!mapRef.current || !route || !route.path) return;
+
+    // Remove existing route layer
+    if (routeLayerRef.current) {
+      mapRef.current.removeLayer(routeLayerRef.current);
+    }
+
+    // Create route polyline
+    const routePolyline = L.polyline(route.path, {
+      color: "#3b82f6",
+      weight: 4,
+      opacity: 0.8,
+      dashArray: "5, 10",
+      lineCap: "round",
+      lineJoin: "round",
+      className: "route-polyline",
+    });
+
+    // Add start marker
+    const startMarker = L.circleMarker(route.start, {
+      radius: 8,
+      fillColor: "#10b981",
+      color: "#fff",
+      weight: 3,
+      opacity: 1,
+      fillOpacity: 0.9,
+    });
+
+    // Add end marker
+    const endMarker = L.circleMarker(route.end, {
+      radius: 10,
+      fillColor: "#3b82f6",
+      color: "#fff",
+      weight: 3,
+      opacity: 1,
+      fillOpacity: 0.9,
+    });
+
+    // Create a feature group with route elements
+    const routeGroup = L.featureGroup([routePolyline, startMarker, endMarker]);
+    routeLayerRef.current = routePolyline;
+
+    // Add to map
+    routeGroup.addTo(mapRef.current);
+
+    // Fit bounds to show entire route
+    mapRef.current.fitBounds(routeGroup.getBounds(), { padding: [100, 100] });
+  }, [route]);
 
   // Expose layer visibility control
   useEffect(() => {

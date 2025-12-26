@@ -21,6 +21,12 @@ interface Location {
   coords: [number, number];
 }
 
+interface Route {
+  start: [number, number];
+  end: [number, number];
+  path: [number, number][];
+}
+
 export default function Navigator() {
   const [selectedLocation, setSelectedLocation] = useState<
     Building | Location | null
@@ -38,6 +44,7 @@ export default function Navigator() {
     roads: true,
     boundary: true,
   });
+  const [route, setRoute] = useState<Route | null>(null);
   const [routePanel, setRoutePanel] = useState({
     isOpen: false,
     distance: 0,
@@ -49,11 +56,22 @@ export default function Navigator() {
 
     // If user location exists, calculate route
     if (userLocation) {
-      const route = calculateRoute(userLocation.coords, location.coords);
+      const calculatedRoute = calculateRoute(
+        userLocation.coords,
+        location.coords,
+      );
+      setRoute({
+        start: userLocation.coords,
+        end: location.coords,
+        path: calculatedRoute.routePath || [
+          userLocation.coords,
+          location.coords,
+        ],
+      });
       setRoutePanel({
         isOpen: true,
-        distance: route.distance,
-        estimatedTime: route.estimatedTime,
+        distance: calculatedRoute.distance,
+        estimatedTime: calculatedRoute.estimatedTime,
       });
     }
   };
@@ -71,14 +89,22 @@ export default function Navigator() {
 
           // Recalculate route if destination is selected
           if (selectedLocation && "coords" in selectedLocation) {
-            const route = calculateRoute(
+            const calculatedRoute = calculateRoute(
               newLocation.coords,
               selectedLocation.coords,
             );
+            setRoute({
+              start: newLocation.coords,
+              end: selectedLocation.coords,
+              path: calculatedRoute.routePath || [
+                newLocation.coords,
+                selectedLocation.coords,
+              ],
+            });
             setRoutePanel({
               isOpen: true,
-              distance: route.distance,
-              estimatedTime: route.estimatedTime,
+              distance: calculatedRoute.distance,
+              estimatedTime: calculatedRoute.estimatedTime,
             });
           }
         },
@@ -123,6 +149,7 @@ export default function Navigator() {
           baseLayerKey={baseLayerKey}
           onBaseLayerChange={setBaseLayerKey}
           onBuildingsLoaded={setBuildings}
+          route={route || undefined}
         />
 
         {/* Map Controls - Top Right */}
@@ -243,6 +270,26 @@ export default function Navigator() {
             </SheetContent>
           </Sheet>
         </div>
+
+        {/* Route Panel */}
+        <RoutePanel
+          isOpen={routePanel.isOpen}
+          onClose={() =>
+            setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })
+          }
+          startLocation={
+            userLocation
+              ? { name: "Your Location", coords: userLocation.coords }
+              : undefined
+          }
+          destinationLocation={
+            selectedLocation && "coords" in selectedLocation
+              ? { name: selectedLocation.name, coords: selectedLocation.coords }
+              : undefined
+          }
+          distance={routePanel.distance}
+          estimatedTime={routePanel.estimatedTime}
+        />
       </div>
     </div>
   );

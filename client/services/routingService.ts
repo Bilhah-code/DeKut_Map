@@ -1,11 +1,12 @@
-// Simple routing service for campus navigation
-// Calculates distance and estimated walking time between two points
+// Enhanced routing service for campus navigation
+// Calculates distance, estimated walking time, and provides route paths
 
 interface RouteResult {
   distance: number; // in meters
   estimatedTime: number; // in minutes
   startCoords: [number, number];
   endCoords: [number, number];
+  routePath?: [number, number][]; // array of coordinates representing the route
 }
 
 // Haversine formula to calculate distance between two coordinates
@@ -35,6 +36,15 @@ const toRadians = (degrees: number): number => {
   return (degrees * Math.PI) / 180;
 };
 
+// Calculate total distance along a path
+export const calculatePathDistance = (path: [number, number][]): number => {
+  let totalDistance = 0;
+  for (let i = 0; i < path.length - 1; i++) {
+    totalDistance += calculateDistance(path[i], path[i + 1]);
+  }
+  return totalDistance;
+};
+
 // Calculate estimated walking time based on distance
 // Assumes average walking speed of 1.4 m/s (5 km/h)
 export const estimateWalkingTime = (distanceInMeters: number): number => {
@@ -43,8 +53,27 @@ export const estimateWalkingTime = (distanceInMeters: number): number => {
   return Math.ceil(timeInSeconds / 60); // convert to minutes
 };
 
-// Simple routing: straight line between start and end
-// In a real app, this would use a proper routing engine with roads
+// Find nearest point on a path to a given coordinate
+export const findNearestPointOnPath = (
+  point: [number, number],
+  path: [number, number][],
+): [number, number] => {
+  let minDistance = Infinity;
+  let nearest = path[0];
+
+  for (const pathPoint of path) {
+    const distance = calculateDistance(point, pathPoint);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearest = pathPoint;
+    }
+  }
+
+  return nearest;
+};
+
+// Simple routing using a predefined straight line or approximation
+// In production, this could integrate with actual campus path data
 export const calculateRoute = (
   startCoords: [number, number],
   endCoords: [number, number],
@@ -52,11 +81,28 @@ export const calculateRoute = (
   const distance = calculateDistance(startCoords, endCoords);
   const estimatedTime = estimateWalkingTime(distance);
 
+  // Create an approximate path with intermediate points for visualization
+  const routePath: [number, number][] = [startCoords];
+
+  // Add intermediate points to create a smoother line
+  const numIntermediatePoints = Math.ceil(distance / 100); // One point every ~100 meters
+  for (let i = 1; i < numIntermediatePoints; i++) {
+    const fraction = i / numIntermediatePoints;
+    const [lat1, lon1] = startCoords;
+    const [lat2, lon2] = endCoords;
+    const intermediateLat = lat1 + (lat2 - lat1) * fraction;
+    const intermediateLon = lon1 + (lon2 - lon1) * fraction;
+    routePath.push([intermediateLat, intermediateLon]);
+  }
+
+  routePath.push(endCoords);
+
   return {
     distance,
     estimatedTime,
     startCoords,
     endCoords,
+    routePath,
   };
 };
 
