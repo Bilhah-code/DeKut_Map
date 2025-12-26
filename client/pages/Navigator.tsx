@@ -261,6 +261,22 @@ export default function Navigator() {
             </SheetContent>
           </Sheet>
         </div>
+
+        {/* Route Panel */}
+        <RoutePanel
+          isOpen={routePanel.isOpen}
+          onClose={() => setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })}
+          startLocation={
+            userLocation ? { name: "Your Location", coords: userLocation.coords } : undefined
+          }
+          destinationLocation={
+            selectedLocation && "coords" in selectedLocation
+              ? { name: selectedLocation.name, coords: selectedLocation.coords }
+              : undefined
+          }
+          distance={routePanel.distance}
+          estimatedTime={routePanel.estimatedTime}
+        />
       </div>
     </div>
   );
