@@ -14,15 +14,15 @@ interface Location {
 
 export default function Navigator() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    null
+    null,
   );
   const [userLocation, setUserLocation] = useState<{
     coords: [number, number];
     accuracy: number;
   } | null>(null);
-  const [baseLayerKey, setBaseLayerKey] = useState<"openstreetmap" | "satellite">(
-    "openstreetmap"
-  );
+  const [baseLayerKey, setBaseLayerKey] = useState<
+    "openstreetmap" | "satellite"
+  >("openstreetmap");
 
   const handleLocationSelect = (location: Location) => {
     setSelectedLocation(location);
@@ -40,7 +40,7 @@ export default function Navigator() {
         },
         (error) => {
           console.error("Geolocation error:", error);
-        }
+        },
       );
     }
   };

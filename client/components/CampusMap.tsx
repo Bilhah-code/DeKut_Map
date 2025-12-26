@@ -24,13 +24,13 @@ const CAMPUS_BUILDINGS = [
   {
     id: 4,
     name: "Student Center",
-    coords: [-0.3610, 37.0090] as [number, number],
+    coords: [-0.361, 37.009] as [number, number],
     type: "building",
   },
   {
     id: 5,
     name: "Sports Complex",
-    coords: [-0.3600, 37.0085] as [number, number],
+    coords: [-0.36, 37.0085] as [number, number],
     type: "facility",
   },
 ];
@@ -45,7 +45,7 @@ interface CampusMapProps {
     coords: [number, number];
     accuracy: number;
   };
-  onLocationSelect?: (location: typeof CAMPUS_BUILDINGS[0]) => void;
+  onLocationSelect?: (location: (typeof CAMPUS_BUILDINGS)[0]) => void;
   baseLayerKey?: "openstreetmap" | "satellite";
   onBaseLayerChange?: (key: "openstreetmap" | "satellite") => void;
 }
@@ -85,7 +85,7 @@ export default function CampusMap({
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           maxZoom: 19,
-        }
+        },
       ).addTo(mapRef.current);
     } else {
       layerRef.current = L.tileLayer(
@@ -94,7 +94,7 @@ export default function CampusMap({
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
           maxZoom: 19,
-        }
+        },
       ).addTo(mapRef.current);
     }
 

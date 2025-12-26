@@ -28,14 +28,14 @@ const CAMPUS_BUILDINGS = [
   {
     id: 4,
     name: "Student Center",
-    coords: [-0.3610, 37.0090] as [number, number],
+    coords: [-0.361, 37.009] as [number, number],
     type: "building",
     description: "Student hub and services",
   },
   {
     id: 5,
     name: "Sports Complex",
-    coords: [-0.3600, 37.0085] as [number, number],
+    coords: [-0.36, 37.0085] as [number, number],
     type: "facility",
     description: "Athletics and sports",
   },
@@ -90,7 +90,7 @@ export default function SpatialSearch({
     return CAMPUS_BUILDINGS.filter(
       (building) =>
         building.name.toLowerCase().includes(query) ||
-        building.description.toLowerCase().includes(query)
+        building.description.toLowerCase().includes(query),
     );
   }, [searchQuery]);
 
@@ -105,7 +105,7 @@ export default function SpatialSearch({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) =>
-        prev < filteredResults.length - 1 ? prev + 1 : prev
+        prev < filteredResults.length - 1 ? prev + 1 : prev,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
