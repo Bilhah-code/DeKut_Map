@@ -3,83 +3,26 @@ import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const CAMPUS_BUILDINGS = [
-  {
-    id: 1,
-    name: "Main Gate",
-    coords: [-0.3603, 37.0093] as [number, number],
-    type: "entrance",
-    description: "University main entrance",
-  },
-  {
-    id: 2,
-    name: "Main Library",
-    coords: [-0.3605, 37.0095] as [number, number],
-    type: "building",
-    description: "Central library facility",
-  },
-  {
-    id: 3,
-    name: "Engineering Building",
-    coords: [-0.3608, 37.0098] as [number, number],
-    type: "building",
-    description: "Faculty of engineering",
-  },
-  {
-    id: 4,
-    name: "Student Center",
-    coords: [-0.361, 37.009] as [number, number],
-    type: "building",
-    description: "Student hub and services",
-  },
-  {
-    id: 5,
-    name: "Sports Complex",
-    coords: [-0.36, 37.0085] as [number, number],
-    type: "facility",
-    description: "Athletics and sports",
-  },
-  {
-    id: 6,
-    name: "Medical Center",
-    coords: [-0.3615, 37.0092] as [number, number],
-    type: "facility",
-    description: "Campus health services",
-  },
-  {
-    id: 7,
-    name: "IT Department",
-    coords: [-0.3607, 37.0088] as [number, number],
-    type: "building",
-    description: "Information technology",
-  },
-  {
-    id: 8,
-    name: "Cafeteria",
-    coords: [-0.3602, 37.0091] as [number, number],
-    type: "facility",
-    description: "Dining and food services",
-  },
-];
-
-interface Location {
-  id: number;
+interface Building {
+  id: string;
   name: string;
   coords: [number, number];
-  type: "building" | "entrance" | "facility";
-  description: string;
+  character: string;
+  descriptio: string;
 }
 
 interface SpatialSearchProps {
-  onLocationSelect?: (location: Location) => void;
+  onLocationSelect?: (location: Building) => void;
   isOpen?: boolean;
   onClose?: () => void;
+  buildings?: Building[];
 }
 
 export default function SpatialSearch({
   onLocationSelect,
   isOpen,
   onClose,
+  buildings = [],
 }: SpatialSearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -87,14 +30,15 @@ export default function SpatialSearch({
   const filteredResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase();
-    return CAMPUS_BUILDINGS.filter(
+    return buildings.filter(
       (building) =>
         building.name.toLowerCase().includes(query) ||
-        building.description.toLowerCase().includes(query),
+        building.character.toLowerCase().includes(query) ||
+        building.descriptio.toLowerCase().includes(query),
     );
-  }, [searchQuery]);
+  }, [searchQuery, buildings]);
 
-  const handleSelect = (location: Location) => {
+  const handleSelect = (location: Building) => {
     onLocationSelect?.(location);
     setSearchQuery("");
     setSelectedIndex(-1);
@@ -172,7 +116,7 @@ export default function SpatialSearch({
                       : "text-muted-foreground"
                   }`}
                 >
-                  {building.description}
+                  {building.descriptio}
                 </div>
               </button>
             ))}
@@ -190,9 +134,9 @@ export default function SpatialSearch({
       </div>
 
       {/* All Locations List (when search is empty and dropdown is open) */}
-      {!searchQuery && isOpen && (
+      {!searchQuery && isOpen && buildings.length > 0 && (
         <div className="mt-2 bg-white rounded-lg border border-border shadow-lg max-h-80 overflow-y-auto">
-          {CAMPUS_BUILDINGS.map((building) => (
+          {buildings.map((building) => (
             <button
               key={building.id}
               onClick={() => handleSelect(building)}
@@ -200,7 +144,7 @@ export default function SpatialSearch({
             >
               <div className="font-medium text-sm">{building.name}</div>
               <div className="text-xs text-muted-foreground">
-                {building.description}
+                {building.descriptio}
               </div>
             </button>
           ))}
