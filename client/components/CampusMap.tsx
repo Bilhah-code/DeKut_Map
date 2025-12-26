@@ -66,6 +66,7 @@ export default function CampusMap({
   const defaultZoom = 16;
 
   const markersRef = useRef<L.Marker[]>([]);
+  const layerRef = useRef<L.TileLayer | null>(null);
 
   useEffect(() => {
     // Initialize map
