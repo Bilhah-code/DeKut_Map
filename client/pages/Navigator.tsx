@@ -140,6 +140,7 @@ export default function Navigator() {
           baseLayerKey={baseLayerKey}
           onBaseLayerChange={setBaseLayerKey}
           onBuildingsLoaded={setBuildings}
+          route={route || undefined}
         />
 
         {/* Map Controls - Top Right */}
