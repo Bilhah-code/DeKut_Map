@@ -21,6 +21,12 @@ interface Location {
   coords: [number, number];
 }
 
+interface Route {
+  start: [number, number];
+  end: [number, number];
+  path: [number, number][];
+}
+
 export default function Navigator() {
   const [selectedLocation, setSelectedLocation] = useState<
     Building | Location | null
@@ -38,6 +44,7 @@ export default function Navigator() {
     roads: true,
     boundary: true,
   });
+  const [route, setRoute] = useState<Route | null>(null);
   const [routePanel, setRoutePanel] = useState({
     isOpen: false,
     distance: 0,
@@ -49,11 +56,16 @@ export default function Navigator() {
 
     // If user location exists, calculate route
     if (userLocation) {
-      const route = calculateRoute(userLocation.coords, location.coords);
+      const calculatedRoute = calculateRoute(userLocation.coords, location.coords);
+      setRoute({
+        start: userLocation.coords,
+        end: location.coords,
+        path: calculatedRoute.routePath || [userLocation.coords, location.coords],
+      });
       setRoutePanel({
         isOpen: true,
-        distance: route.distance,
-        estimatedTime: route.estimatedTime,
+        distance: calculatedRoute.distance,
+        estimatedTime: calculatedRoute.estimatedTime,
       });
     }
   };
