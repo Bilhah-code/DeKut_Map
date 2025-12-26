@@ -48,17 +48,18 @@ interface CampusMapProps {
     accuracy: number;
   };
   onLocationSelect?: (location: typeof CAMPUS_BUILDINGS[0]) => void;
+  baseLayerKey?: "openstreetmap" | "satellite";
+  onBaseLayerChange?: (key: "openstreetmap" | "satellite") => void;
 }
 
 export default function CampusMap({
   selectedLocation,
   userLocation,
   onLocationSelect,
+  baseLayerKey = "openstreetmap",
+  onBaseLayerChange,
 }: CampusMapProps) {
   const mapRef = useRef<L.Map | null>(null);
-  const [baseLayerKey, setBaseLayerKey] = useState<"openstreetmap" | "satellite">(
-    "openstreetmap"
-  );
 
   // Default campus center (Dedan Kimathi University)
   const defaultCenter: [number, number] = [-0.3605, 37.0093];
