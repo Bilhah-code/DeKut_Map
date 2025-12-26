@@ -159,16 +159,16 @@ export default function CampusMap({
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col bg-white">
+    <div className="relative w-full h-full flex flex-col bg-white overflow-hidden">
       {/* Map Container */}
       <div
         id="map"
-        className="flex-1 relative"
+        className="flex-1 relative w-full"
         style={{ height: "100%" }}
       />
 
       {/* Map Controls - Top Right */}
-      <div className="absolute top-4 right-4 flex flex-col gap-2 z-40">
+      <div className="fixed top-20 right-6 flex flex-col gap-2 z-50 pointer-events-auto">
         {/* Basemap Toggle */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden border border-border">
           <Button
