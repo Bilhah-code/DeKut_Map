@@ -61,10 +61,24 @@ export default function Navigator() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude, accuracy } = position.coords;
-          setUserLocation({
-            coords: [latitude, longitude],
+          const newLocation = {
+            coords: [latitude, longitude] as [number, number],
             accuracy: accuracy,
-          });
+          };
+          setUserLocation(newLocation);
+
+          // Recalculate route if destination is selected
+          if (selectedLocation && "coords" in selectedLocation) {
+            const route = calculateRoute(
+              newLocation.coords,
+              selectedLocation.coords,
+            );
+            setRoutePanel({
+              isOpen: true,
+              distance: route.distance,
+              estimatedTime: route.estimatedTime,
+            });
+          }
         },
         (error) => {
           console.error("Geolocation error:", error);
