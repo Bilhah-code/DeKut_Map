@@ -1,125 +1,60 @@
 {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Main Gate",
-        "character": "MG-001",
-        "descriptio": "University main entrance gate"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.0093, -0.3603]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Main Library",
-        "character": "LIB-001",
-        "descriptio": "Central library facility with 4 floors"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.0095, -0.3605]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Engineering Building",
-        "character": "ENG-001",
-        "descriptio": "Faculty of engineering and technology"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.0098, -0.3608]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Student Center",
-        "character": "STC-001",
-        "descriptio": "Student services and administration hub"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.009, -0.361]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Sports Complex",
-        "character": "SPC-001",
-        "descriptio": "Athletic facilities and sports ground"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.0085, -0.36]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Medical Center",
-        "character": "MED-001",
-        "descriptio": "Campus health center and clinic"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.0092, -0.3615]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "IT Department",
-        "character": "IT-001",
-        "descriptio": "Information technology and computing center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.0088, -0.3607]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Cafeteria",
-        "character": "CAF-001",
-        "descriptio": "Main dining and food services facility"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.0091, -0.3602]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Science Building",
-        "character": "SCI-001",
-        "descriptio": "Faculty of sciences laboratories and classrooms"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.01, -0.3612]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Lecture Hall A",
-        "character": "LEC-001",
-        "descriptio": "Large lecture hall for 500+ students"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [37.0089, -0.3604]
-      }
-    }
-  ]
+"type": "FeatureCollection",
+"name": "points",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "name": "School of engineering", "character": "45", "descriptio": "located next to the farm", "longitude": null, "latitude": null, "X": 36.963, "Y": -0.399 }, "geometry": { "type": "Point", "coordinates": [ 36.962852571197494, -0.399082738441749 ] } },
+{ "type": "Feature", "properties": { "id": 2, "name": "semiconductor laboratoty", "character": "46", "descriptio": "nxt to SOE", "longitude": null, "latitude": null, "X": 36.962, "Y": -0.399 }, "geometry": { "type": "Point", "coordinates": [ 36.962082786039545, -0.399246068067542 ] } },
+{ "type": "Feature", "properties": { "id": 3, "name": "Civil engneering lab", "character": null, "descriptio": "next to semiconductor", "longitude": null, "latitude": null, "X": 36.962, "Y": -0.399 }, "geometry": { "type": "Point", "coordinates": [ 36.961527754304839, -0.399338319058455 ] } },
+{ "type": "Feature", "properties": { "id": 4, "name": "Advanced Design and Manufacturing lab", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.399 }, "geometry": { "type": "Point", "coordinates": [ 36.961219235302437, -0.398851354799658 ] } },
+{ "type": "Feature", "properties": { "id": 5, "name": "Mechatronic labs", "character": "67", "descriptio": null, "longitude": null, "latitude": null, "X": 36.962, "Y": -0.399 }, "geometry": { "type": "Point", "coordinates": [ 36.961586735878818, -0.39884984248825 ] } },
+{ "type": "Feature", "properties": { "id": 6, "name": "Dekut center fo energy studies", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.964, "Y": -0.399 }, "geometry": { "type": "Point", "coordinates": [ 36.963582279132076, -0.398724320640449 ] } },
+{ "type": "Feature", "properties": { "id": 7, "name": "Resource centre car park", "character": null, "descriptio": "next to admin", "longitude": null, "latitude": null, "X": 36.961, "Y": -0.398 }, "geometry": { "type": "Point", "coordinates": [ 36.96114664259597, -0.398362122044803 ] } },
+{ "type": "Feature", "properties": { "id": 8, "name": "School generators", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.962, "Y": -0.398 }, "geometry": { "type": "Point", "coordinates": [ 36.96172814042157, -0.398350779708566 ] } },
+{ "type": "Feature", "properties": { "id": 9, "name": "Lecturers mess", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.398 }, "geometry": { "type": "Point", "coordinates": [ 36.96003582295252, -0.39816703385934 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "E-learning office", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.398 }, "geometry": { "type": "Point", "coordinates": [ 36.961281241572493, -0.397556816133159 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Dekut library", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.398 }, "geometry": { "type": "Point", "coordinates": [ 36.961166303120599, -0.397649067142986 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "VC court", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.397 }, "geometry": { "type": "Point", "coordinates": [ 36.96024377080952, -0.397327700915769 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Parking Area", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.397 }, "geometry": { "type": "Point", "coordinates": [ 36.961119420331016, -0.397131100394132 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Kimathi & mandela statues", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.397 }, "geometry": { "type": "Point", "coordinates": [ 36.961253641220551, -0.396912193269347 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Heroes Garden", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.397 }, "geometry": { "type": "Point", "coordinates": [ 36.960790106542916, -0.396625610185309 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Blessed Sister Irene Nyaatha Shrine", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.396 }, "geometry": { "type": "Point", "coordinates": [ 36.960291031686097, -0.396491014432652 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "University Farm", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.397 }, "geometry": { "type": "Point", "coordinates": [ 36.958476214024927, -0.396595363948947 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Dekut outlet", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.396 }, "geometry": { "type": "Point", "coordinates": [ 36.958869424518177, -0.395994976134313 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Field washroom", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.395 }, "geometry": { "type": "Point", "coordinates": [ 36.958719702061131, -0.39530233724125 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Rugby pitch", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.394 }, "geometry": { "type": "Point", "coordinates": [ 36.959037295151838, -0.394289088101505 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Hockey field", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.394 }, "geometry": { "type": "Point", "coordinates": [ 36.959911432325299, -0.393850517540075 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Football pitch", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.394 }, "geometry": { "type": "Point", "coordinates": [ 36.957981676212249, -0.394431245450943 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Batian hostel", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.959497048959328, -0.393287937337836 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Kimathi Canteen", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.958665257531294, -0.393374139145479 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Medical centre", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.960523933285941, -0.392908346911136 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Servant Quaters", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.961059304495983, -0.392660327658876 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "University Guest House", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.961, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.961009397010294, -0.392140092130237 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Student centre", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.960039981909617, -0.392153702943899 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "84 hostel", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.960345476215913, -0.392127993629186 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Fire assembly point", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.959772296304607, -0.392426675368765 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Hostel 87", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.959523515050215, -0.392248222482603 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Nyandarua hostel", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.959618792977423, -0.391914001388961 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Hostel 85", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.96, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.960260784725058, -0.392256540201958 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Dekut Mess", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.95901839080117, -0.392655034564997 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "ITOHM", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.958738606411742, -0.39265352225246 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Business Administration Block", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.958135179539404, -0.392444823119687 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Freedom Hall", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.958424038017142, -0.392095478907526 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Room 10 & 11 lecture hall", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.957899253243461, -0.391851996569216 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Kimathi car wash area", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.957, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.957422863607398, -0.391957858456307 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Room 12,14 lecture room", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.957648203466995, -0.391637248165579 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Room 8 & 9 lecture halls", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.391 }, "geometry": { "type": "Point", "coordinates": [ 36.957855395149977, -0.391448209073317 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Basket hall court", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.958084515879698, -0.392751066410556 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Car park", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.958281121126312, -0.392705697034839 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Dekut Mess Kitchen", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.958801368855852, -0.392905322286152 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "car park Dsw", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.393 }, "geometry": { "type": "Point", "coordinates": [ 36.959301956060727, -0.392884149911239 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Dekut shades", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.959, "Y": -0.392 }, "geometry": { "type": "Point", "coordinates": [ 36.958832371990908, -0.392296616486006 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Electrical Engineering Workshops", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.391 }, "geometry": { "type": "Point", "coordinates": [ 36.958415720102849, -0.390627023207097 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Bcw lecture halls", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.391 }, "geometry": { "type": "Point", "coordinates": [ 36.958378667575602, -0.390506794330443 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Room 8(Dkusda)", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.958, "Y": -0.391 }, "geometry": { "type": "Point", "coordinates": [ 36.9579393304668, -0.390918899592321 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Fire Assembly Point", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": 36.957, "Y": -0.391 }, "geometry": { "type": "Point", "coordinates": [ 36.957382786384038, -0.391399815065013 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Gate A", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": null, "Y": null }, "geometry": { "type": "Point", "coordinates": [ 36.957969381993351, -0.396218248802999 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Gate B", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": null, "Y": null }, "geometry": { "type": "Point", "coordinates": [ 36.957444220131428, -0.393152545847774 ] } },
+{ "type": "Feature", "properties": { "id": null, "name": "Gate B", "character": null, "descriptio": null, "longitude": null, "latitude": null, "X": null, "Y": null }, "geometry": { "type": "Point", "coordinates": [ 36.960961957571016, -0.39424606836993 ] } }
+]
 }
