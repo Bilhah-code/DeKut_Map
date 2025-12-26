@@ -83,14 +83,19 @@ export default function Navigator() {
 
           // Recalculate route if destination is selected
           if (selectedLocation && "coords" in selectedLocation) {
-            const route = calculateRoute(
+            const calculatedRoute = calculateRoute(
               newLocation.coords,
               selectedLocation.coords,
             );
+            setRoute({
+              start: newLocation.coords,
+              end: selectedLocation.coords,
+              path: calculatedRoute.routePath || [newLocation.coords, selectedLocation.coords],
+            });
             setRoutePanel({
               isOpen: true,
-              distance: route.distance,
-              estimatedTime: route.estimatedTime,
+              distance: calculatedRoute.distance,
+              estimatedTime: calculatedRoute.estimatedTime,
             });
           }
         },
