@@ -1,0 +1,24 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DeKUT Campus",
+        "descriptio": "Dedan Kimathi University of Technology campus boundary"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [37.0080, -0.3595],
+            [37.0105, -0.3595],
+            [37.0105, -0.3620],
+            [37.0080, -0.3620],
+            [37.0080, -0.3595]
+          ]
+        ]
+      }
+    }
+  ]
+}
