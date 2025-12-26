@@ -37,9 +37,7 @@ const toRadians = (degrees: number): number => {
 };
 
 // Calculate total distance along a path
-export const calculatePathDistance = (
-  path: [number, number][],
-): number => {
+export const calculatePathDistance = (path: [number, number][]): number => {
   let totalDistance = 0;
   for (let i = 0; i < path.length - 1; i++) {
     totalDistance += calculateDistance(path[i], path[i + 1]);

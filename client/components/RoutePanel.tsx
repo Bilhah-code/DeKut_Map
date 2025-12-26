@@ -1,4 +1,12 @@
-import { Loader2, X, MapPin, Clock, Gauge, Navigation2, AlertCircle } from "lucide-react";
+import {
+  Loader2,
+  X,
+  MapPin,
+  Clock,
+  Gauge,
+  Navigation2,
+  AlertCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistance, formatTime } from "@/services/routingService";
 
@@ -112,9 +120,7 @@ export default function RoutePanel({
                   </p>
                 </div>
                 <p className="text-xl font-bold text-orange-900">
-                  {distance !== undefined
-                    ? formatDistance(distance)
-                    : "—"}
+                  {distance !== undefined ? formatDistance(distance) : "—"}
                 </p>
               </div>
 
@@ -138,7 +144,8 @@ export default function RoutePanel({
             <div className="bg-blue-50 border border-blue-200/50 rounded-lg p-3 flex gap-2">
               <AlertCircle className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
               <p className="text-xs text-blue-800">
-                <span className="font-semibold">Walking pace:</span> ~5 km/h average. Times are estimates based on flat terrain.
+                <span className="font-semibold">Walking pace:</span> ~5 km/h
+                average. Times are estimates based on flat terrain.
               </p>
             </div>
           </>

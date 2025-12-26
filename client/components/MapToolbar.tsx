@@ -68,7 +68,9 @@ export default function MapToolbar({
             <div className="flex items-center gap-3 px-4 py-2 bg-primary/5 rounded-lg border border-primary/10 min-w-fit">
               <Navigation className="h-4 w-4 text-primary" />
               <div className="flex flex-col gap-0.5">
-                <p className="text-xs text-muted-foreground font-medium">Destination</p>
+                <p className="text-xs text-muted-foreground font-medium">
+                  Destination
+                </p>
                 <p className="text-sm font-semibold text-foreground truncate max-w-xs">
                   {selectedLocation.name}
                 </p>
@@ -89,9 +91,7 @@ export default function MapToolbar({
                 <h1 className="font-bold text-foreground text-sm truncate">
                   DeKUT Navigator
                 </h1>
-                <p className="text-xs text-muted-foreground">
-                  Find your way
-                </p>
+                <p className="text-xs text-muted-foreground">Find your way</p>
               </div>
             </div>
 

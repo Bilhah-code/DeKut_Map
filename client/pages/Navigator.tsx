@@ -56,11 +56,17 @@ export default function Navigator() {
 
     // If user location exists, calculate route
     if (userLocation) {
-      const calculatedRoute = calculateRoute(userLocation.coords, location.coords);
+      const calculatedRoute = calculateRoute(
+        userLocation.coords,
+        location.coords,
+      );
       setRoute({
         start: userLocation.coords,
         end: location.coords,
-        path: calculatedRoute.routePath || [userLocation.coords, location.coords],
+        path: calculatedRoute.routePath || [
+          userLocation.coords,
+          location.coords,
+        ],
       });
       setRoutePanel({
         isOpen: true,
@@ -90,7 +96,10 @@ export default function Navigator() {
             setRoute({
               start: newLocation.coords,
               end: selectedLocation.coords,
-              path: calculatedRoute.routePath || [newLocation.coords, selectedLocation.coords],
+              path: calculatedRoute.routePath || [
+                newLocation.coords,
+                selectedLocation.coords,
+              ],
             });
             setRoutePanel({
               isOpen: true,
@@ -265,9 +274,13 @@ export default function Navigator() {
         {/* Route Panel */}
         <RoutePanel
           isOpen={routePanel.isOpen}
-          onClose={() => setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })}
+          onClose={() =>
+            setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })
+          }
           startLocation={
-            userLocation ? { name: "Your Location", coords: userLocation.coords } : undefined
+            userLocation
+              ? { name: "Your Location", coords: userLocation.coords }
+              : undefined
           }
           destinationLocation={
             selectedLocation && "coords" in selectedLocation
