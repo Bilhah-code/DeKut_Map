@@ -22,14 +22,16 @@ interface Location {
 }
 
 export default function Navigator() {
-  const [selectedLocation, setSelectedLocation] = useState<Building | Location | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<
+    Building | Location | null
+  >(null);
   const [userLocation, setUserLocation] = useState<{
     coords: [number, number];
     accuracy: number;
   } | null>(null);
-  const [baseLayerKey, setBaseLayerKey] = useState<"openstreetmap" | "satellite">(
-    "openstreetmap",
-  );
+  const [baseLayerKey, setBaseLayerKey] = useState<
+    "openstreetmap" | "satellite"
+  >("openstreetmap");
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [visibleLayers, setVisibleLayers] = useState({
     buildings: true,

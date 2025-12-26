@@ -258,7 +258,9 @@ export default function CampusMap({
 
   // Expose layer visibility control
   useEffect(() => {
-    (window as any).toggleMapLayer = (layer: "buildings" | "roads" | "boundary") => {
+    (window as any).toggleMapLayer = (
+      layer: "buildings" | "roads" | "boundary",
+    ) => {
       setVisibleLayers((prev) => ({
         ...prev,
         [layer]: !prev[layer],
