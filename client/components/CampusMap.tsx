@@ -1,25 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
 import L from "leaflet";
 import { Button } from "@/components/ui/button";
-import { MapPin, Satellite, Map as MapIcon, Crosshair } from "lucide-react";
-
-// Import default Leaflet icons
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-
-const DefaultIcon = L.icon({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
-L.Marker.prototype.setIcon(DefaultIcon);
+import { Satellite, Map as MapIcon, Crosshair } from "lucide-react";
 
 // Sample campus buildings data
 const CAMPUS_BUILDINGS = [
@@ -73,10 +55,7 @@ export default function CampusMap({
   userLocation,
   onLocationSelect,
 }: CampusMapProps) {
-  const mapRef = useRef(null);
-  const [baseLayers, setBaseLayers] = useState<
-    Record<string, { layer: TileLayer; active: boolean }>
-  >({});
+  const mapRef = useRef<L.Map | null>(null);
   const [baseLayerKey, setBaseLayerKey] = useState<"openstreetmap" | "satellite">(
     "openstreetmap"
   );
@@ -85,15 +64,92 @@ export default function CampusMap({
   const defaultCenter: [number, number] = [-0.3605, 37.0093];
   const defaultZoom = 16;
 
+  const markersRef = useRef<L.Marker[]>([]);
+
+  useEffect(() => {
+    // Initialize map
+    if (!mapRef.current) {
+      mapRef.current = L.map("map").setView(defaultCenter, defaultZoom);
+    }
+
+    // Add base layer
+    if (baseLayerKey === "openstreetmap") {
+      L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19,
+        }
+      ).addTo(mapRef.current);
+    } else {
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastered/{z}/{x}/{y}.png",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          maxZoom: 19,
+        }
+      ).addTo(mapRef.current);
+    }
+
+    // Clear existing markers
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current = [];
+
+    // Add building markers
+    CAMPUS_BUILDINGS.forEach((building) => {
+      const marker = L.marker(building.coords).addTo(mapRef.current!);
+      marker
+        .bindPopup(`<strong>${building.name}</strong><br/>${building.type}`)
+        .on("click", () => onLocationSelect?.(building));
+      markersRef.current.push(marker);
+    });
+
+    // Add user location marker if available
+    if (userLocation) {
+      const userMarker = L.circleMarker(userLocation.coords, {
+        radius: 6,
+        fillColor: "#2057d9",
+        color: "#fff",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.8,
+      }).addTo(mapRef.current);
+      userMarker.bindPopup("Your Location");
+    }
+
+    // Add selected location marker if available
+    if (selectedLocation) {
+      mapRef.current.setView(selectedLocation.coords, 17);
+      const selectedMarker = L.circleMarker(selectedLocation.coords, {
+        radius: 8,
+        fillColor: "#ff8c1a",
+        color: "#fff",
+        weight: 3,
+        opacity: 1,
+        fillOpacity: 0.8,
+      }).addTo(mapRef.current);
+      selectedMarker.bindPopup(selectedLocation.name);
+    }
+  }, [baseLayerKey, selectedLocation, userLocation, onLocationSelect]);
+
   const toggleBaseLayer = (key: "openstreetmap" | "satellite") => {
     setBaseLayerKey(key);
+    // Clear the map layers
+    mapRef.current?.eachLayer((layer) => {
+      if (layer instanceof L.TileLayer) {
+        mapRef.current?.removeLayer(layer);
+      }
+    });
   };
 
   const handleGeolocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log("User position:", position.coords);
+          const { latitude, longitude } = position.coords;
+          mapRef.current?.setView([latitude, longitude], 17);
         },
         (error) => {
           console.error("Geolocation error:", error);
@@ -105,104 +161,45 @@ export default function CampusMap({
   return (
     <div className="relative w-full h-full flex flex-col bg-white">
       {/* Map Container */}
-      <div className="flex-1 relative">
-        <MapContainer
-          center={selectedLocation?.coords || defaultCenter}
-          zoom={defaultZoom}
-          className="w-full h-full"
-          ref={mapRef}
-        >
-          {baseLayerKey === "openstreetmap" && (
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-          )}
+      <div
+        id="map"
+        className="flex-1 relative"
+        style={{ height: "100%" }}
+      />
 
-          {baseLayerKey === "satellite" && (
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-              url="https://{s}.basemaps.cartocdn.com/rastered/{z}/{x}/{y}.png"
-            />
-          )}
-
-          {/* Campus Buildings */}
-          {CAMPUS_BUILDINGS.map((building) => (
-            <Marker
-              key={building.id}
-              position={building.coords}
-              eventHandlers={{
-                click: () => onLocationSelect?.(building),
-              }}
-            >
-              <Popup>
-                <div className="p-2 text-sm">
-                  <h3 className="font-semibold text-foreground">
-                    {building.name}
-                  </h3>
-                  <p className="text-muted-foreground text-xs mt-1">
-                    {building.type === "building" && "Building"}
-                    {building.type === "entrance" && "Entrance"}
-                    {building.type === "facility" && "Facility"}
-                  </p>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-
-          {/* User Location */}
-          {userLocation && (
-            <>
-              <Marker position={userLocation.coords}>
-                <Popup>Your Location</Popup>
-              </Marker>
-              {/* Accuracy Circle */}
-              {/* Note: In a real implementation, you'd use a Circle from react-leaflet */}
-            </>
-          )}
-
-          {/* Selected Location Marker */}
-          {selectedLocation && (
-            <Marker position={selectedLocation.coords}>
-              <Popup>{selectedLocation.name}</Popup>
-            </Marker>
-          )}
-        </MapContainer>
-
-        {/* Map Controls - Top Right */}
-        <div className="absolute top-4 right-4 flex flex-col gap-2 z-40">
-          {/* Basemap Toggle */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden border border-border">
-            <Button
-              variant={baseLayerKey === "openstreetmap" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => toggleBaseLayer("openstreetmap")}
-              className="w-12 h-12 rounded-none flex items-center justify-center"
-              title="OpenStreetMap"
-            >
-              <MapIcon className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={baseLayerKey === "satellite" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => toggleBaseLayer("satellite")}
-              className="w-12 h-12 rounded-none flex items-center justify-center border-t border-border"
-              title="Satellite"
-            >
-              <Satellite className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Geolocation Button */}
+      {/* Map Controls - Top Right */}
+      <div className="absolute top-4 right-4 flex flex-col gap-2 z-40">
+        {/* Basemap Toggle */}
+        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-border">
           <Button
-            onClick={handleGeolocation}
+            variant={baseLayerKey === "openstreetmap" ? "default" : "ghost"}
             size="sm"
-            className="w-12 h-12 rounded-lg shadow-md p-0 flex items-center justify-center"
-            title="Get My Location"
+            onClick={() => toggleBaseLayer("openstreetmap")}
+            className="w-12 h-12 rounded-none flex items-center justify-center"
+            title="OpenStreetMap"
           >
-            <Crosshair className="h-4 w-4" />
+            <MapIcon className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={baseLayerKey === "satellite" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => toggleBaseLayer("satellite")}
+            className="w-12 h-12 rounded-none flex items-center justify-center border-t border-border"
+            title="Satellite"
+          >
+            <Satellite className="h-4 w-4" />
           </Button>
         </div>
+
+        {/* Geolocation Button */}
+        <Button
+          onClick={handleGeolocation}
+          size="sm"
+          className="w-12 h-12 rounded-lg shadow-md p-0 flex items-center justify-center"
+          title="Get My Location"
+        >
+          <Crosshair className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
