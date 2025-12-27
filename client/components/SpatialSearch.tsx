@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Search, X, MapPin, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,19 +13,17 @@ interface Building {
 
 interface SpatialSearchProps {
   onLocationSelect?: (location: Building) => void;
-  isOpen?: boolean;
-  onClose?: () => void;
   buildings?: Building[];
 }
 
 export default function SpatialSearch({
   onLocationSelect,
-  isOpen,
-  onClose,
   buildings = [],
 }: SpatialSearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
 
   const filteredResults = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -53,7 +51,7 @@ export default function SpatialSearch({
     onLocationSelect?.(location);
     setSearchQuery("");
     setSelectedIndex(-1);
-    onClose?.();
+    setIsFocused(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -69,17 +67,29 @@ export default function SpatialSearch({
       e.preventDefault();
       handleSelect(filteredResults[selectedIndex]);
     } else if (e.key === "Escape") {
-      onClose?.();
+      setIsFocused(false);
     }
+  };
+
+  const handleInputFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    // Delay blur to allow click on dropdown to register
+    setTimeout(() => {
+      setIsFocused(false);
+    }, 100);
   };
 
   return (
     <div className="w-full">
-      {/* Search Input */}
-      <div className="relative">
+      {/* Search Input Wrapper */}
+      <div className="relative z-30">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input
+            ref={inputRef}
             placeholder="Search buildings, facilities, labs..."
             value={searchQuery}
             onChange={(e) => {
@@ -87,8 +97,9 @@ export default function SpatialSearch({
               setSelectedIndex(-1);
             }}
             onKeyDown={handleKeyDown}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
             className="pl-9 pr-9 py-2 h-auto"
-            autoFocus={isOpen}
           />
           {searchQuery && (
             <Button
@@ -97,6 +108,7 @@ export default function SpatialSearch({
               onClick={() => {
                 setSearchQuery("");
                 setSelectedIndex(-1);
+                inputRef.current?.focus();
               }}
               className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
             >
@@ -106,8 +118,8 @@ export default function SpatialSearch({
         </div>
 
         {/* Search Results Dropdown */}
-        {(searchQuery || isOpen) && filteredResults.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-border shadow-xl z-50 max-h-96 overflow-y-auto">
+        {(isFocused || searchQuery) && filteredResults.length > 0 && (
+          <div className="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg border border-border shadow-xl z-50 max-h-96 overflow-y-auto">
             <div className="divide-y divide-border">
               {filteredResults.map((building, index) => (
                 <button
@@ -148,19 +160,21 @@ export default function SpatialSearch({
         )}
 
         {/* No Results Message */}
-        {searchQuery && filteredResults.length === 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-border shadow-lg z-50 p-4">
-            <div className="flex flex-col items-center justify-center gap-2">
-              <Search className="h-6 w-6 text-muted-foreground/50" />
-              <p className="text-sm text-muted-foreground text-center font-medium">
-                No locations found
-              </p>
-              <p className="text-xs text-muted-foreground text-center">
-                Try searching for a building name, facility, or description
-              </p>
+        {(isFocused || searchQuery) &&
+          searchQuery &&
+          filteredResults.length === 0 && (
+            <div className="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg border border-border shadow-lg z-50 p-4">
+              <div className="flex flex-col items-center justify-center gap-2">
+                <Search className="h-6 w-6 text-muted-foreground/50" />
+                <p className="text-sm text-muted-foreground text-center font-medium">
+                  No locations found
+                </p>
+                <p className="text-xs text-muted-foreground text-center">
+                  Try searching for a building name, facility, or description
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </div>
   );

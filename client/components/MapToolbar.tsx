@@ -28,7 +28,6 @@ export default function MapToolbar({
   selectedLocation,
   buildings = [],
 }: MapToolbarProps) {
-  const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -53,14 +52,10 @@ export default function MapToolbar({
 
           {/* Search Bar */}
           <div className="flex-1 max-w-lg">
-            <div className="relative">
-              <SpatialSearch
-                onLocationSelect={onLocationSelect}
-                isOpen={searchOpen}
-                onClose={() => setSearchOpen(false)}
-                buildings={buildings}
-              />
-            </div>
+            <SpatialSearch
+              onLocationSelect={onLocationSelect}
+              buildings={buildings}
+            />
           </div>
 
           {/* Selected Location Display */}
@@ -115,11 +110,6 @@ export default function MapToolbar({
             <SpatialSearch
               onLocationSelect={(location) => {
                 onLocationSelect?.(location);
-                setMobileMenuOpen(false);
-              }}
-              isOpen={searchOpen || mobileMenuOpen}
-              onClose={() => {
-                setSearchOpen(false);
                 setMobileMenuOpen(false);
               }}
               buildings={buildings}
