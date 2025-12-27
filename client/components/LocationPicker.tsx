@@ -1,11 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import {
-  Search,
-  X,
-  ArrowRightLeft,
-  ChevronRight,
-  MapPin,
-} from "lucide-react";
+import { X, ArrowRightLeft, ChevronRight, MapPin, Locate } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -169,13 +163,16 @@ export default function LocationPicker({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-      <div className="p-4 space-y-3">
+    <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+      <div className="p-5 space-y-4">
         {/* Origin Input */}
         <div className="relative z-30">
+          <label className="text-xs font-bold text-gray-600 uppercase mb-2 block">
+            Starting location
+          </label>
           <div className="relative">
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-              <MapPin className="h-5 w-5 text-gray-400" />
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm" />
             </div>
             <Input
               ref={originInputRef}
@@ -190,7 +187,7 @@ export default function LocationPicker({
                 setIsOriginFocused(true);
               }}
               onBlur={handleOriginInputBlur}
-              className="pl-10 pr-10 py-3 text-sm font-medium border border-gray-200 hover:border-gray-300 focus:border-gray-400 focus:outline-none rounded-lg"
+              className="pl-12 pr-12 py-3.5 text-sm font-medium border-2 border-gray-200 hover:border-green-300 focus:border-green-500 focus:outline-none rounded-xl bg-white transition-all duration-200"
             />
             {origin && (
               <Button
@@ -200,9 +197,24 @@ export default function LocationPicker({
                   onOriginSelect(null);
                   setOriginSearchQuery("");
                 }}
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-gray-100 rounded"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-red-100 rounded-lg transition-colors"
               >
-                <X className="h-4 w-4 text-gray-500" />
+                <X className="h-4 w-4 text-gray-500 hover:text-red-600" />
+              </Button>
+            )}
+            {!origin && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onOriginMapPick}
+                className={`absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 rounded-lg transition-all ${
+                  isSelectingOriginOnMap
+                    ? "bg-green-100 text-green-600"
+                    : "hover:bg-green-100 text-gray-600 hover:text-green-600"
+                }`}
+                title="Pick on map"
+              >
+                <Locate className="h-4 w-4" />
               </Button>
             )}
           </div>
@@ -213,15 +225,17 @@ export default function LocationPicker({
             filteredOriginResults.length > 0 && (
               <div
                 ref={originDropdownRef}
-                className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 max-h-80 overflow-y-auto"
+                className="absolute top-full left-0 right-0 mt-3 bg-white rounded-xl border border-gray-200 shadow-xl z-50 max-h-80 overflow-y-auto backdrop-blur-sm"
               >
                 {filteredOriginResults.slice(0, 6).map((building, index) => (
                   <button
                     key={building.id}
                     onClick={() => handleSelectOrigin(building)}
                     onMouseEnter={() => setOriginSelectedIndex(index)}
-                    className={`w-full text-left px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors ${
-                      index === originSelectedIndex ? "bg-gray-50" : ""
+                    className={`w-full text-left px-5 py-3 border-b border-gray-100 last:border-b-0 transition-all duration-150 ${
+                      index === originSelectedIndex
+                        ? "bg-green-50 border-l-4 border-l-green-500"
+                        : "hover:bg-green-50"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -236,7 +250,7 @@ export default function LocationPicker({
                         )}
                       </div>
                       {index === originSelectedIndex && (
-                        <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                        <ChevronRight className="h-4 w-4 text-green-500 flex-shrink-0" />
                       )}
                     </div>
                   </button>
@@ -248,7 +262,7 @@ export default function LocationPicker({
           {isOriginFocused &&
             originSearchQuery &&
             filteredOriginResults.length === 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 p-4">
+              <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-xl border border-gray-200 shadow-xl z-50 p-4">
                 <p className="text-sm text-gray-500 text-center">
                   No locations found
                 </p>
@@ -257,12 +271,12 @@ export default function LocationPicker({
         </div>
 
         {/* Swap Button */}
-        <div className="flex justify-center -my-1">
+        <div className="flex justify-center -my-2">
           <Button
             variant="outline"
             size="sm"
             onClick={handleSwapLocations}
-            className="h-9 w-9 p-0 rounded-full border border-gray-300 hover:bg-gray-100 hover:border-gray-400 disabled:opacity-40"
+            className="h-10 w-10 p-0 rounded-full border-2 border-gray-300 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 bg-white"
             disabled={!origin || !destination}
             title="Swap locations"
           >
@@ -272,9 +286,12 @@ export default function LocationPicker({
 
         {/* Destination Input */}
         <div className="relative z-20">
+          <label className="text-xs font-bold text-gray-600 uppercase mb-2 block">
+            Destination
+          </label>
           <div className="relative">
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-              <MapPin className="h-5 w-5 text-gray-400" />
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+              <div className="w-2.5 h-2.5 rounded-full bg-blue-600 shadow-sm" />
             </div>
             <Input
               ref={destinationInputRef}
@@ -289,7 +306,7 @@ export default function LocationPicker({
                 setIsDestinationFocused(true);
               }}
               onBlur={handleDestinationInputBlur}
-              className="pl-10 pr-10 py-3 text-sm font-medium border border-gray-200 hover:border-gray-300 focus:border-gray-400 focus:outline-none rounded-lg"
+              className="pl-12 pr-12 py-3.5 text-sm font-medium border-2 border-gray-200 hover:border-blue-300 focus:border-blue-500 focus:outline-none rounded-xl bg-white transition-all duration-200"
             />
             {destination && (
               <Button
@@ -299,9 +316,24 @@ export default function LocationPicker({
                   onDestinationSelect(null);
                   setDestinationSearchQuery("");
                 }}
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-gray-100 rounded"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-red-100 rounded-lg transition-colors"
               >
-                <X className="h-4 w-4 text-gray-500" />
+                <X className="h-4 w-4 text-gray-500 hover:text-red-600" />
+              </Button>
+            )}
+            {!destination && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onDestinationMapPick}
+                className={`absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 rounded-lg transition-all ${
+                  isSelectingDestinationOnMap
+                    ? "bg-blue-100 text-blue-600"
+                    : "hover:bg-blue-100 text-gray-600 hover:text-blue-600"
+                }`}
+                title="Pick on map"
+              >
+                <Locate className="h-4 w-4" />
               </Button>
             )}
           </div>
@@ -312,34 +344,38 @@ export default function LocationPicker({
             filteredDestinationResults.length > 0 && (
               <div
                 ref={destinationDropdownRef}
-                className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 max-h-80 overflow-y-auto"
+                className="absolute top-full left-0 right-0 mt-3 bg-white rounded-xl border border-gray-200 shadow-xl z-50 max-h-80 overflow-y-auto backdrop-blur-sm"
               >
-                {filteredDestinationResults.slice(0, 6).map((building, index) => (
-                  <button
-                    key={building.id}
-                    onClick={() => handleSelectDestination(building)}
-                    onMouseEnter={() => setDestinationSelectedIndex(index)}
-                    className={`w-full text-left px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors ${
-                      index === destinationSelectedIndex ? "bg-gray-50" : ""
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-sm text-gray-900 mb-1 truncate">
-                          {building.name || "Unnamed Building"}
-                        </div>
-                        {building.character && (
-                          <div className="text-xs text-gray-500">
-                            {building.character}
+                {filteredDestinationResults
+                  .slice(0, 6)
+                  .map((building, index) => (
+                    <button
+                      key={building.id}
+                      onClick={() => handleSelectDestination(building)}
+                      onMouseEnter={() => setDestinationSelectedIndex(index)}
+                      className={`w-full text-left px-5 py-3 border-b border-gray-100 last:border-b-0 transition-all duration-150 ${
+                        index === destinationSelectedIndex
+                          ? "bg-blue-50 border-l-4 border-l-blue-600"
+                          : "hover:bg-blue-50"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm text-gray-900 mb-1 truncate">
+                            {building.name || "Unnamed Building"}
                           </div>
+                          {building.character && (
+                            <div className="text-xs text-gray-500">
+                              {building.character}
+                            </div>
+                          )}
+                        </div>
+                        {index === destinationSelectedIndex && (
+                          <ChevronRight className="h-4 w-4 text-blue-600 flex-shrink-0" />
                         )}
                       </div>
-                      {index === destinationSelectedIndex && (
-                        <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                      )}
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))}
               </div>
             )}
 
@@ -347,7 +383,7 @@ export default function LocationPicker({
           {isDestinationFocused &&
             destinationSearchQuery &&
             filteredDestinationResults.length === 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 p-4">
+              <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-xl border border-gray-200 shadow-xl z-50 p-4">
                 <p className="text-sm text-gray-500 text-center">
                   No locations found
                 </p>
