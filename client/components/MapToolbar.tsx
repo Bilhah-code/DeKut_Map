@@ -52,14 +52,10 @@ export default function MapToolbar({
 
           {/* Search Bar */}
           <div className="flex-1 max-w-lg">
-            <div className="relative">
-              <SpatialSearch
-                onLocationSelect={onLocationSelect}
-                isOpen={searchOpen}
-                onClose={() => setSearchOpen(false)}
-                buildings={buildings}
-              />
-            </div>
+            <SpatialSearch
+              onLocationSelect={onLocationSelect}
+              buildings={buildings}
+            />
           </div>
 
           {/* Selected Location Display */}
