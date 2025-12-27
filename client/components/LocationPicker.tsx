@@ -263,7 +263,10 @@ export default function LocationPicker({
                           </div>
                           {building.character && (
                             <div className="text-xs text-muted-foreground ml-4">
-                              Code: <span className="font-medium text-foreground">{building.character}</span>
+                              Code:{" "}
+                              <span className="font-medium text-foreground">
+                                {building.character}
+                              </span>
                             </div>
                           )}
                           {building.descriptio && (
@@ -324,7 +327,9 @@ export default function LocationPicker({
             </div>
             <Input
               ref={destinationInputRef}
-              placeholder={destination ? destination.name : "Enter destination..."}
+              placeholder={
+                destination ? destination.name : "Enter destination..."
+              }
               value={destinationSearchQuery || destination?.name || ""}
               onChange={(e) => {
                 setDestinationSearchQuery(e.target.value);
@@ -382,42 +387,47 @@ export default function LocationPicker({
                 className="absolute top-[calc(100%+0.75rem)] left-0 right-0 bg-white rounded-xl border border-border/50 shadow-2xl z-50 max-h-96 overflow-hidden overflow-y-auto backdrop-blur-sm bg-white/97"
               >
                 <div className="divide-y divide-border/30">
-                  {filteredDestinationResults.slice(0, 8).map((building, index) => (
-                    <button
-                      key={building.id}
-                      onClick={() => handleSelectDestination(building)}
-                      onMouseEnter={() => setDestinationSelectedIndex(index)}
-                      className={`w-full text-left px-4 py-3.5 transition-all duration-150 ${
-                        index === destinationSelectedIndex
-                          ? "bg-gradient-to-r from-primary/12 to-transparent border-l-3 border-l-blue-500"
-                          : "hover:bg-muted/40"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1.5">
-                            <div className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></div>
-                            <span className="truncate">
-                              {building.name || "Unnamed Building"}
-                            </span>
+                  {filteredDestinationResults
+                    .slice(0, 8)
+                    .map((building, index) => (
+                      <button
+                        key={building.id}
+                        onClick={() => handleSelectDestination(building)}
+                        onMouseEnter={() => setDestinationSelectedIndex(index)}
+                        className={`w-full text-left px-4 py-3.5 transition-all duration-150 ${
+                          index === destinationSelectedIndex
+                            ? "bg-gradient-to-r from-primary/12 to-transparent border-l-3 border-l-blue-500"
+                            : "hover:bg-muted/40"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1.5">
+                              <div className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></div>
+                              <span className="truncate">
+                                {building.name || "Unnamed Building"}
+                              </span>
+                            </div>
+                            {building.character && (
+                              <div className="text-xs text-muted-foreground ml-4">
+                                Code:{" "}
+                                <span className="font-medium text-foreground">
+                                  {building.character}
+                                </span>
+                              </div>
+                            )}
+                            {building.descriptio && (
+                              <div className="text-xs text-muted-foreground line-clamp-1 ml-4 mt-1">
+                                {building.descriptio}
+                              </div>
+                            )}
                           </div>
-                          {building.character && (
-                            <div className="text-xs text-muted-foreground ml-4">
-                              Code: <span className="font-medium text-foreground">{building.character}</span>
-                            </div>
-                          )}
-                          {building.descriptio && (
-                            <div className="text-xs text-muted-foreground line-clamp-1 ml-4 mt-1">
-                              {building.descriptio}
-                            </div>
+                          {index === destinationSelectedIndex && (
+                            <ChevronRight className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
                           )}
                         </div>
-                        {index === destinationSelectedIndex && (
-                          <ChevronRight className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                        )}
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    ))}
                 </div>
               </div>
             )}
