@@ -234,48 +234,46 @@ export default function LocationPicker({
           </div>
 
           {/* Origin Results Dropdown */}
-          {(isOriginFocused || originSearchQuery) &&
+          {isOriginFocused &&
+            originSearchQuery &&
             filteredOriginResults.length > 0 && (
               <div
                 ref={originDropdownRef}
-                className="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg border border-border shadow-2xl z-50 max-h-80 overflow-y-auto"
+                className="absolute top-[calc(100%+0.75rem)] left-0 right-0 bg-white rounded-xl border border-border/50 shadow-2xl z-50 max-h-96 overflow-hidden overflow-y-auto backdrop-blur-sm bg-white/97"
               >
-                <div className="divide-y divide-border">
-                  {filteredOriginResults.map((building, index) => (
+                <div className="divide-y divide-border/30">
+                  {filteredOriginResults.slice(0, 8).map((building, index) => (
                     <button
                       key={building.id}
                       onClick={() => handleSelectOrigin(building)}
                       onMouseEnter={() => setOriginSelectedIndex(index)}
-                      className={`w-full text-left px-4 py-3 transition-all duration-150 hover:bg-muted/60 ${
+                      className={`w-full text-left px-4 py-3.5 transition-all duration-150 ${
                         index === originSelectedIndex
-                          ? "bg-gradient-to-r from-primary/15 to-primary/5 border-l-3 border-l-primary"
-                          : ""
+                          ? "bg-gradient-to-r from-primary/12 to-transparent border-l-3 border-l-emerald-500"
+                          : "hover:bg-muted/40"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                          <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1">
-                            <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                          <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1.5">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"></div>
                             <span className="truncate">
                               {building.name || "Unnamed Building"}
                             </span>
                           </div>
-                          <div className="flex flex-col gap-1.5 ml-6">
-                            {building.character && (
-                              <div className="text-xs font-medium text-primary/80 flex items-center gap-1">
-                                <span className="text-primary/60">ID:</span>
-                                {building.character}
-                              </div>
-                            )}
-                            {building.descriptio && (
-                              <div className="text-xs text-muted-foreground line-clamp-2">
-                                {building.descriptio}
-                              </div>
-                            )}
-                          </div>
+                          {building.character && (
+                            <div className="text-xs text-muted-foreground ml-4">
+                              Code: <span className="font-medium text-foreground">{building.character}</span>
+                            </div>
+                          )}
+                          {building.descriptio && (
+                            <div className="text-xs text-muted-foreground line-clamp-1 ml-4 mt-1">
+                              {building.descriptio}
+                            </div>
+                          )}
                         </div>
                         {index === originSelectedIndex && (
-                          <ChevronRight className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                          <ChevronRight className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
                         )}
                       </div>
                     </button>
