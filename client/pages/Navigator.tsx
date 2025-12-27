@@ -80,12 +80,25 @@ export default function Navigator() {
     endCoords?: [number, number],
   ) => {
     if (!startCoords || !endCoords) {
+      console.log("Missing coordinates for route calculation", { startCoords, endCoords });
       setRoute(null);
       setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 });
       return;
     }
 
+    console.log("Calculating route", {
+      startCoords,
+      endCoords,
+      buildingsCount: buildings.length,
+    });
+
     const calculatedRoute = calculateRoute(startCoords, endCoords, buildings);
+    console.log("Route calculated:", {
+      distance: calculatedRoute.distance,
+      estimatedTime: calculatedRoute.estimatedTime,
+      pathLength: calculatedRoute.routePath?.length,
+    });
+
     setRoute({
       start: startCoords,
       end: endCoords,
