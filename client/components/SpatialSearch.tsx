@@ -28,15 +28,20 @@ export default function SpatialSearch({
   const filteredResults = useMemo(() => {
     if (!searchQuery.trim()) {
       // If no search query, return all buildings sorted by name
-      return buildings.slice().sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      return buildings
+        .slice()
+        .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     }
     const query = searchQuery.toLowerCase();
     return buildings
       .filter(
         (building) =>
-          (building.name?.toLowerCase().includes(query) || false) ||
-          (building.character?.toLowerCase().includes(query) || false) ||
-          (building.descriptio?.toLowerCase().includes(query) || false),
+          building.name?.toLowerCase().includes(query) ||
+          false ||
+          building.character?.toLowerCase().includes(query) ||
+          false ||
+          building.descriptio?.toLowerCase().includes(query) ||
+          false,
       )
       .sort((a, b) => {
         // Sort by name match relevance
