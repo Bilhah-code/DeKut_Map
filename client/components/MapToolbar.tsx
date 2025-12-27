@@ -28,7 +28,6 @@ export default function MapToolbar({
   selectedLocation,
   buildings = [],
 }: MapToolbarProps) {
-  const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
