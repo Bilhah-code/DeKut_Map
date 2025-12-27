@@ -181,30 +181,68 @@ export const findNearestPointOnPath = (
   return nearest;
 };
 
-// Simple routing using a predefined straight line or approximation
-// In production, this could integrate with actual campus path data
+// Calculate route between two locations
+// Uses Dijkstra's algorithm if a graph is provided for shortest path
 export const calculateRoute = (
   startCoords: [number, number],
   endCoords: [number, number],
+  buildings?: Building[],
 ): RouteResult => {
-  const distance = calculateDistance(startCoords, endCoords);
-  const estimatedTime = estimateWalkingTime(distance);
+  let distance = calculateDistance(startCoords, endCoords);
+  let routePath: [number, number][] = [startCoords, endCoords];
 
-  // Create an approximate path with intermediate points for visualization
-  const routePath: [number, number][] = [startCoords];
+  // If buildings provided, find shortest path through the campus graph
+  if (buildings && buildings.length > 0) {
+    const graph = buildCampusGraph(buildings);
 
-  // Add intermediate points to create a smoother line
-  const numIntermediatePoints = Math.ceil(distance / 100); // One point every ~100 meters
-  for (let i = 1; i < numIntermediatePoints; i++) {
-    const fraction = i / numIntermediatePoints;
-    const [lat1, lon1] = startCoords;
-    const [lat2, lon2] = endCoords;
-    const intermediateLat = lat1 + (lat2 - lat1) * fraction;
-    const intermediateLon = lon1 + (lon2 - lon1) * fraction;
-    routePath.push([intermediateLat, intermediateLon]);
+    // Find nearest building to start
+    let nearestStart = buildings[0];
+    let minStartDist = calculateDistance(startCoords, buildings[0].coords);
+    for (const building of buildings) {
+      const dist = calculateDistance(startCoords, building.coords);
+      if (dist < minStartDist) {
+        minStartDist = dist;
+        nearestStart = building;
+      }
+    }
+
+    // Find nearest building to end
+    let nearestEnd = buildings[0];
+    let minEndDist = calculateDistance(endCoords, buildings[0].coords);
+    for (const building of buildings) {
+      const dist = calculateDistance(endCoords, building.coords);
+      if (dist < minEndDist) {
+        minEndDist = dist;
+        nearestEnd = building;
+      }
+    }
+
+    // Get shortest path through graph
+    const pathResult = dijkstraShortestPath(graph, nearestStart.id, nearestEnd.id);
+
+    if (pathResult && pathResult.path.length > 1) {
+      // Build coordinate path from building IDs
+      const coordPath: [number, number][] = [startCoords];
+
+      for (let i = 1; i < pathResult.path.length; i++) {
+        const buildingId = pathResult.path[i];
+        const building = buildings.find((b) => b.id === buildingId);
+        if (building) {
+          coordPath.push(building.coords);
+        }
+      }
+
+      coordPath.push(endCoords);
+      routePath = coordPath;
+      distance = calculatePathDistance(routePath);
+    } else {
+      // Fallback to straight line if no path found
+      routePath = [startCoords, endCoords];
+      distance = calculateDistance(startCoords, endCoords);
+    }
   }
 
-  routePath.push(endCoords);
+  const estimatedTime = estimateWalkingTime(distance);
 
   return {
     distance,
