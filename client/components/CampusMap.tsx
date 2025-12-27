@@ -287,38 +287,62 @@ export default function CampusMap({
 
   // Handle route visualization
   useEffect(() => {
-    if (!mapRef.current || !route || !route.path) return;
+    if (!mapRef.current) return;
 
-    // Remove existing route layer
+    // Remove existing route layer group
     if (routeLayerRef.current) {
       mapRef.current.removeLayer(routeLayerRef.current);
+      routeLayerRef.current = null;
     }
 
-    // Create route polyline with thicker solid line to show direction
-    const routePolyline = L.polyline(route.path, {
-      color: "#3b82f6",
-      weight: 6,
-      opacity: 0.85,
+    // If no route, stop here
+    if (!route || !route.path || route.path.length === 0) return;
+
+    // Create feature group to hold all route elements
+    const routeGroup = L.featureGroup();
+
+    // Create shadow/outline polyline for better visibility
+    const shadowPolyline = L.polyline(route.path, {
+      color: "#000000",
+      weight: 10,
+      opacity: 0.2,
       lineCap: "round",
       lineJoin: "round",
-      className: "route-polyline",
     });
+    routeGroup.addLayer(shadowPolyline);
+
+    // Create main route polyline
+    const routePolyline = L.polyline(route.path, {
+      color: "#2563eb",
+      weight: 5,
+      opacity: 0.9,
+      lineCap: "round",
+      lineJoin: "round",
+      dashArray: "0",
+    });
+    routeGroup.addLayer(routePolyline);
+
+    // Create pulsing animated polyline for visual emphasis
+    const animatedPolyline = L.polyline(route.path, {
+      color: "#60a5fa",
+      weight: 3,
+      opacity: 0.6,
+      lineCap: "round",
+      lineJoin: "round",
+      dashArray: "10, 10",
+    });
+    routeGroup.addLayer(animatedPolyline);
 
     // Add direction arrows along the route
-    const arrowGroup = L.featureGroup();
-    const pathSegments = 5; // Number of arrows to display
-    const segmentLength = Math.floor(route.path.length / (pathSegments + 1));
+    const minPoints = Math.min(route.path.length, 20);
+    for (let i = 0; i < minPoints - 1; i++) {
+      const step = Math.floor((route.path.length - 1) / minPoints);
+      const idx = i * step;
+      if (idx >= route.path.length - 1) break;
 
-    for (
-      let i = 1;
-      i <= pathSegments && i * segmentLength < route.path.length;
-      i++
-    ) {
-      const index = i * segmentLength;
-      const point = route.path[index];
-      const nextPoint = route.path[Math.min(index + 1, route.path.length - 1)];
+      const point = route.path[idx];
+      const nextPoint = route.path[Math.min(idx + 1, route.path.length - 1)];
 
-      // Calculate angle for arrow rotation
       const lat1 = point[0];
       const lon1 = point[1];
       const lat2 = nextPoint[0];
@@ -328,76 +352,81 @@ export default function CampusMap({
       const dLon = lon2 - lon1;
       const angle = Math.atan2(dLon, dLat) * (180 / Math.PI);
 
-      // Create arrow marker
       const arrow = L.marker(point, {
         icon: L.divIcon({
-          html: `<div style="transform: rotate(${angle}deg); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 12px solid #3b82f6;"></div>`,
-          iconSize: [12, 12],
-          className: "route-direction-arrow",
+          html: `<div style="transform: rotate(${angle}deg); color: #2563eb;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));">
+                    <path d="M10 2L18 16H2L10 2Z" fill="currentColor"/>
+                  </svg>
+                </div>`,
+          iconSize: [20, 20],
+          iconAnchor: [10, 10],
+          className: "route-arrow",
         }),
       });
-
-      arrowGroup.addLayer(arrow);
+      routeGroup.addLayer(arrow);
     }
 
-    // Add start marker
+    // Add start marker (green circle)
     const startMarker = L.circleMarker(route.start, {
-      radius: 10,
+      radius: 12,
       fillColor: "#10b981",
       color: "#fff",
       weight: 3,
       opacity: 1,
-      fillOpacity: 0.9,
+      fillOpacity: 1,
+      zIndexOffset: 100,
     });
 
-    // Add label for start
-    const startLabel = L.tooltip({
+    const startPopup = L.tooltip({
       permanent: true,
       direction: "top",
-      offset: [0, -15],
-      className: "route-label",
+      offset: [0, -20],
     });
-    startLabel.setContent(
-      '<div class="text-xs font-semibold text-green-700 bg-white px-2 py-1 rounded shadow">Start</div>',
+    startPopup.setContent(
+      '<div class="text-xs font-bold bg-white text-green-700 px-2 py-1 rounded shadow-md whitespace-nowrap">START</div>',
     );
-    startMarker.bindTooltip(startLabel);
+    startMarker.bindTooltip(startPopup);
+    routeGroup.addLayer(startMarker);
 
-    // Add end marker
+    // Add end marker (blue circle)
     const endMarker = L.circleMarker(route.end, {
-      radius: 12,
-      fillColor: "#3b82f6",
+      radius: 14,
+      fillColor: "#2563eb",
       color: "#fff",
       weight: 3,
       opacity: 1,
-      fillOpacity: 0.9,
+      fillOpacity: 1,
+      zIndexOffset: 100,
     });
 
-    // Add label for end
-    const endLabel = L.tooltip({
+    const endPopup = L.tooltip({
       permanent: true,
       direction: "top",
-      offset: [0, -15],
-      className: "route-label",
+      offset: [0, -25],
     });
-    endLabel.setContent(
-      '<div class="text-xs font-semibold text-blue-700 bg-white px-2 py-1 rounded shadow">Destination</div>',
+    endPopup.setContent(
+      '<div class="text-xs font-bold bg-white text-blue-700 px-2 py-1 rounded shadow-md whitespace-nowrap">DESTINATION</div>',
     );
-    endMarker.bindTooltip(endLabel);
+    endMarker.bindTooltip(endPopup);
+    routeGroup.addLayer(endMarker);
 
-    // Create a feature group with route elements
-    const routeGroup = L.featureGroup([
-      routePolyline,
-      arrowGroup,
-      startMarker,
-      endMarker,
-    ]);
-    routeLayerRef.current = routePolyline;
-
-    // Add to map
+    // Add route group to map
     routeGroup.addTo(mapRef.current);
+    routeLayerRef.current = routeGroup;
 
-    // Fit bounds to show entire route
-    mapRef.current.fitBounds(routeGroup.getBounds(), { padding: [100, 100] });
+    // Fit map to show entire route with padding
+    try {
+      const bounds = routeGroup.getBounds();
+      if (bounds.isValid()) {
+        mapRef.current.fitBounds(bounds, {
+          padding: [80, 80],
+          maxZoom: 17,
+        });
+      }
+    } catch (error) {
+      console.error("Error fitting bounds:", error);
+    }
   }, [route]);
 
   // Expose layer visibility control
