@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Satellite, Map as MapIcon, Crosshair, Layers } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import MapToolbar from "@/components/MapToolbar";
 import CampusMap from "@/components/CampusMap";
 import RoutePanel from "@/components/RoutePanel";
 import LocationPicker from "@/components/LocationPicker";
