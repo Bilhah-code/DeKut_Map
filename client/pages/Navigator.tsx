@@ -194,26 +194,27 @@ export default function Navigator() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      {/* Header */}
-      <div className="border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-white">
+      {/* Header with gradient background */}
+      <div className="border-b-2 border-blue-200 shadow-md bg-gradient-to-r from-white via-blue-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           {/* Desktop Layout */}
-          <div className="hidden md:flex items-center justify-between gap-6">
+          <div className="hidden md:flex items-center justify-between gap-8">
             {/* Logo/Title */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-base">DK</span>
+            <div className="flex items-center gap-4 flex-shrink-0">
+              <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-black text-base">DK</span>
               </div>
               <div>
-                <h1 className="font-bold text-base text-gray-900">
+                <h1 className="font-black text-lg text-gray-900 tracking-tight">
                   DeKUT Navigator
                 </h1>
+                <p className="text-xs text-gray-500 font-medium">Campus Navigation</p>
               </div>
             </div>
 
             {/* Location Picker */}
-            <div className="flex-1">
+            <div className="flex-1 max-w-2xl">
               <LocationPicker
                 origin={origin}
                 destination={destination}
@@ -233,14 +234,17 @@ export default function Navigator() {
           </div>
 
           {/* Mobile Layout */}
-          <div className="md:hidden space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-sm">DK</span>
+          <div className="md:hidden space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="relative w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-white font-black text-sm">DK</span>
               </div>
-              <h1 className="font-bold text-sm text-gray-900">
-                DeKUT Navigator
-              </h1>
+              <div>
+                <h1 className="font-black text-base text-gray-900">
+                  DeKUT Navigator
+                </h1>
+                <p className="text-xs text-gray-500 font-medium">Campus Navigation</p>
+              </div>
             </div>
 
             {/* Mobile Location Picker */}
