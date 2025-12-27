@@ -67,7 +67,7 @@ export default function SpatialSearch({
       e.preventDefault();
       handleSelect(filteredResults[selectedIndex]);
     } else if (e.key === "Escape") {
-      onClose?.();
+      setIsFocused(false);
     }
   };
 
