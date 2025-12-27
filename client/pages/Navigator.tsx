@@ -249,7 +249,7 @@ export default function Navigator() {
           selectedLocation={
             destination && "coords" in destination
               ? {
-                  id: destination.id as number,
+                  id: parseInt(destination.id),
                   name: destination.name,
                   coords: destination.coords,
                 }
