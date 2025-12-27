@@ -308,11 +308,21 @@ export default function CampusMap({
       path: route.path,
     });
 
+    // Ensure path has at least 2 points
+    const pathToRender = route.path && route.path.length >= 2
+      ? route.path
+      : [route.start, route.end];
+
+    console.log("Path to render:", {
+      length: pathToRender.length,
+      points: pathToRender.slice(0, 3),
+    });
+
     // Create feature group to hold all route elements
     const routeGroup = L.featureGroup();
 
     // Create shadow/outline polyline for better visibility
-    const shadowPolyline = L.polyline(route.path, {
+    const shadowPolyline = L.polyline(pathToRender, {
       color: "#000000",
       weight: 10,
       opacity: 0.2,
@@ -322,7 +332,7 @@ export default function CampusMap({
     routeGroup.addLayer(shadowPolyline);
 
     // Create main route polyline
-    const routePolyline = L.polyline(route.path, {
+    const routePolyline = L.polyline(pathToRender, {
       color: "#2563eb",
       weight: 5,
       opacity: 0.9,
@@ -333,7 +343,7 @@ export default function CampusMap({
     routeGroup.addLayer(routePolyline);
 
     // Create pulsing animated polyline for visual emphasis
-    const animatedPolyline = L.polyline(route.path, {
+    const animatedPolyline = L.polyline(pathToRender, {
       color: "#60a5fa",
       weight: 3,
       opacity: 0.6,
