@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import { Search, X, MapPin, ArrowRight } from "lucide-react";
+import { Search, X, MapPin, ArrowRight, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +24,7 @@ export default function SpatialSearch({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const filteredResults = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -122,40 +123,50 @@ export default function SpatialSearch({
           )}
         </div>
 
-        {/* Search Results Dropdown */}
+        {/* Search Results Dropdown - Enhanced */}
         {(isFocused || searchQuery) && filteredResults.length > 0 && (
-          <div className="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg border border-border shadow-xl z-50 max-h-96 overflow-y-auto">
+          <div
+            ref={dropdownRef}
+            className="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg border border-border shadow-2xl z-50 max-h-80 overflow-y-auto"
+          >
             <div className="divide-y divide-border">
               {filteredResults.map((building, index) => (
                 <button
                   key={building.id}
                   onClick={() => handleSelect(building)}
                   onMouseEnter={() => setSelectedIndex(index)}
-                  className={`w-full text-left px-4 py-3 transition-all duration-150 ${
+                  className={`w-full text-left px-4 py-3 transition-all duration-150 hover:bg-muted/60 ${
                     index === selectedIndex
-                      ? "bg-gradient-to-r from-primary/10 to-primary/5 border-l-2 border-l-primary"
-                      : "hover:bg-muted/50"
+                      ? "bg-gradient-to-r from-primary/15 to-primary/5 border-l-3 border-l-primary"
+                      : ""
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-sm text-foreground truncate flex items-center gap-2">
-                        <MapPin className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                        {building.name || "Unnamed Building"}
+                      <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1">
+                        <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                        <span className="truncate">
+                          {building.name || "Unnamed Building"}
+                        </span>
                       </div>
-                      {building.descriptio && (
-                        <div className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                          {building.descriptio}
-                        </div>
-                      )}
-                      {building.character && (
-                        <div className="text-xs font-medium text-primary mt-1">
-                          ID: {building.character}
-                        </div>
-                      )}
+                      <div className="flex flex-col gap-1.5 ml-6">
+                        {building.character && (
+                          <div className="text-xs font-medium text-primary/80 flex items-center gap-1">
+                            <span className="text-primary/60">ID:</span>
+                            {building.character}
+                          </div>
+                        )}
+                        {building.descriptio && (
+                          <div className="text-xs text-muted-foreground line-clamp-2">
+                            <span className="text-muted-foreground/70">
+                              {building.descriptio}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     {index === selectedIndex && (
-                      <ArrowRight className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                      <ChevronRight className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                     )}
                   </div>
                 </button>
