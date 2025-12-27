@@ -51,7 +51,7 @@ export default function SpatialSearch({
     onLocationSelect?.(location);
     setSearchQuery("");
     setSelectedIndex(-1);
-    onClose?.();
+    setIsFocused(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
