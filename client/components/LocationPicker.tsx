@@ -3,7 +3,7 @@ import {
   Search,
   X,
   MapPin,
-  ArrowRight,
+  ArrowDown,
   ChevronRight,
   Navigation2,
   Map,
@@ -44,8 +44,8 @@ export default function LocationPicker({
 }: LocationPickerProps) {
   const [originSearchQuery, setOriginSearchQuery] = useState("");
   const [destinationSearchQuery, setDestinationSearchQuery] = useState("");
-  const [originSelectedIndex, setOriginSelectedIndex] = useState(-1);
-  const [destinationSelectedIndex, setDestinationSelectedIndex] = useState(-1);
+  const [originSelectedIndex, setOriginSelectedIndex] = useState(0);
+  const [destinationSelectedIndex, setDestinationSelectedIndex] = useState(0);
   const originInputRef = useRef<HTMLInputElement>(null);
   const destinationInputRef = useRef<HTMLInputElement>(null);
   const [isOriginFocused, setIsOriginFocused] = useState(false);
