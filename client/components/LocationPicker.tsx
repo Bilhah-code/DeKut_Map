@@ -350,15 +350,17 @@ export default function LocationPicker({
             filteredDestinationResults.length > 0 && (
               <div
                 ref={destinationDropdownRef}
-                className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 max-h-80 overflow-y-auto"
+                className="absolute top-full left-0 right-0 mt-3 bg-white rounded-xl border border-gray-200 shadow-xl z-50 max-h-80 overflow-y-auto backdrop-blur-sm"
               >
                 {filteredDestinationResults.slice(0, 6).map((building, index) => (
                   <button
                     key={building.id}
                     onClick={() => handleSelectDestination(building)}
                     onMouseEnter={() => setDestinationSelectedIndex(index)}
-                    className={`w-full text-left px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors ${
-                      index === destinationSelectedIndex ? "bg-gray-50" : ""
+                    className={`w-full text-left px-5 py-3 border-b border-gray-100 last:border-b-0 transition-all duration-150 ${
+                      index === destinationSelectedIndex
+                        ? "bg-blue-50 border-l-4 border-l-blue-600"
+                        : "hover:bg-blue-50"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -373,7 +375,7 @@ export default function LocationPicker({
                         )}
                       </div>
                       {index === destinationSelectedIndex && (
-                        <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                        <ChevronRight className="h-4 w-4 text-blue-600 flex-shrink-0" />
                       )}
                     </div>
                   </button>
@@ -385,7 +387,7 @@ export default function LocationPicker({
           {isDestinationFocused &&
             destinationSearchQuery &&
             filteredDestinationResults.length === 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 p-4">
+              <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-xl border border-gray-200 shadow-xl z-50 p-4">
                 <p className="text-sm text-gray-500 text-center">
                   No locations found
                 </p>
