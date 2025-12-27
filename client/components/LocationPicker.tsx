@@ -300,16 +300,16 @@ export default function LocationPicker({
         </div>
 
         {/* Swap Button */}
-        <div className="flex justify-center">
+        <div className="flex justify-center -my-2">
           <Button
             variant="outline"
             size="sm"
             onClick={handleSwapLocations}
-            className="h-8 w-8 p-0 rounded-full border border-border hover:bg-muted"
+            className="h-9 w-9 p-0 rounded-full border-2 border-border hover:bg-muted transition-all duration-200 hover:border-primary disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={!origin || !destination}
             title="Swap origin and destination"
           >
-            <ArrowRight className="h-4 w-4 rotate-90" />
+            <ArrowDown className="h-4 w-4 rotate-90" />
           </Button>
         </div>
 
