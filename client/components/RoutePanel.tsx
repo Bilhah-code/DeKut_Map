@@ -1,11 +1,4 @@
-import {
-  Loader2,
-  X,
-  MapPin,
-  Clock,
-  Gauge,
-  CheckCircle,
-} from "lucide-react";
+import { Loader2, X, MapPin, Clock, Gauge, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistance, formatTime } from "@/services/routingService";
 
@@ -62,7 +55,9 @@ export default function RoutePanel({
               <div className="absolute inset-0 bg-blue-400 rounded-full animate-pulse"></div>
               <Loader2 className="h-8 w-8 text-blue-600 animate-spin relative" />
             </div>
-            <p className="text-sm font-medium text-blue-900">Calculating route...</p>
+            <p className="text-sm font-medium text-blue-900">
+              Calculating route...
+            </p>
           </div>
         ) : (
           <>
@@ -149,7 +144,10 @@ export default function RoutePanel({
             {/* Info Box */}
             <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-300 rounded-xl p-4">
               <p className="text-xs text-blue-900 leading-relaxed">
-                <span className="font-bold">Pro Tip:</span> Follow the highlighted blue route on the map. The route uses the shortest path through campus with times estimated at ~5 km/h walking pace.
+                <span className="font-bold">Pro Tip:</span> Follow the
+                highlighted blue route on the map. The route uses the shortest
+                path through campus with times estimated at ~5 km/h walking
+                pace.
               </p>
             </div>
           </>

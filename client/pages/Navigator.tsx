@@ -80,7 +80,10 @@ export default function Navigator() {
     endCoords?: [number, number],
   ) => {
     if (!startCoords || !endCoords) {
-      console.log("Missing coordinates for route calculation", { startCoords, endCoords });
+      console.log("Missing coordinates for route calculation", {
+        startCoords,
+        endCoords,
+      });
       setRoute(null);
       setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 });
       return;
@@ -209,7 +212,9 @@ export default function Navigator() {
                 <h1 className="font-black text-lg text-gray-900 tracking-tight">
                   DeKUT Navigator
                 </h1>
-                <p className="text-xs text-gray-500 font-medium">Campus Navigation</p>
+                <p className="text-xs text-gray-500 font-medium">
+                  Campus Navigation
+                </p>
               </div>
             </div>
 
@@ -243,7 +248,9 @@ export default function Navigator() {
                 <h1 className="font-black text-base text-gray-900">
                   DeKUT Navigator
                 </h1>
-                <p className="text-xs text-gray-500 font-medium">Campus Navigation</p>
+                <p className="text-xs text-gray-500 font-medium">
+                  Campus Navigation
+                </p>
               </div>
             </div>
 
@@ -349,11 +356,18 @@ export default function Navigator() {
                 <Layers className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 bg-gradient-to-b from-white to-gray-50">
+            <SheetContent
+              side="right"
+              className="w-80 bg-gradient-to-b from-white to-gray-50"
+            >
               <div className="space-y-5 mt-2">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">Map Layers</h2>
-                  <p className="text-xs text-gray-500 mt-1">Toggle layers to customize your view</p>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Map Layers
+                  </h2>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Toggle layers to customize your view
+                  </p>
                 </div>
 
                 {/* Buildings Layer Toggle */}
@@ -365,9 +379,16 @@ export default function Navigator() {
                     onChange={() => toggleLayer("buildings")}
                     className="w-5 h-5 rounded accent-blue-600"
                   />
-                  <label htmlFor="buildings-toggle" className="flex-1 cursor-pointer">
-                    <span className="block text-sm font-bold text-gray-900">Buildings</span>
-                    <span className="text-xs text-gray-500">Campus structures</span>
+                  <label
+                    htmlFor="buildings-toggle"
+                    className="flex-1 cursor-pointer"
+                  >
+                    <span className="block text-sm font-bold text-gray-900">
+                      Buildings
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      Campus structures
+                    </span>
                   </label>
                 </div>
 
@@ -380,9 +401,16 @@ export default function Navigator() {
                     onChange={() => toggleLayer("roads")}
                     className="w-5 h-5 rounded accent-orange-600"
                   />
-                  <label htmlFor="roads-toggle" className="flex-1 cursor-pointer">
-                    <span className="block text-sm font-bold text-gray-900">Roads & Paths</span>
-                    <span className="text-xs text-gray-500">Pedestrian and vehicle routes</span>
+                  <label
+                    htmlFor="roads-toggle"
+                    className="flex-1 cursor-pointer"
+                  >
+                    <span className="block text-sm font-bold text-gray-900">
+                      Roads & Paths
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      Pedestrian and vehicle routes
+                    </span>
                   </label>
                 </div>
 
@@ -395,45 +423,66 @@ export default function Navigator() {
                     onChange={() => toggleLayer("boundary")}
                     className="w-5 h-5 rounded accent-green-600"
                   />
-                  <label htmlFor="boundary-toggle" className="flex-1 cursor-pointer">
-                    <span className="block text-sm font-bold text-gray-900">Campus Boundary</span>
-                    <span className="text-xs text-gray-500">Campus perimeter</span>
+                  <label
+                    htmlFor="boundary-toggle"
+                    className="flex-1 cursor-pointer"
+                  >
+                    <span className="block text-sm font-bold text-gray-900">
+                      Campus Boundary
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      Campus perimeter
+                    </span>
                   </label>
                 </div>
 
                 {/* Legend */}
                 <div className="mt-7 space-y-4 border-t-2 border-gray-300 pt-5">
-                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Map Legend</h3>
+                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                    Map Legend
+                  </h3>
 
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full bg-blue-600 shadow-md"></div>
-                      <span className="text-sm font-medium text-gray-700">Buildings</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Buildings
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-1 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm font-medium text-gray-700">Pedestrian Path</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Pedestrian Path
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-1 bg-orange-500 rounded-full"></div>
-                      <span className="text-sm font-medium text-gray-700">Road</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Road
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-1 border-b-2 border-dashed border-green-600"></div>
-                      <span className="text-sm font-medium text-gray-700">Campus Boundary</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Campus Boundary
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full bg-green-500 shadow-md"></div>
-                      <span className="text-sm font-medium text-gray-700">Start Location</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Start Location
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full bg-blue-700 shadow-md"></div>
-                      <span className="text-sm font-medium text-gray-700">Destination</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Destination
+                      </span>
                     </div>
                   </div>
                 </div>

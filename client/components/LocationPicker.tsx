@@ -1,11 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import {
-  X,
-  ArrowRightLeft,
-  ChevronRight,
-  MapPin,
-  Locate,
-} from "lucide-react";
+import { X, ArrowRightLeft, ChevronRight, MapPin, Locate } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -352,34 +346,36 @@ export default function LocationPicker({
                 ref={destinationDropdownRef}
                 className="absolute top-full left-0 right-0 mt-3 bg-white rounded-xl border border-gray-200 shadow-xl z-50 max-h-80 overflow-y-auto backdrop-blur-sm"
               >
-                {filteredDestinationResults.slice(0, 6).map((building, index) => (
-                  <button
-                    key={building.id}
-                    onClick={() => handleSelectDestination(building)}
-                    onMouseEnter={() => setDestinationSelectedIndex(index)}
-                    className={`w-full text-left px-5 py-3 border-b border-gray-100 last:border-b-0 transition-all duration-150 ${
-                      index === destinationSelectedIndex
-                        ? "bg-blue-50 border-l-4 border-l-blue-600"
-                        : "hover:bg-blue-50"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-sm text-gray-900 mb-1 truncate">
-                          {building.name || "Unnamed Building"}
-                        </div>
-                        {building.character && (
-                          <div className="text-xs text-gray-500">
-                            {building.character}
+                {filteredDestinationResults
+                  .slice(0, 6)
+                  .map((building, index) => (
+                    <button
+                      key={building.id}
+                      onClick={() => handleSelectDestination(building)}
+                      onMouseEnter={() => setDestinationSelectedIndex(index)}
+                      className={`w-full text-left px-5 py-3 border-b border-gray-100 last:border-b-0 transition-all duration-150 ${
+                        index === destinationSelectedIndex
+                          ? "bg-blue-50 border-l-4 border-l-blue-600"
+                          : "hover:bg-blue-50"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm text-gray-900 mb-1 truncate">
+                            {building.name || "Unnamed Building"}
                           </div>
+                          {building.character && (
+                            <div className="text-xs text-gray-500">
+                              {building.character}
+                            </div>
+                          )}
+                        </div>
+                        {index === destinationSelectedIndex && (
+                          <ChevronRight className="h-4 w-4 text-blue-600 flex-shrink-0" />
                         )}
                       </div>
-                      {index === destinationSelectedIndex && (
-                        <ChevronRight className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                      )}
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))}
               </div>
             )}
 

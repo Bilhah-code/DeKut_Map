@@ -309,9 +309,10 @@ export default function CampusMap({
     });
 
     // Ensure path has at least 2 points
-    const pathToRender = route.path && route.path.length >= 2
-      ? route.path
-      : [route.start, route.end];
+    const pathToRender =
+      route.path && route.path.length >= 2
+        ? route.path
+        : [route.start, route.end];
 
     console.log("Path to render:", {
       length: pathToRender.length,
@@ -326,7 +327,7 @@ export default function CampusMap({
         typeof point[0] === "number" &&
         typeof point[1] === "number" &&
         !isNaN(point[0]) &&
-        !isNaN(point[1])
+        !isNaN(point[1]),
     );
 
     if (validPath.length < 2) {
@@ -456,7 +457,11 @@ export default function CampusMap({
     routeGroup.addLayer(endMarker);
 
     // Add route group to map
-    console.log("Adding route group to map with", routeGroup.getLayers().length, "layers");
+    console.log(
+      "Adding route group to map with",
+      routeGroup.getLayers().length,
+      "layers",
+    );
     routeGroup.addTo(mapRef.current);
     routeLayerRef.current = routeGroup;
 
