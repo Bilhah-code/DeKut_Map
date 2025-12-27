@@ -291,20 +291,51 @@ export default function CampusMap({
       mapRef.current.removeLayer(routeLayerRef.current);
     }
 
-    // Create route polyline
+    // Create route polyline with thicker solid line to show direction
     const routePolyline = L.polyline(route.path, {
       color: "#3b82f6",
-      weight: 4,
-      opacity: 0.8,
-      dashArray: "5, 10",
+      weight: 6,
+      opacity: 0.85,
       lineCap: "round",
       lineJoin: "round",
       className: "route-polyline",
     });
 
+    // Add direction arrows along the route
+    const arrowGroup = L.featureGroup();
+    const pathSegments = 5; // Number of arrows to display
+    const segmentLength = Math.floor(route.path.length / (pathSegments + 1));
+
+    for (let i = 1; i <= pathSegments && i * segmentLength < route.path.length; i++) {
+      const index = i * segmentLength;
+      const point = route.path[index];
+      const nextPoint = route.path[Math.min(index + 1, route.path.length - 1)];
+
+      // Calculate angle for arrow rotation
+      const lat1 = point[0];
+      const lon1 = point[1];
+      const lat2 = nextPoint[0];
+      const lon2 = nextPoint[1];
+
+      const dLat = lat2 - lat1;
+      const dLon = lon2 - lon1;
+      const angle = Math.atan2(dLon, dLat) * (180 / Math.PI);
+
+      // Create arrow marker
+      const arrow = L.marker(point, {
+        icon: L.divIcon({
+          html: `<div style="transform: rotate(${angle}deg); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 12px solid #3b82f6;"></div>`,
+          iconSize: [12, 12],
+          className: "route-direction-arrow",
+        }),
+      });
+
+      arrowGroup.addLayer(arrow);
+    }
+
     // Add start marker
     const startMarker = L.circleMarker(route.start, {
-      radius: 8,
+      radius: 10,
       fillColor: "#10b981",
       color: "#fff",
       weight: 3,
@@ -312,9 +343,19 @@ export default function CampusMap({
       fillOpacity: 0.9,
     });
 
+    // Add label for start
+    const startLabel = L.tooltip({
+      permanent: true,
+      direction: "top",
+      offset: [0, -15],
+      className: "route-label",
+    });
+    startLabel.setContent("<div class=\"text-xs font-semibold text-green-700 bg-white px-2 py-1 rounded shadow\">Start</div>");
+    startMarker.bindTooltip(startLabel);
+
     // Add end marker
     const endMarker = L.circleMarker(route.end, {
-      radius: 10,
+      radius: 12,
       fillColor: "#3b82f6",
       color: "#fff",
       weight: 3,
@@ -322,8 +363,18 @@ export default function CampusMap({
       fillOpacity: 0.9,
     });
 
+    // Add label for end
+    const endLabel = L.tooltip({
+      permanent: true,
+      direction: "top",
+      offset: [0, -15],
+      className: "route-label",
+    });
+    endLabel.setContent("<div class=\"text-xs font-semibold text-blue-700 bg-white px-2 py-1 rounded shadow\">Destination</div>");
+    endMarker.bindTooltip(endLabel);
+
     // Create a feature group with route elements
-    const routeGroup = L.featureGroup([routePolyline, startMarker, endMarker]);
+    const routeGroup = L.featureGroup([routePolyline, arrowGroup, startMarker, endMarker]);
     routeLayerRef.current = routePolyline;
 
     // Add to map
