@@ -318,17 +318,36 @@ export default function CampusMap({
       points: pathToRender.slice(0, 3),
     });
 
+    // Validate coordinates
+    const validPath = pathToRender.filter(
+      (point) =>
+        Array.isArray(point) &&
+        point.length === 2 &&
+        typeof point[0] === "number" &&
+        typeof point[1] === "number" &&
+        !isNaN(point[0]) &&
+        !isNaN(point[1])
+    );
+
+    if (validPath.length < 2) {
+      console.error("Invalid path coordinates:", pathToRender);
+      return;
+    }
+
+    console.log("Valid path for rendering:", validPath);
+
     // Create feature group to hold all route elements
     const routeGroup = L.featureGroup();
 
     // Create shadow/outline polyline for better visibility
-    const shadowPolyline = L.polyline(pathToRender, {
+    const shadowPolyline = L.polyline(validPath, {
       color: "#000000",
       weight: 10,
       opacity: 0.2,
       lineCap: "round",
       lineJoin: "round",
     });
+    console.log("Shadow polyline created");
     routeGroup.addLayer(shadowPolyline);
 
     // Create main route polyline
