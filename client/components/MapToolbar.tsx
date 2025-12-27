@@ -112,11 +112,6 @@ export default function MapToolbar({
                 onLocationSelect?.(location);
                 setMobileMenuOpen(false);
               }}
-              isOpen={searchOpen || mobileMenuOpen}
-              onClose={() => {
-                setSearchOpen(false);
-                setMobileMenuOpen(false);
-              }}
               buildings={buildings}
             />
           </div>
