@@ -28,22 +28,22 @@ export default function SpatialSearch({
   const filteredResults = useMemo(() => {
     if (!searchQuery.trim()) {
       // If no search query, return all buildings sorted by name
-      return buildings.slice().sort((a, b) => a.name.localeCompare(b.name));
+      return buildings.slice().sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     }
     const query = searchQuery.toLowerCase();
     return buildings
       .filter(
         (building) =>
-          building.name.toLowerCase().includes(query) ||
-          building.character.toLowerCase().includes(query) ||
-          building.descriptio.toLowerCase().includes(query),
+          (building.name?.toLowerCase().includes(query) || false) ||
+          (building.character?.toLowerCase().includes(query) || false) ||
+          (building.descriptio?.toLowerCase().includes(query) || false),
       )
       .sort((a, b) => {
         // Sort by name match relevance
-        const aNameMatch = a.name.toLowerCase().indexOf(query);
-        const bNameMatch = b.name.toLowerCase().indexOf(query);
+        const aNameMatch = (a.name?.toLowerCase() || "").indexOf(query);
+        const bNameMatch = (b.name?.toLowerCase() || "").indexOf(query);
         if (aNameMatch !== bNameMatch) return aNameMatch - bNameMatch;
-        return a.name.localeCompare(b.name);
+        return (a.name || "").localeCompare(b.name || "");
       });
   }, [searchQuery, buildings]);
 
