@@ -389,13 +389,13 @@ export default function Navigator() {
             setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })
           }
           startLocation={
-            userLocation
-              ? { name: "Your Location", coords: userLocation.coords }
+            origin
+              ? { name: origin.name, coords: origin.coords }
               : undefined
           }
           destinationLocation={
-            selectedLocation && "coords" in selectedLocation
-              ? { name: selectedLocation.name, coords: selectedLocation.coords }
+            destination
+              ? { name: destination.name, coords: destination.coords }
               : undefined
           }
           distance={routePanel.distance}
