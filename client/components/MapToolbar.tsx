@@ -20,7 +20,7 @@ interface Location {
 
 interface MapToolbarProps {
   onLocationSelect?: (location: Building) => void;
-  selectedLocation?: Building | Location | null;
+  selectedLocation?: Building | null;
   buildings?: Building[];
 }
 
@@ -30,11 +30,6 @@ export default function MapToolbar({
   buildings = [],
 }: MapToolbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleClearLocation = () => {
-    // Clear by selecting null - handled by parent
-    onLocationSelect?.(null as any);
-  };
 
   return (
     <div className="bg-gradient-to-r from-white via-white to-blue-50/30 border-b border-border/80 shadow-sm">
