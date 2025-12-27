@@ -125,14 +125,31 @@ export default function CampusMap({
           },
           onEachFeature: (feature, layer) => {
             const props = feature.properties;
-            const popup = `
+            const popupContent = `
               <div class="p-2 text-sm">
                 <h3 class="font-semibold text-foreground">${props.name}</h3>
                 <p class="text-xs text-muted-foreground mt-1">${props.character}</p>
                 <p class="text-xs text-muted-foreground mt-2">${props.descriptio}</p>
               </div>
             `;
-            layer.bindPopup(popup);
+            layer.bindPopup(popupContent);
+
+            // Add hover tooltip
+            const tooltip = L.tooltip({
+              permanent: false,
+              direction: "top",
+              offset: [0, -10],
+              className: "building-tooltip",
+            });
+
+            tooltip.setContent(`
+              <div class="bg-slate-900 text-white px-3 py-2 rounded-lg shadow-lg text-xs whitespace-nowrap">
+                <div class="font-semibold">${props.name}</div>
+                <div class="text-slate-300">${props.character}</div>
+              </div>
+            `);
+
+            layer.bindTooltip(tooltip);
 
             // Add click handler
             layer.on("click", () => {
