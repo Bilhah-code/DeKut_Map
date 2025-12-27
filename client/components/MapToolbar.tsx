@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Menu, X, MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SpatialSearch from "./SpatialSearch";
+import LocationPathPanel from "./LocationPathPanel";
 
 interface Building {
   id: string;
