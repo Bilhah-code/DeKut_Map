@@ -31,6 +31,11 @@ export default function MapToolbar({
 }: MapToolbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleClearLocation = () => {
+    // Clear by selecting null - handled by parent
+    onLocationSelect?.(null as any);
+  };
+
   return (
     <div className="bg-gradient-to-r from-white via-white to-blue-50/30 border-b border-border/80 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-4">
@@ -61,17 +66,10 @@ export default function MapToolbar({
 
           {/* Selected Location Display */}
           {selectedLocation && "name" in selectedLocation && (
-            <div className="flex items-center gap-3 px-4 py-2 bg-primary/5 rounded-lg border border-primary/10 min-w-fit">
-              <Navigation className="h-4 w-4 text-primary" />
-              <div className="flex flex-col gap-0.5">
-                <p className="text-xs text-muted-foreground font-medium">
-                  Destination
-                </p>
-                <p className="text-sm font-semibold text-foreground truncate max-w-xs">
-                  {selectedLocation.name}
-                </p>
-              </div>
-            </div>
+            <LocationPathPanel
+              location={selectedLocation}
+              compact={true}
+            />
           )}
         </div>
 
