@@ -2,11 +2,9 @@ import { useState, useMemo, useRef } from "react";
 import {
   Search,
   X,
-  MapPin,
-  ArrowDown,
+  ArrowRightLeft,
   ChevronRight,
-  Navigation2,
-  Map,
+  MapPin,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -171,20 +169,17 @@ export default function LocationPicker({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-border/40 overflow-hidden backdrop-blur-sm bg-white/95">
-      <div className="p-5 space-y-4">
+    <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+      <div className="p-4 space-y-3">
         {/* Origin Input */}
         <div className="relative z-30">
-          <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
-            Starting Point
-          </label>
           <div className="relative">
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+              <MapPin className="h-5 w-5 text-gray-400" />
             </div>
             <Input
               ref={originInputRef}
-              placeholder={origin ? origin.name : "Enter starting location..."}
+              placeholder={origin ? origin.name : "Where from?"}
               value={originSearchQuery || origin?.name || ""}
               onChange={(e) => {
                 setOriginSearchQuery(e.target.value);
@@ -195,42 +190,21 @@ export default function LocationPicker({
                 setIsOriginFocused(true);
               }}
               onBlur={handleOriginInputBlur}
-              className={`pl-8 pr-20 py-3 h-auto text-sm font-medium border-2 transition-all duration-200 rounded-xl ${
-                isSelectingOriginOnMap
-                  ? "border-primary bg-primary/5"
-                  : "border-border/50 hover:border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
-              }`}
+              className="pl-10 pr-10 py-3 text-sm font-medium border border-gray-200 hover:border-gray-300 focus:border-gray-400 focus:outline-none rounded-lg"
             />
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-0.5">
-              {origin && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    onOriginSelect(null);
-                    setOriginSearchQuery("");
-                    setOriginSelectedIndex(0);
-                  }}
-                  className="h-7 w-7 p-0 hover:bg-muted rounded-lg"
-                  title="Clear origin"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
+            {origin && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={onOriginMapPick}
-                className={`h-7 w-7 p-0 rounded-lg transition-colors ${
-                  isSelectingOriginOnMap
-                    ? "bg-primary text-white hover:bg-primary/90"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-                title="Pick on map"
+                onClick={() => {
+                  onOriginSelect(null);
+                  setOriginSearchQuery("");
+                }}
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-gray-100 rounded"
               >
-                <Map className="h-4 w-4" />
+                <X className="h-4 w-4 text-gray-500" />
               </Button>
-            </div>
+            )}
           </div>
 
           {/* Origin Results Dropdown */}
@@ -239,49 +213,34 @@ export default function LocationPicker({
             filteredOriginResults.length > 0 && (
               <div
                 ref={originDropdownRef}
-                className="absolute top-[calc(100%+0.75rem)] left-0 right-0 bg-white rounded-xl border border-border/50 shadow-2xl z-50 max-h-96 overflow-hidden overflow-y-auto backdrop-blur-sm bg-white/97"
+                className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 max-h-80 overflow-y-auto"
               >
-                <div className="divide-y divide-border/30">
-                  {filteredOriginResults.slice(0, 8).map((building, index) => (
-                    <button
-                      key={building.id}
-                      onClick={() => handleSelectOrigin(building)}
-                      onMouseEnter={() => setOriginSelectedIndex(index)}
-                      className={`w-full text-left px-4 py-3.5 transition-all duration-150 ${
-                        index === originSelectedIndex
-                          ? "bg-gradient-to-r from-primary/12 to-transparent border-l-3 border-l-emerald-500"
-                          : "hover:bg-muted/40"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1.5">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"></div>
-                            <span className="truncate">
-                              {building.name || "Unnamed Building"}
-                            </span>
-                          </div>
-                          {building.character && (
-                            <div className="text-xs text-muted-foreground ml-4">
-                              Code:{" "}
-                              <span className="font-medium text-foreground">
-                                {building.character}
-                              </span>
-                            </div>
-                          )}
-                          {building.descriptio && (
-                            <div className="text-xs text-muted-foreground line-clamp-1 ml-4 mt-1">
-                              {building.descriptio}
-                            </div>
-                          )}
+                {filteredOriginResults.slice(0, 6).map((building, index) => (
+                  <button
+                    key={building.id}
+                    onClick={() => handleSelectOrigin(building)}
+                    onMouseEnter={() => setOriginSelectedIndex(index)}
+                    className={`w-full text-left px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors ${
+                      index === originSelectedIndex ? "bg-gray-50" : ""
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm text-gray-900 mb-1 truncate">
+                          {building.name || "Unnamed Building"}
                         </div>
-                        {index === originSelectedIndex && (
-                          <ChevronRight className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        {building.character && (
+                          <div className="text-xs text-gray-500">
+                            {building.character}
+                          </div>
                         )}
                       </div>
-                    </button>
-                  ))}
-                </div>
+                      {index === originSelectedIndex && (
+                        <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                      )}
+                    </div>
+                  </button>
+                ))}
               </div>
             )}
 
@@ -289,47 +248,37 @@ export default function LocationPicker({
           {isOriginFocused &&
             originSearchQuery &&
             filteredOriginResults.length === 0 && (
-              <div className="absolute top-[calc(100%+0.75rem)] left-0 right-0 bg-white rounded-xl border border-border/50 shadow-lg z-50 p-6">
-                <div className="flex flex-col items-center justify-center gap-3">
-                  <div className="p-3 bg-muted rounded-full">
-                    <Search className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <p className="text-sm text-muted-foreground text-center font-medium">
-                    No locations match "{originSearchQuery}"
-                  </p>
-                </div>
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 p-4">
+                <p className="text-sm text-gray-500 text-center">
+                  No locations found
+                </p>
               </div>
             )}
         </div>
 
         {/* Swap Button */}
-        <div className="flex justify-center -my-2">
+        <div className="flex justify-center -my-1">
           <Button
             variant="outline"
             size="sm"
             onClick={handleSwapLocations}
-            className="h-9 w-9 p-0 rounded-full border-2 border-border hover:bg-muted transition-all duration-200 hover:border-primary disabled:opacity-40 disabled:cursor-not-allowed"
+            className="h-9 w-9 p-0 rounded-full border border-gray-300 hover:bg-gray-100 hover:border-gray-400 disabled:opacity-40"
             disabled={!origin || !destination}
-            title="Swap origin and destination"
+            title="Swap locations"
           >
-            <ArrowDown className="h-4 w-4 rotate-90" />
+            <ArrowRightLeft className="h-4 w-4" />
           </Button>
         </div>
 
         {/* Destination Input */}
         <div className="relative z-20">
-          <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
-            Destination
-          </label>
           <div className="relative">
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+              <MapPin className="h-5 w-5 text-gray-400" />
             </div>
             <Input
               ref={destinationInputRef}
-              placeholder={
-                destination ? destination.name : "Enter destination..."
-              }
+              placeholder={destination ? destination.name : "Where to?"}
               value={destinationSearchQuery || destination?.name || ""}
               onChange={(e) => {
                 setDestinationSearchQuery(e.target.value);
@@ -340,42 +289,21 @@ export default function LocationPicker({
                 setIsDestinationFocused(true);
               }}
               onBlur={handleDestinationInputBlur}
-              className={`pl-8 pr-20 py-3 h-auto text-sm font-medium border-2 transition-all duration-200 rounded-xl ${
-                isSelectingDestinationOnMap
-                  ? "border-primary bg-primary/5"
-                  : "border-border/50 hover:border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
-              }`}
+              className="pl-10 pr-10 py-3 text-sm font-medium border border-gray-200 hover:border-gray-300 focus:border-gray-400 focus:outline-none rounded-lg"
             />
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-0.5">
-              {destination && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    onDestinationSelect(null);
-                    setDestinationSearchQuery("");
-                    setDestinationSelectedIndex(0);
-                  }}
-                  className="h-7 w-7 p-0 hover:bg-muted rounded-lg"
-                  title="Clear destination"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
+            {destination && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={onDestinationMapPick}
-                className={`h-7 w-7 p-0 rounded-lg transition-colors ${
-                  isSelectingDestinationOnMap
-                    ? "bg-primary text-white hover:bg-primary/90"
-                    : "text-muted-foreground hover:bg-muted"
-                }`}
-                title="Pick on map"
+                onClick={() => {
+                  onDestinationSelect(null);
+                  setDestinationSearchQuery("");
+                }}
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-gray-100 rounded"
               >
-                <Map className="h-4 w-4" />
+                <X className="h-4 w-4 text-gray-500" />
               </Button>
-            </div>
+            )}
           </div>
 
           {/* Destination Results Dropdown */}
@@ -384,51 +312,34 @@ export default function LocationPicker({
             filteredDestinationResults.length > 0 && (
               <div
                 ref={destinationDropdownRef}
-                className="absolute top-[calc(100%+0.75rem)] left-0 right-0 bg-white rounded-xl border border-border/50 shadow-2xl z-50 max-h-96 overflow-hidden overflow-y-auto backdrop-blur-sm bg-white/97"
+                className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 max-h-80 overflow-y-auto"
               >
-                <div className="divide-y divide-border/30">
-                  {filteredDestinationResults
-                    .slice(0, 8)
-                    .map((building, index) => (
-                      <button
-                        key={building.id}
-                        onClick={() => handleSelectDestination(building)}
-                        onMouseEnter={() => setDestinationSelectedIndex(index)}
-                        className={`w-full text-left px-4 py-3.5 transition-all duration-150 ${
-                          index === destinationSelectedIndex
-                            ? "bg-gradient-to-r from-primary/12 to-transparent border-l-3 border-l-blue-500"
-                            : "hover:bg-muted/40"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex-1 min-w-0">
-                            <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1.5">
-                              <div className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></div>
-                              <span className="truncate">
-                                {building.name || "Unnamed Building"}
-                              </span>
-                            </div>
-                            {building.character && (
-                              <div className="text-xs text-muted-foreground ml-4">
-                                Code:{" "}
-                                <span className="font-medium text-foreground">
-                                  {building.character}
-                                </span>
-                              </div>
-                            )}
-                            {building.descriptio && (
-                              <div className="text-xs text-muted-foreground line-clamp-1 ml-4 mt-1">
-                                {building.descriptio}
-                              </div>
-                            )}
-                          </div>
-                          {index === destinationSelectedIndex && (
-                            <ChevronRight className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                          )}
+                {filteredDestinationResults.slice(0, 6).map((building, index) => (
+                  <button
+                    key={building.id}
+                    onClick={() => handleSelectDestination(building)}
+                    onMouseEnter={() => setDestinationSelectedIndex(index)}
+                    className={`w-full text-left px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors ${
+                      index === destinationSelectedIndex ? "bg-gray-50" : ""
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm text-gray-900 mb-1 truncate">
+                          {building.name || "Unnamed Building"}
                         </div>
-                      </button>
-                    ))}
-                </div>
+                        {building.character && (
+                          <div className="text-xs text-gray-500">
+                            {building.character}
+                          </div>
+                        )}
+                      </div>
+                      {index === destinationSelectedIndex && (
+                        <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                      )}
+                    </div>
+                  </button>
+                ))}
               </div>
             )}
 
@@ -436,15 +347,10 @@ export default function LocationPicker({
           {isDestinationFocused &&
             destinationSearchQuery &&
             filteredDestinationResults.length === 0 && (
-              <div className="absolute top-[calc(100%+0.75rem)] left-0 right-0 bg-white rounded-xl border border-border/50 shadow-lg z-50 p-6">
-                <div className="flex flex-col items-center justify-center gap-3">
-                  <div className="p-3 bg-muted rounded-full">
-                    <Search className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <p className="text-sm text-muted-foreground text-center font-medium">
-                    No locations match "{destinationSearchQuery}"
-                  </p>
-                </div>
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-lg z-50 p-4">
+                <p className="text-sm text-gray-500 text-center">
+                  No locations found
+                </p>
               </div>
             )}
         </div>
