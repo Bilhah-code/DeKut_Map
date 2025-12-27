@@ -419,6 +419,7 @@ export default function CampusMap({
       weight: 3,
       opacity: 1,
       fillOpacity: 1,
+      className: "route-start-marker",
     });
 
     const startPopup = L.tooltip({
@@ -427,7 +428,7 @@ export default function CampusMap({
       offset: [0, -20],
     });
     startPopup.setContent(
-      '<div class="text-xs font-bold bg-white text-green-700 px-2 py-1 rounded shadow-md whitespace-nowrap">START</div>',
+      '<div class="text-xs font-bold bg-white text-green-700 px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap border border-green-300">START</div>',
     );
     startMarker.bindTooltip(startPopup);
     routeGroup.addLayer(startMarker);
@@ -440,6 +441,7 @@ export default function CampusMap({
       weight: 3,
       opacity: 1,
       fillOpacity: 1,
+      className: "route-end-marker",
     });
 
     const endPopup = L.tooltip({
@@ -448,7 +450,7 @@ export default function CampusMap({
       offset: [0, -25],
     });
     endPopup.setContent(
-      '<div class="text-xs font-bold bg-white text-blue-700 px-2 py-1 rounded shadow-md whitespace-nowrap">DESTINATION</div>',
+      '<div class="text-xs font-bold bg-white text-blue-700 px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap border border-blue-500">DESTINATION</div>',
     );
     endMarker.bindTooltip(endPopup);
     routeGroup.addLayer(endMarker);
