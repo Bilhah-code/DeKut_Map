@@ -437,7 +437,6 @@ export default function CampusMap({
       weight: 3,
       opacity: 1,
       fillOpacity: 1,
-      zIndexOffset: 100,
     });
 
     const endPopup = L.tooltip({
