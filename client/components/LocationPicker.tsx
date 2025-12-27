@@ -169,13 +169,16 @@ export default function LocationPicker({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-      <div className="p-4 space-y-3">
+    <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+      <div className="p-5 space-y-4">
         {/* Origin Input */}
         <div className="relative z-30">
+          <label className="text-xs font-bold text-gray-600 uppercase mb-2 block">
+            Starting location
+          </label>
           <div className="relative">
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-              <MapPin className="h-5 w-5 text-gray-400" />
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm" />
             </div>
             <Input
               ref={originInputRef}
@@ -190,7 +193,7 @@ export default function LocationPicker({
                 setIsOriginFocused(true);
               }}
               onBlur={handleOriginInputBlur}
-              className="pl-10 pr-10 py-3 text-sm font-medium border border-gray-200 hover:border-gray-300 focus:border-gray-400 focus:outline-none rounded-lg"
+              className="pl-12 pr-12 py-3.5 text-sm font-medium border-2 border-gray-200 hover:border-green-300 focus:border-green-500 focus:outline-none rounded-xl bg-white transition-all duration-200"
             />
             {origin && (
               <Button
@@ -200,9 +203,24 @@ export default function LocationPicker({
                   onOriginSelect(null);
                   setOriginSearchQuery("");
                 }}
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-gray-100 rounded"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-red-100 rounded-lg transition-colors"
               >
-                <X className="h-4 w-4 text-gray-500" />
+                <X className="h-4 w-4 text-gray-500 hover:text-red-600" />
+              </Button>
+            )}
+            {!origin && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onOriginMapPick}
+                className={`absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 rounded-lg transition-all ${
+                  isSelectingOriginOnMap
+                    ? "bg-green-100 text-green-600"
+                    : "hover:bg-green-100 text-gray-600 hover:text-green-600"
+                }`}
+                title="Pick on map"
+              >
+                <Locate className="h-4 w-4" />
               </Button>
             )}
           </div>
