@@ -432,20 +432,31 @@ export default function CampusMap({
     routeGroup.addLayer(endMarker);
 
     // Add route group to map
+    console.log("Adding route group to map with", routeGroup.getLayers().length, "layers");
     routeGroup.addTo(mapRef.current);
     routeLayerRef.current = routeGroup;
 
     // Fit map to show entire route with padding
     try {
       const bounds = routeGroup.getBounds();
+      console.log("Route bounds valid:", bounds.isValid());
       if (bounds.isValid()) {
+        console.log("Fitting bounds to route:", bounds);
         mapRef.current.fitBounds(bounds, {
           padding: [80, 80],
           maxZoom: 17,
         });
+      } else {
+        console.warn("Invalid bounds for route, centering on start");
+        const midpoint: [number, number] = [
+          (route.start[0] + route.end[0]) / 2,
+          (route.start[1] + route.end[1]) / 2,
+        ];
+        mapRef.current.setView(midpoint, 15);
       }
     } catch (error) {
       console.error("Error fitting bounds:", error);
+      mapRef.current.setView(route.start, 16);
     }
   }, [route]);
 
