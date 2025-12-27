@@ -349,71 +349,92 @@ export default function Navigator() {
                 <Layers className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-72">
-              <div className="space-y-4">
-                <h2 className="text-lg font-bold text-gray-900">Map Layers</h2>
+            <SheetContent side="right" className="w-80 bg-gradient-to-b from-white to-gray-50">
+              <div className="space-y-5 mt-2">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Map Layers</h2>
+                  <p className="text-xs text-gray-500 mt-1">Toggle layers to customize your view</p>
+                </div>
 
                 {/* Buildings Layer Toggle */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-                  <label className="flex items-center gap-3 cursor-pointer flex-1">
-                    <input
-                      type="checkbox"
-                      checked={visibleLayers.buildings}
-                      onChange={() => toggleLayer("buildings")}
-                      className="w-4 h-4"
-                    />
-                    <span className="text-sm font-medium text-gray-900">Buildings</span>
+                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-blue-300 hover:border-blue-400 transition-all cursor-pointer hover:shadow-md">
+                  <input
+                    type="checkbox"
+                    id="buildings-toggle"
+                    checked={visibleLayers.buildings}
+                    onChange={() => toggleLayer("buildings")}
+                    className="w-5 h-5 rounded accent-blue-600"
+                  />
+                  <label htmlFor="buildings-toggle" className="flex-1 cursor-pointer">
+                    <span className="block text-sm font-bold text-gray-900">Buildings</span>
+                    <span className="text-xs text-gray-500">Campus structures</span>
                   </label>
                 </div>
 
                 {/* Roads Layer Toggle */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-                  <label className="flex items-center gap-3 cursor-pointer flex-1">
-                    <input
-                      type="checkbox"
-                      checked={visibleLayers.roads}
-                      onChange={() => toggleLayer("roads")}
-                      className="w-4 h-4"
-                    />
-                    <span className="text-sm font-medium text-gray-900">Roads & Paths</span>
+                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-orange-300 hover:border-orange-400 transition-all cursor-pointer hover:shadow-md">
+                  <input
+                    type="checkbox"
+                    id="roads-toggle"
+                    checked={visibleLayers.roads}
+                    onChange={() => toggleLayer("roads")}
+                    className="w-5 h-5 rounded accent-orange-600"
+                  />
+                  <label htmlFor="roads-toggle" className="flex-1 cursor-pointer">
+                    <span className="block text-sm font-bold text-gray-900">Roads & Paths</span>
+                    <span className="text-xs text-gray-500">Pedestrian and vehicle routes</span>
                   </label>
                 </div>
 
                 {/* Boundary Layer Toggle */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-                  <label className="flex items-center gap-3 cursor-pointer flex-1">
-                    <input
-                      type="checkbox"
-                      checked={visibleLayers.boundary}
-                      onChange={() => toggleLayer("boundary")}
-                      className="w-4 h-4"
-                    />
-                    <span className="text-sm font-medium text-gray-900">Campus Boundary</span>
+                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-green-300 hover:border-green-400 transition-all cursor-pointer hover:shadow-md">
+                  <input
+                    type="checkbox"
+                    id="boundary-toggle"
+                    checked={visibleLayers.boundary}
+                    onChange={() => toggleLayer("boundary")}
+                    className="w-5 h-5 rounded accent-green-600"
+                  />
+                  <label htmlFor="boundary-toggle" className="flex-1 cursor-pointer">
+                    <span className="block text-sm font-bold text-gray-900">Campus Boundary</span>
+                    <span className="text-xs text-gray-500">Campus perimeter</span>
                   </label>
                 </div>
 
                 {/* Legend */}
-                <div className="mt-6 space-y-3 border-t border-gray-200 pt-4">
-                  <h3 className="text-sm font-semibold text-gray-900">Legend</h3>
+                <div className="mt-7 space-y-4 border-t-2 border-gray-300 pt-5">
+                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Map Legend</h3>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="w-2 h-2 rounded-full bg-blue-600"></div>
-                    <span>Buildings</span>
-                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full bg-blue-600 shadow-md"></div>
+                      <span className="text-sm font-medium text-gray-700">Buildings</span>
+                    </div>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="w-3 h-0.5 bg-blue-500"></div>
-                    <span>Pedestrian Path</span>
-                  </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-1 bg-blue-500 rounded-full"></div>
+                      <span className="text-sm font-medium text-gray-700">Pedestrian Path</span>
+                    </div>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="w-3 h-0.5 bg-orange-500"></div>
-                    <span>Road</span>
-                  </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-1 bg-orange-500 rounded-full"></div>
+                      <span className="text-sm font-medium text-gray-700">Road</span>
+                    </div>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="w-3 h-0.5 border-b-2 border-dashed border-green-600"></div>
-                    <span>Campus Boundary</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-1 border-b-2 border-dashed border-green-600"></div>
+                      <span className="text-sm font-medium text-gray-700">Campus Boundary</span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full bg-green-500 shadow-md"></div>
+                      <span className="text-sm font-medium text-gray-700">Start Location</span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full bg-blue-700 shadow-md"></div>
+                      <span className="text-sm font-medium text-gray-700">Destination</span>
+                    </div>
                   </div>
                 </div>
               </div>
