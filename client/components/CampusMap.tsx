@@ -43,7 +43,7 @@ export default function CampusMap({
 }: CampusMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.TileLayer | null>(null);
-  const routeLayerRef = useRef<L.Polyline | null>(null);
+  const routeLayerRef = useRef<L.FeatureGroup | null>(null);
   const geojsonLayersRef = useRef<{
     buildings: L.GeoJSON | null;
     roads: L.GeoJSON | null;
@@ -287,38 +287,103 @@ export default function CampusMap({
 
   // Handle route visualization
   useEffect(() => {
-    if (!mapRef.current || !route || !route.path) return;
+    if (!mapRef.current) return;
 
-    // Remove existing route layer
+    // Remove existing route layer group
     if (routeLayerRef.current) {
       mapRef.current.removeLayer(routeLayerRef.current);
+      routeLayerRef.current = null;
     }
 
-    // Create route polyline with thicker solid line to show direction
-    const routePolyline = L.polyline(route.path, {
-      color: "#3b82f6",
-      weight: 6,
-      opacity: 0.85,
-      lineCap: "round",
-      lineJoin: "round",
-      className: "route-polyline",
+    // If no route, stop here
+    if (!route || !route.path || route.path.length === 0) {
+      console.log("No route or empty path", { route });
+      return;
+    }
+
+    console.log("Rendering route with path:", {
+      pathLength: route.path.length,
+      start: route.start,
+      end: route.end,
+      path: route.path,
     });
 
+    // Ensure path has at least 2 points
+    const pathToRender = route.path && route.path.length >= 2
+      ? route.path
+      : [route.start, route.end];
+
+    console.log("Path to render:", {
+      length: pathToRender.length,
+      points: pathToRender.slice(0, 3),
+    });
+
+    // Validate coordinates
+    const validPath = pathToRender.filter(
+      (point) =>
+        Array.isArray(point) &&
+        point.length === 2 &&
+        typeof point[0] === "number" &&
+        typeof point[1] === "number" &&
+        !isNaN(point[0]) &&
+        !isNaN(point[1])
+    );
+
+    if (validPath.length < 2) {
+      console.error("Invalid path coordinates:", pathToRender);
+      return;
+    }
+
+    console.log("Valid path for rendering:", validPath);
+
+    // Create feature group to hold all route elements
+    const routeGroup = L.featureGroup();
+
+    // Create shadow/outline polyline for better visibility
+    const shadowPolyline = L.polyline(validPath, {
+      color: "#000000",
+      weight: 10,
+      opacity: 0.2,
+      lineCap: "round",
+      lineJoin: "round",
+    });
+    console.log("Shadow polyline created");
+    routeGroup.addLayer(shadowPolyline);
+
+    // Create main route polyline
+    const routePolyline = L.polyline(validPath, {
+      color: "#2563eb",
+      weight: 5,
+      opacity: 0.9,
+      lineCap: "round",
+      lineJoin: "round",
+      dashArray: "0",
+    });
+    console.log("Route polyline created");
+    routeGroup.addLayer(routePolyline);
+
+    // Create pulsing animated polyline for visual emphasis
+    const animatedPolyline = L.polyline(validPath, {
+      color: "#60a5fa",
+      weight: 3,
+      opacity: 0.6,
+      lineCap: "round",
+      lineJoin: "round",
+      dashArray: "10, 10",
+    });
+    console.log("Animated polyline created");
+    routeGroup.addLayer(animatedPolyline);
+
     // Add direction arrows along the route
-    const arrowGroup = L.featureGroup();
-    const pathSegments = 5; // Number of arrows to display
-    const segmentLength = Math.floor(route.path.length / (pathSegments + 1));
+    const minPoints = Math.min(validPath.length, 20);
+    for (let i = 0; i < minPoints - 1; i++) {
+      const step = Math.floor((validPath.length - 1) / minPoints);
+      const idx = i * step;
+      if (idx >= validPath.length - 1) break;
 
-    for (
-      let i = 1;
-      i <= pathSegments && i * segmentLength < route.path.length;
-      i++
-    ) {
-      const index = i * segmentLength;
-      const point = route.path[index];
-      const nextPoint = route.path[Math.min(index + 1, route.path.length - 1)];
+      const point = validPath[idx];
+      const nextPoint = validPath[Math.min(idx + 1, validPath.length - 1)];
 
-      // Calculate angle for arrow rotation
       const lat1 = point[0];
       const lon1 = point[1];
       const lat2 = nextPoint[0];
@@ -328,76 +393,90 @@ export default function CampusMap({
       const dLon = lon2 - lon1;
       const angle = Math.atan2(dLon, dLat) * (180 / Math.PI);
 
-      // Create arrow marker
       const arrow = L.marker(point, {
         icon: L.divIcon({
-          html: `<div style="transform: rotate(${angle}deg); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 12px solid #3b82f6;"></div>`,
-          iconSize: [12, 12],
-          className: "route-direction-arrow",
+          html: `<div style="transform: rotate(${angle}deg); color: #2563eb;">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));">
+                    <path d="M10 2L18 16H2L10 2Z" fill="currentColor"/>
+                  </svg>
+                </div>`,
+          iconSize: [20, 20],
+          iconAnchor: [10, 10],
+          className: "route-arrow",
         }),
       });
-
-      arrowGroup.addLayer(arrow);
+      routeGroup.addLayer(arrow);
     }
 
-    // Add start marker
+    // Add start marker (green circle)
     const startMarker = L.circleMarker(route.start, {
-      radius: 10,
+      radius: 12,
       fillColor: "#10b981",
       color: "#fff",
       weight: 3,
       opacity: 1,
-      fillOpacity: 0.9,
+      fillOpacity: 1,
     });
 
-    // Add label for start
-    const startLabel = L.tooltip({
+    const startPopup = L.tooltip({
       permanent: true,
       direction: "top",
-      offset: [0, -15],
-      className: "route-label",
+      offset: [0, -20],
     });
-    startLabel.setContent(
-      '<div class="text-xs font-semibold text-green-700 bg-white px-2 py-1 rounded shadow">Start</div>',
+    startPopup.setContent(
+      '<div class="text-xs font-bold bg-white text-green-700 px-2 py-1 rounded shadow-md whitespace-nowrap">START</div>',
     );
-    startMarker.bindTooltip(startLabel);
+    startMarker.bindTooltip(startPopup);
+    routeGroup.addLayer(startMarker);
 
-    // Add end marker
+    // Add end marker (blue circle)
     const endMarker = L.circleMarker(route.end, {
-      radius: 12,
-      fillColor: "#3b82f6",
+      radius: 14,
+      fillColor: "#2563eb",
       color: "#fff",
       weight: 3,
       opacity: 1,
-      fillOpacity: 0.9,
+      fillOpacity: 1,
     });
 
-    // Add label for end
-    const endLabel = L.tooltip({
+    const endPopup = L.tooltip({
       permanent: true,
       direction: "top",
-      offset: [0, -15],
-      className: "route-label",
+      offset: [0, -25],
     });
-    endLabel.setContent(
-      '<div class="text-xs font-semibold text-blue-700 bg-white px-2 py-1 rounded shadow">Destination</div>',
+    endPopup.setContent(
+      '<div class="text-xs font-bold bg-white text-blue-700 px-2 py-1 rounded shadow-md whitespace-nowrap">DESTINATION</div>',
     );
-    endMarker.bindTooltip(endLabel);
+    endMarker.bindTooltip(endPopup);
+    routeGroup.addLayer(endMarker);
 
-    // Create a feature group with route elements
-    const routeGroup = L.featureGroup([
-      routePolyline,
-      arrowGroup,
-      startMarker,
-      endMarker,
-    ]);
-    routeLayerRef.current = routePolyline;
-
-    // Add to map
+    // Add route group to map
+    console.log("Adding route group to map with", routeGroup.getLayers().length, "layers");
     routeGroup.addTo(mapRef.current);
+    routeLayerRef.current = routeGroup;
 
-    // Fit bounds to show entire route
-    mapRef.current.fitBounds(routeGroup.getBounds(), { padding: [100, 100] });
+    // Fit map to show entire route with padding
+    try {
+      const bounds = routeGroup.getBounds();
+      console.log("Route bounds valid:", bounds.isValid());
+      if (bounds.isValid()) {
+        console.log("Fitting bounds to route:", bounds);
+        mapRef.current.fitBounds(bounds, {
+          padding: [80, 80],
+          maxZoom: 17,
+        });
+      } else {
+        console.warn("Invalid bounds for route, centering on start");
+        const midpoint: [number, number] = [
+          (route.start[0] + route.end[0]) / 2,
+          (route.start[1] + route.end[1]) / 2,
+        ];
+        mapRef.current.setView(midpoint, 15);
+      }
+    } catch (error) {
+      console.error("Error fitting bounds:", error);
+      mapRef.current.setView(route.start, 16);
+    }
   }, [route]);
 
   // Expose layer visibility control

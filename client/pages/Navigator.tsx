@@ -61,7 +61,7 @@ export default function Navigator() {
     setOrigin(location);
     setIsSelectingOriginOnMap(false);
     if (location) {
-      toast.success(`Starting point: ${location.name}`);
+      toast.success(`From: ${location.name}`);
       calculateAndShowRoute(location.coords, destination?.coords);
     }
   };
@@ -70,7 +70,7 @@ export default function Navigator() {
     setDestination(location);
     setIsSelectingDestinationOnMap(false);
     if (location) {
-      toast.success(`Destination: ${location.name}`);
+      toast.success(`To: ${location.name}`);
       calculateAndShowRoute(origin?.coords, location.coords);
     }
   };
@@ -80,12 +80,25 @@ export default function Navigator() {
     endCoords?: [number, number],
   ) => {
     if (!startCoords || !endCoords) {
+      console.log("Missing coordinates for route calculation", { startCoords, endCoords });
       setRoute(null);
       setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 });
       return;
     }
 
-    const calculatedRoute = calculateRoute(startCoords, endCoords);
+    console.log("Calculating route", {
+      startCoords,
+      endCoords,
+      buildingsCount: buildings.length,
+    });
+
+    const calculatedRoute = calculateRoute(startCoords, endCoords, buildings);
+    console.log("Route calculated:", {
+      distance: calculatedRoute.distance,
+      estimatedTime: calculatedRoute.estimatedTime,
+      pathLength: calculatedRoute.routePath?.length,
+    });
+
     setRoute({
       start: startCoords,
       end: endCoords,
@@ -114,6 +127,7 @@ export default function Navigator() {
       const calculatedRoute = calculateRoute(
         userLocation.coords,
         location.coords,
+        buildings,
       );
       setRoute({
         start: userLocation.coords,
@@ -147,6 +161,7 @@ export default function Navigator() {
             const calculatedRoute = calculateRoute(
               newLocation.coords,
               selectedLocation.coords,
+              buildings,
             );
             setRoute({
               start: newLocation.coords,
@@ -179,29 +194,26 @@ export default function Navigator() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background">
-      {/* Toolbar with Location Picker */}
-      <div className="bg-gradient-to-r from-white via-white to-blue-50/30 border-b border-border/80 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+    <div className="flex flex-col h-screen bg-white">
+      {/* Header */}
+      <div className="border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-3">
           {/* Desktop Layout */}
-          <div className="hidden md:flex items-center justify-between gap-4">
+          <div className="hidden md:flex items-center justify-between gap-6">
             {/* Logo/Title */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-md">
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-base">DK</span>
               </div>
-              <div className="flex-1">
-                <h1 className="font-bold text-lg text-foreground">
-                  DeKUT Campus Navigator
+              <div>
+                <h1 className="font-bold text-base text-gray-900">
+                  DeKUT Navigator
                 </h1>
-                <p className="text-xs text-muted-foreground">
-                  Find your way around campus
-                </p>
               </div>
             </div>
 
             {/* Location Picker */}
-            <div className="flex-1 max-w-xl">
+            <div className="flex-1">
               <LocationPicker
                 origin={origin}
                 destination={destination}
@@ -223,15 +235,12 @@ export default function Navigator() {
           {/* Mobile Layout */}
           <div className="md:hidden space-y-3">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center shadow-md flex-shrink-0">
+              <div className="w-9 h-9 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-sm">DK</span>
               </div>
-              <div className="flex-1 min-w-0">
-                <h1 className="font-bold text-foreground text-sm truncate">
-                  DeKUT Navigator
-                </h1>
-                <p className="text-xs text-muted-foreground">Find your way</p>
-              </div>
+              <h1 className="font-bold text-sm text-gray-900">
+                DeKUT Navigator
+              </h1>
             </div>
 
             {/* Mobile Location Picker */}
@@ -285,12 +294,12 @@ export default function Navigator() {
         {/* Map Controls - Top Right */}
         <div className="absolute top-4 right-4 flex flex-col gap-2 z-40">
           {/* Basemap Toggle */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden border border-border">
+          <div className="bg-white rounded-lg shadow-md border border-gray-200">
             <Button
               variant={baseLayerKey === "openstreetmap" ? "default" : "ghost"}
               size="sm"
               onClick={() => setBaseLayerKey("openstreetmap")}
-              className="w-12 h-12 rounded-none flex items-center justify-center"
+              className="w-10 h-10 rounded-none flex items-center justify-center"
               title="OpenStreetMap"
             >
               <MapIcon className="h-4 w-4" />
@@ -299,7 +308,7 @@ export default function Navigator() {
               variant={baseLayerKey === "satellite" ? "default" : "ghost"}
               size="sm"
               onClick={() => setBaseLayerKey("satellite")}
-              className="w-12 h-12 rounded-none flex items-center justify-center border-t border-border"
+              className="w-10 h-10 rounded-none border-t border-gray-200 flex items-center justify-center"
               title="Satellite"
             >
               <Satellite className="h-4 w-4" />
@@ -310,8 +319,8 @@ export default function Navigator() {
           <Button
             onClick={handleGeolocation}
             size="sm"
-            className="w-12 h-12 rounded-lg shadow-md p-0 flex items-center justify-center"
-            title="Get My Location"
+            className="w-10 h-10 rounded-lg shadow-md p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+            title="Get my location"
           >
             <Crosshair className="h-4 w-4" />
           </Button>
@@ -321,77 +330,75 @@ export default function Navigator() {
             <SheetTrigger asChild>
               <Button
                 size="sm"
-                className="w-12 h-12 rounded-lg shadow-md p-0 flex items-center justify-center"
-                title="Layer Controls"
+                className="w-10 h-10 rounded-lg shadow-md p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                title="Layer controls"
               >
                 <Layers className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-64">
+            <SheetContent side="right" className="w-72">
               <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Map Layers</h2>
+                <h2 className="text-lg font-bold text-gray-900">Map Layers</h2>
 
                 {/* Buildings Layer Toggle */}
-                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                  <label className="flex items-center gap-2 cursor-pointer flex-1">
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <label className="flex items-center gap-3 cursor-pointer flex-1">
                     <input
                       type="checkbox"
                       checked={visibleLayers.buildings}
                       onChange={() => toggleLayer("buildings")}
                       className="w-4 h-4"
                     />
-                    <span className="text-sm font-medium">Buildings</span>
+                    <span className="text-sm font-medium text-gray-900">Buildings</span>
                   </label>
                 </div>
 
                 {/* Roads Layer Toggle */}
-                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                  <label className="flex items-center gap-2 cursor-pointer flex-1">
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <label className="flex items-center gap-3 cursor-pointer flex-1">
                     <input
                       type="checkbox"
                       checked={visibleLayers.roads}
                       onChange={() => toggleLayer("roads")}
                       className="w-4 h-4"
                     />
-                    <span className="text-sm font-medium">Roads & Paths</span>
+                    <span className="text-sm font-medium text-gray-900">Roads & Paths</span>
                   </label>
                 </div>
 
                 {/* Boundary Layer Toggle */}
-                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                  <label className="flex items-center gap-2 cursor-pointer flex-1">
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <label className="flex items-center gap-3 cursor-pointer flex-1">
                     <input
                       type="checkbox"
                       checked={visibleLayers.boundary}
                       onChange={() => toggleLayer("boundary")}
                       className="w-4 h-4"
                     />
-                    <span className="text-sm font-medium">Campus Boundary</span>
+                    <span className="text-sm font-medium text-gray-900">Campus Boundary</span>
                   </label>
                 </div>
 
                 {/* Legend */}
-                <div className="mt-6 space-y-3 border-t border-border pt-4">
-                  <h3 className="text-sm font-medium">Legend</h3>
+                <div className="mt-6 space-y-3 border-t border-gray-200 pt-4">
+                  <h3 className="text-sm font-semibold text-gray-900">Legend</h3>
 
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="w-2 h-2 rounded-full bg-blue-600"></div>
                     <span>Buildings</span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="flex gap-1">
-                      <div className="w-3 h-0.5 bg-blue-500"></div>
-                    </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="w-3 h-0.5 bg-blue-500"></div>
                     <span>Pedestrian Path</span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
                     <div className="w-3 h-0.5 bg-orange-500"></div>
                     <span>Road</span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
                     <div className="w-3 h-0.5 border-b-2 border-dashed border-green-600"></div>
                     <span>Campus Boundary</span>
                   </div>
