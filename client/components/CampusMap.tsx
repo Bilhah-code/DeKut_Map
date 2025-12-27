@@ -296,7 +296,17 @@ export default function CampusMap({
     }
 
     // If no route, stop here
-    if (!route || !route.path || route.path.length === 0) return;
+    if (!route || !route.path || route.path.length === 0) {
+      console.log("No route or empty path", { route });
+      return;
+    }
+
+    console.log("Rendering route with path:", {
+      pathLength: route.path.length,
+      start: route.start,
+      end: route.end,
+      path: route.path,
+    });
 
     // Create feature group to hold all route elements
     const routeGroup = L.featureGroup();
