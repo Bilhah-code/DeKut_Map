@@ -115,21 +115,12 @@ export default function MapToolbar({
             />
           </div>
 
-          {/* Selected Location Display */}
+          {/* Selected Location Display - Full Panel */}
           {selectedLocation && "name" in selectedLocation && (
-            <div className="p-3 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/10">
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-muted-foreground font-medium">
-                    Destination Selected
-                  </p>
-                  <p className="font-semibold text-foreground text-sm">
-                    {selectedLocation.name}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <LocationPathPanel
+              location={selectedLocation}
+              compact={false}
+            />
           )}
         </div>
       </div>
