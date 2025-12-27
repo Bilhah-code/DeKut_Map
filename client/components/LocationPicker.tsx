@@ -423,14 +423,16 @@ export default function LocationPicker({
             )}
 
           {/* No Results Message - Destination */}
-          {(isDestinationFocused || destinationSearchQuery) &&
+          {isDestinationFocused &&
             destinationSearchQuery &&
             filteredDestinationResults.length === 0 && (
-              <div className="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg border border-border shadow-lg z-50 p-4">
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <Search className="h-6 w-6 text-muted-foreground/50" />
+              <div className="absolute top-[calc(100%+0.75rem)] left-0 right-0 bg-white rounded-xl border border-border/50 shadow-lg z-50 p-6">
+                <div className="flex flex-col items-center justify-center gap-3">
+                  <div className="p-3 bg-muted rounded-full">
+                    <Search className="h-5 w-5 text-muted-foreground" />
+                  </div>
                   <p className="text-sm text-muted-foreground text-center font-medium">
-                    No locations found
+                    No locations match "{destinationSearchQuery}"
                   </p>
                 </div>
               </div>
