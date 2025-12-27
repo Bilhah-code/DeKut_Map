@@ -175,30 +175,33 @@ export default function LocationPicker({
       <div className="p-5 space-y-4">
         {/* Origin Input */}
         <div className="relative z-30">
+          <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
+            Starting Point
+          </label>
           <div className="relative">
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-              <Navigation2 className="h-4 w-4 text-primary" />
+              <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
             </div>
             <Input
               ref={originInputRef}
-              placeholder="From where?"
+              placeholder={origin ? origin.name : "Enter starting location..."}
               value={originSearchQuery || origin?.name || ""}
               onChange={(e) => {
                 setOriginSearchQuery(e.target.value);
-                setOriginSelectedIndex(-1);
+                setOriginSelectedIndex(0);
               }}
               onKeyDown={handleOriginKeyDown}
               onFocus={() => {
                 setIsOriginFocused(true);
               }}
               onBlur={handleOriginInputBlur}
-              className={`pl-9 pr-32 py-2 h-auto text-sm ${
+              className={`pl-8 pr-20 py-3 h-auto text-sm font-medium border-2 transition-all duration-200 rounded-xl ${
                 isSelectingOriginOnMap
-                  ? "border-primary border-2 bg-primary/5"
-                  : ""
+                  ? "border-primary bg-primary/5"
+                  : "border-border/50 hover:border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
               }`}
             />
-            <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex gap-1">
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-0.5">
               {origin && (
                 <Button
                   variant="ghost"
@@ -206,26 +209,26 @@ export default function LocationPicker({
                   onClick={() => {
                     onOriginSelect(null);
                     setOriginSearchQuery("");
-                    setOriginSelectedIndex(-1);
+                    setOriginSelectedIndex(0);
                   }}
-                  className="h-6 w-6 p-0"
+                  className="h-7 w-7 p-0 hover:bg-muted rounded-lg"
                   title="Clear origin"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="h-4 w-4" />
                 </Button>
               )}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onOriginMapPick}
-                className={`h-6 px-2 text-xs font-medium ${
+                className={`h-7 w-7 p-0 rounded-lg transition-colors ${
                   isSelectingOriginOnMap
                     ? "bg-primary text-white hover:bg-primary/90"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground hover:bg-muted"
                 }`}
                 title="Pick on map"
               >
-                <Map className="h-3 w-3" />
+                <Map className="h-4 w-4" />
               </Button>
             </div>
           </div>
