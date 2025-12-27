@@ -1,5 +1,18 @@
 // Enhanced routing service for campus navigation
-// Calculates distance, estimated walking time, and provides route paths
+// Calculates distance, estimated walking time, and provides optimal route paths using Dijkstra's algorithm
+
+interface Building {
+  id: string;
+  name: string;
+  coords: [number, number];
+}
+
+interface Graph {
+  [buildingId: string]: {
+    building: Building;
+    neighbors: Array<{ id: string; distance: number }>;
+  };
+}
 
 interface RouteResult {
   distance: number; // in meters
@@ -34,6 +47,102 @@ export const calculateDistance = (
 
 const toRadians = (degrees: number): number => {
   return (degrees * Math.PI) / 180;
+};
+
+// Build a graph from buildings - connect nearby buildings (within ~500 meters for campus navigation)
+export const buildCampusGraph = (buildings: Building[]): Graph => {
+  const graph: Graph = {};
+  const MAX_DISTANCE = 500; // meters - reasonable walking distance between connected points
+
+  // Initialize all buildings in graph
+  buildings.forEach((building) => {
+    graph[building.id] = {
+      building,
+      neighbors: [],
+    };
+  });
+
+  // Connect buildings based on proximity (nearest neighbors approach)
+  buildings.forEach((building) => {
+    const distances = buildings
+      .filter((b) => b.id !== building.id)
+      .map((b) => ({
+        id: b.id,
+        distance: calculateDistance(building.coords, b.coords),
+      }))
+      .filter((d) => d.distance <= MAX_DISTANCE)
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, 5); // Connect to 5 nearest neighbors
+
+    graph[building.id].neighbors = distances;
+  });
+
+  return graph;
+};
+
+// Dijkstra's algorithm to find shortest path between two buildings
+export const dijkstraShortestPath = (
+  graph: Graph,
+  startId: string,
+  endId: string,
+): { distance: number; path: string[] } | null => {
+  if (!graph[startId] || !graph[endId]) {
+    return null;
+  }
+
+  const distances: { [key: string]: number } = {};
+  const previous: { [key: string]: string | null } = {};
+  const unvisited = new Set<string>();
+
+  // Initialize distances
+  Object.keys(graph).forEach((id) => {
+    distances[id] = id === startId ? 0 : Infinity;
+    previous[id] = null;
+    unvisited.add(id);
+  });
+
+  while (unvisited.size > 0) {
+    // Find unvisited node with minimum distance
+    let current: string | null = null;
+    let minDistance = Infinity;
+
+    unvisited.forEach((id) => {
+      if (distances[id] < minDistance) {
+        minDistance = distances[id];
+        current = id;
+      }
+    });
+
+    if (current === null || minDistance === Infinity) {
+      break;
+    }
+
+    if (current === endId) {
+      // Reconstruct path
+      const path: string[] = [];
+      let node: string | null = endId;
+      while (node !== null) {
+        path.unshift(node);
+        node = previous[node];
+      }
+      return { distance: distances[endId], path };
+    }
+
+    unvisited.delete(current);
+
+    // Check neighbors
+    graph[current].neighbors.forEach(({ id: neighborId, distance: edgeDistance }) => {
+      if (unvisited.has(neighborId)) {
+        const newDistance = distances[current!] + edgeDistance;
+        if (newDistance < distances[neighborId]) {
+          distances[neighborId] = newDistance;
+          previous[neighborId] = current;
+        }
+      }
+    });
+  }
+
+  return null;
 };
 
 // Calculate total distance along a path
