@@ -346,6 +346,7 @@ export default function CampusMap({
       opacity: 0.2,
       lineCap: "round",
       lineJoin: "round",
+      className: "route-shadow",
     });
     console.log("Shadow polyline created");
     routeGroup.addLayer(shadowPolyline);
@@ -358,6 +359,7 @@ export default function CampusMap({
       lineCap: "round",
       lineJoin: "round",
       dashArray: "0",
+      className: "route-main",
     });
     console.log("Route polyline created");
     routeGroup.addLayer(routePolyline);
@@ -370,6 +372,7 @@ export default function CampusMap({
       lineCap: "round",
       lineJoin: "round",
       dashArray: "10, 10",
+      className: "route-animated",
     });
     console.log("Animated polyline created");
     routeGroup.addLayer(animatedPolyline);
