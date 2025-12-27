@@ -43,7 +43,7 @@ export default function CampusMap({
 }: CampusMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.TileLayer | null>(null);
-  const routeLayerRef = useRef<L.Polyline | null>(null);
+  const routeLayerRef = useRef<L.FeatureGroup | null>(null);
   const geojsonLayersRef = useRef<{
     buildings: L.GeoJSON | null;
     roads: L.GeoJSON | null;
