@@ -193,6 +193,7 @@ export const calculateRoute = (
 
   // If buildings provided, find shortest path through the campus graph
   if (buildings && buildings.length > 0) {
+    console.log("Building campus graph with", buildings.length, "buildings");
     const graph = buildCampusGraph(buildings);
 
     // Find nearest building to start
@@ -205,6 +206,7 @@ export const calculateRoute = (
         nearestStart = building;
       }
     }
+    console.log("Nearest start building:", nearestStart.name, "distance:", minStartDist);
 
     // Find nearest building to end
     let nearestEnd = buildings[0];
@@ -216,9 +218,11 @@ export const calculateRoute = (
         nearestEnd = building;
       }
     }
+    console.log("Nearest end building:", nearestEnd.name, "distance:", minEndDist);
 
     // Get shortest path through graph
     const pathResult = dijkstraShortestPath(graph, nearestStart.id, nearestEnd.id);
+    console.log("Dijkstra result:", pathResult);
 
     if (pathResult && pathResult.path.length > 1) {
       // Build coordinate path from building IDs
@@ -228,6 +232,7 @@ export const calculateRoute = (
         const buildingId = pathResult.path[i];
         const building = buildings.find((b) => b.id === buildingId);
         if (building) {
+          console.log("Adding waypoint:", building.name);
           coordPath.push(building.coords);
         }
       }
@@ -235,8 +240,10 @@ export const calculateRoute = (
       coordPath.push(endCoords);
       routePath = coordPath;
       distance = calculatePathDistance(routePath);
+      console.log("Final route path length:", coordPath.length, "distance:", distance);
     } else {
       // Fallback to straight line if no path found
+      console.log("No shortest path found, using straight line");
       routePath = [startCoords, endCoords];
       distance = calculateDistance(startCoords, endCoords);
     }
