@@ -26,6 +26,8 @@ export default function SpatialSearch({
 }: SpatialSearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
 
   const filteredResults = useMemo(() => {
     if (!searchQuery.trim()) {
