@@ -13,15 +13,11 @@ interface Building {
 
 interface SpatialSearchProps {
   onLocationSelect?: (location: Building) => void;
-  isOpen?: boolean;
-  onClose?: () => void;
   buildings?: Building[];
 }
 
 export default function SpatialSearch({
   onLocationSelect,
-  isOpen,
-  onClose,
   buildings = [],
 }: SpatialSearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
