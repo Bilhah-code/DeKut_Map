@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Menu, X, MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SpatialSearch from "./SpatialSearch";
+import LocationPathPanel from "./LocationPathPanel";
 
 interface Building {
   id: string;
@@ -29,6 +30,11 @@ export default function MapToolbar({
   buildings = [],
 }: MapToolbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleClearLocation = () => {
+    // Clear by selecting null - handled by parent
+    onLocationSelect?.(null as any);
+  };
 
   return (
     <div className="bg-gradient-to-r from-white via-white to-blue-50/30 border-b border-border/80 shadow-sm">
@@ -60,17 +66,7 @@ export default function MapToolbar({
 
           {/* Selected Location Display */}
           {selectedLocation && "name" in selectedLocation && (
-            <div className="flex items-center gap-3 px-4 py-2 bg-primary/5 rounded-lg border border-primary/10 min-w-fit">
-              <Navigation className="h-4 w-4 text-primary" />
-              <div className="flex flex-col gap-0.5">
-                <p className="text-xs text-muted-foreground font-medium">
-                  Destination
-                </p>
-                <p className="text-sm font-semibold text-foreground truncate max-w-xs">
-                  {selectedLocation.name}
-                </p>
-              </div>
-            </div>
+            <LocationPathPanel location={selectedLocation} compact={true} />
           )}
         </div>
 
@@ -116,21 +112,9 @@ export default function MapToolbar({
             />
           </div>
 
-          {/* Selected Location Display */}
+          {/* Selected Location Display - Full Panel */}
           {selectedLocation && "name" in selectedLocation && (
-            <div className="p-3 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/10">
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-muted-foreground font-medium">
-                    Destination Selected
-                  </p>
-                  <p className="font-semibold text-foreground text-sm">
-                    {selectedLocation.name}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <LocationPathPanel location={selectedLocation} compact={false} />
           )}
         </div>
       </div>
