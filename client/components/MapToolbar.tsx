@@ -66,10 +66,7 @@ export default function MapToolbar({
 
           {/* Selected Location Display */}
           {selectedLocation && "name" in selectedLocation && (
-            <LocationPathPanel
-              location={selectedLocation}
-              compact={true}
-            />
+            <LocationPathPanel location={selectedLocation} compact={true} />
           )}
         </div>
 
@@ -117,10 +114,7 @@ export default function MapToolbar({
 
           {/* Selected Location Display - Full Panel */}
           {selectedLocation && "name" in selectedLocation && (
-            <LocationPathPanel
-              location={selectedLocation}
-              compact={false}
-            />
+            <LocationPathPanel location={selectedLocation} compact={false} />
           )}
         </div>
       </div>
