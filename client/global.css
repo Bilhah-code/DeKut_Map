@@ -175,6 +175,21 @@
   @apply opacity-100;
 }
 
+/* Leaflet route styling */
+.leaflet-interactive.leaflet-path-route {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Route arrow styling */
+.route-arrow {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.route-arrow:hover {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
 /* Smooth transitions */
 * {
   @apply transition-colors duration-200;
