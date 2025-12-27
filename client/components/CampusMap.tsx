@@ -153,7 +153,10 @@ export default function CampusMap({
 
             // Add click handler
             layer.on("click", () => {
-              const coords = (feature.geometry as any).coordinates as [number, number];
+              const coords = (feature.geometry as any).coordinates as [
+                number,
+                number,
+              ];
               onLocationSelect?.({
                 id: feature.properties.character,
                 name: props.name,

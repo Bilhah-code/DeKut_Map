@@ -32,7 +32,8 @@ export default function Navigator() {
   const [origin, setOrigin] = useState<Building | null>(null);
   const [destination, setDestination] = useState<Building | null>(null);
   const [isSelectingOriginOnMap, setIsSelectingOriginOnMap] = useState(false);
-  const [isSelectingDestinationOnMap, setIsSelectingDestinationOnMap] = useState(false);
+  const [isSelectingDestinationOnMap, setIsSelectingDestinationOnMap] =
+    useState(false);
   const [selectedLocation, setSelectedLocation] = useState<
     Building | Location | null
   >(null);
@@ -74,7 +75,10 @@ export default function Navigator() {
     }
   };
 
-  const calculateAndShowRoute = (startCoords?: [number, number], endCoords?: [number, number]) => {
+  const calculateAndShowRoute = (
+    startCoords?: [number, number],
+    endCoords?: [number, number],
+  ) => {
     if (!startCoords || !endCoords) {
       setRoute(null);
       setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 });
@@ -203,8 +207,12 @@ export default function Navigator() {
                 destination={destination}
                 onOriginSelect={handleOriginSelect}
                 onDestinationSelect={handleDestinationSelect}
-                onOriginMapPick={() => setIsSelectingOriginOnMap(!isSelectingOriginOnMap)}
-                onDestinationMapPick={() => setIsSelectingDestinationOnMap(!isSelectingDestinationOnMap)}
+                onOriginMapPick={() =>
+                  setIsSelectingOriginOnMap(!isSelectingOriginOnMap)
+                }
+                onDestinationMapPick={() =>
+                  setIsSelectingDestinationOnMap(!isSelectingDestinationOnMap)
+                }
                 buildings={buildings}
                 isSelectingOriginOnMap={isSelectingOriginOnMap}
                 isSelectingDestinationOnMap={isSelectingDestinationOnMap}
@@ -232,8 +240,12 @@ export default function Navigator() {
               destination={destination}
               onOriginSelect={handleOriginSelect}
               onDestinationSelect={handleDestinationSelect}
-              onOriginMapPick={() => setIsSelectingOriginOnMap(!isSelectingOriginOnMap)}
-              onDestinationMapPick={() => setIsSelectingDestinationOnMap(!isSelectingDestinationOnMap)}
+              onOriginMapPick={() =>
+                setIsSelectingOriginOnMap(!isSelectingOriginOnMap)
+              }
+              onDestinationMapPick={() =>
+                setIsSelectingDestinationOnMap(!isSelectingDestinationOnMap)
+              }
               buildings={buildings}
               isSelectingOriginOnMap={isSelectingOriginOnMap}
               isSelectingDestinationOnMap={isSelectingDestinationOnMap}
@@ -243,7 +255,15 @@ export default function Navigator() {
       </div>
 
       {/* Map Container */}
-      <div className="flex-1 relative overflow-hidden" style={{ cursor: isSelectingOriginOnMap || isSelectingDestinationOnMap ? 'crosshair' : 'default' }}>
+      <div
+        className="flex-1 relative overflow-hidden"
+        style={{
+          cursor:
+            isSelectingOriginOnMap || isSelectingDestinationOnMap
+              ? "crosshair"
+              : "default",
+        }}
+      >
         <CampusMap
           selectedLocation={
             destination && "coords" in destination
@@ -388,9 +408,7 @@ export default function Navigator() {
             setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })
           }
           startLocation={
-            origin
-              ? { name: origin.name, coords: origin.coords }
-              : undefined
+            origin ? { name: origin.name, coords: origin.coords } : undefined
           }
           destinationLocation={
             destination

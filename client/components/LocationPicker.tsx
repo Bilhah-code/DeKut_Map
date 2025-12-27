@@ -1,5 +1,13 @@
 import { useState, useMemo, useRef } from "react";
-import { Search, X, MapPin, ArrowRight, ChevronRight, Navigation2, Map } from "lucide-react";
+import {
+  Search,
+  X,
+  MapPin,
+  ArrowRight,
+  ChevronRight,
+  Navigation2,
+  Map,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -48,7 +56,9 @@ export default function LocationPicker({
   // Filter origin locations
   const filteredOriginResults = useMemo(() => {
     if (!originSearchQuery.trim()) {
-      return buildings.slice().sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      return buildings
+        .slice()
+        .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     }
     const query = originSearchQuery.toLowerCase();
     return buildings
@@ -56,7 +66,7 @@ export default function LocationPicker({
         (building) =>
           building.name?.toLowerCase().includes(query) ||
           building.character?.toLowerCase().includes(query) ||
-          building.descriptio?.toLowerCase().includes(query)
+          building.descriptio?.toLowerCase().includes(query),
       )
       .sort((a, b) => {
         const aNameMatch = (a.name?.toLowerCase() || "").indexOf(query);
@@ -69,7 +79,9 @@ export default function LocationPicker({
   // Filter destination locations
   const filteredDestinationResults = useMemo(() => {
     if (!destinationSearchQuery.trim()) {
-      return buildings.slice().sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      return buildings
+        .slice()
+        .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     }
     const query = destinationSearchQuery.toLowerCase();
     return buildings
@@ -77,7 +89,7 @@ export default function LocationPicker({
         (building) =>
           building.name?.toLowerCase().includes(query) ||
           building.character?.toLowerCase().includes(query) ||
-          building.descriptio?.toLowerCase().includes(query)
+          building.descriptio?.toLowerCase().includes(query),
       )
       .sort((a, b) => {
         const aNameMatch = (a.name?.toLowerCase() || "").indexOf(query);
@@ -105,7 +117,7 @@ export default function LocationPicker({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setOriginSelectedIndex((prev) =>
-        prev < filteredOriginResults.length - 1 ? prev + 1 : prev
+        prev < filteredOriginResults.length - 1 ? prev + 1 : prev,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -122,14 +134,16 @@ export default function LocationPicker({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setDestinationSelectedIndex((prev) =>
-        prev < filteredDestinationResults.length - 1 ? prev + 1 : prev
+        prev < filteredDestinationResults.length - 1 ? prev + 1 : prev,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setDestinationSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
     } else if (e.key === "Enter" && destinationSelectedIndex >= 0) {
       e.preventDefault();
-      handleSelectDestination(filteredDestinationResults[destinationSelectedIndex]);
+      handleSelectDestination(
+        filteredDestinationResults[destinationSelectedIndex],
+      );
     } else if (e.key === "Escape") {
       setIsDestinationFocused(false);
     }
@@ -139,7 +153,7 @@ export default function LocationPicker({
     const temp = origin;
     if (origin) onDestinationSelect(origin);
     else onDestinationSelect(null);
-    
+
     if (destination) onOriginSelect(destination);
     else onOriginSelect(null);
   };
@@ -179,7 +193,9 @@ export default function LocationPicker({
               }}
               onBlur={handleOriginInputBlur}
               className={`pl-9 pr-32 py-2 h-auto text-sm ${
-                isSelectingOriginOnMap ? "border-primary border-2 bg-primary/5" : ""
+                isSelectingOriginOnMap
+                  ? "border-primary border-2 bg-primary/5"
+                  : ""
               }`}
             />
             <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex gap-1">
@@ -215,52 +231,55 @@ export default function LocationPicker({
           </div>
 
           {/* Origin Results Dropdown */}
-          {(isOriginFocused || originSearchQuery) && filteredOriginResults.length > 0 && (
-            <div
-              ref={originDropdownRef}
-              className="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg border border-border shadow-2xl z-50 max-h-80 overflow-y-auto"
-            >
-              <div className="divide-y divide-border">
-                {filteredOriginResults.map((building, index) => (
-                  <button
-                    key={building.id}
-                    onClick={() => handleSelectOrigin(building)}
-                    onMouseEnter={() => setOriginSelectedIndex(index)}
-                    className={`w-full text-left px-4 py-3 transition-all duration-150 hover:bg-muted/60 ${
-                      index === originSelectedIndex
-                        ? "bg-gradient-to-r from-primary/15 to-primary/5 border-l-3 border-l-primary"
-                        : ""
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1">
-                          <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
-                          <span className="truncate">{building.name || "Unnamed Building"}</span>
+          {(isOriginFocused || originSearchQuery) &&
+            filteredOriginResults.length > 0 && (
+              <div
+                ref={originDropdownRef}
+                className="absolute top-[calc(100%+0.5rem)] left-0 right-0 bg-white rounded-lg border border-border shadow-2xl z-50 max-h-80 overflow-y-auto"
+              >
+                <div className="divide-y divide-border">
+                  {filteredOriginResults.map((building, index) => (
+                    <button
+                      key={building.id}
+                      onClick={() => handleSelectOrigin(building)}
+                      onMouseEnter={() => setOriginSelectedIndex(index)}
+                      className={`w-full text-left px-4 py-3 transition-all duration-150 hover:bg-muted/60 ${
+                        index === originSelectedIndex
+                          ? "bg-gradient-to-r from-primary/15 to-primary/5 border-l-3 border-l-primary"
+                          : ""
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm text-foreground flex items-center gap-2 mb-1">
+                            <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="truncate">
+                              {building.name || "Unnamed Building"}
+                            </span>
+                          </div>
+                          <div className="flex flex-col gap-1.5 ml-6">
+                            {building.character && (
+                              <div className="text-xs font-medium text-primary/80 flex items-center gap-1">
+                                <span className="text-primary/60">ID:</span>
+                                {building.character}
+                              </div>
+                            )}
+                            {building.descriptio && (
+                              <div className="text-xs text-muted-foreground line-clamp-2">
+                                {building.descriptio}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        <div className="flex flex-col gap-1.5 ml-6">
-                          {building.character && (
-                            <div className="text-xs font-medium text-primary/80 flex items-center gap-1">
-                              <span className="text-primary/60">ID:</span>
-                              {building.character}
-                            </div>
-                          )}
-                          {building.descriptio && (
-                            <div className="text-xs text-muted-foreground line-clamp-2">
-                              {building.descriptio}
-                            </div>
-                          )}
-                        </div>
+                        {index === originSelectedIndex && (
+                          <ChevronRight className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        )}
                       </div>
-                      {index === originSelectedIndex && (
-                        <ChevronRight className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                      )}
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* No Results Message - Origin */}
           {(isOriginFocused || originSearchQuery) &&
@@ -311,7 +330,9 @@ export default function LocationPicker({
               }}
               onBlur={handleDestinationInputBlur}
               className={`pl-9 pr-32 py-2 h-auto text-sm ${
-                isSelectingDestinationOnMap ? "border-primary border-2 bg-primary/5" : ""
+                isSelectingDestinationOnMap
+                  ? "border-primary border-2 bg-primary/5"
+                  : ""
               }`}
             />
             <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex gap-1">
