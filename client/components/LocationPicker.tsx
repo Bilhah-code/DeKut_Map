@@ -315,30 +315,33 @@ export default function LocationPicker({
 
         {/* Destination Input */}
         <div className="relative z-20">
+          <label className="block text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
+            Destination
+          </label>
           <div className="relative">
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-red-500" />
+              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
             </div>
             <Input
               ref={destinationInputRef}
-              placeholder="Where to?"
+              placeholder={destination ? destination.name : "Enter destination..."}
               value={destinationSearchQuery || destination?.name || ""}
               onChange={(e) => {
                 setDestinationSearchQuery(e.target.value);
-                setDestinationSelectedIndex(-1);
+                setDestinationSelectedIndex(0);
               }}
               onKeyDown={handleDestinationKeyDown}
               onFocus={() => {
                 setIsDestinationFocused(true);
               }}
               onBlur={handleDestinationInputBlur}
-              className={`pl-9 pr-32 py-2 h-auto text-sm ${
+              className={`pl-8 pr-20 py-3 h-auto text-sm font-medium border-2 transition-all duration-200 rounded-xl ${
                 isSelectingDestinationOnMap
-                  ? "border-primary border-2 bg-primary/5"
-                  : ""
+                  ? "border-primary bg-primary/5"
+                  : "border-border/50 hover:border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
               }`}
             />
-            <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex gap-1">
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-0.5">
               {destination && (
                 <Button
                   variant="ghost"
@@ -346,26 +349,26 @@ export default function LocationPicker({
                   onClick={() => {
                     onDestinationSelect(null);
                     setDestinationSearchQuery("");
-                    setDestinationSelectedIndex(-1);
+                    setDestinationSelectedIndex(0);
                   }}
-                  className="h-6 w-6 p-0"
+                  className="h-7 w-7 p-0 hover:bg-muted rounded-lg"
                   title="Clear destination"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="h-4 w-4" />
                 </Button>
               )}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onDestinationMapPick}
-                className={`h-6 px-2 text-xs font-medium ${
+                className={`h-7 w-7 p-0 rounded-lg transition-colors ${
                   isSelectingDestinationOnMap
                     ? "bg-primary text-white hover:bg-primary/90"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground hover:bg-muted"
                 }`}
                 title="Pick on map"
               >
-                <Map className="h-3 w-3" />
+                <Map className="h-4 w-4" />
               </Button>
             </div>
           </div>
