@@ -306,7 +306,11 @@ export default function CampusMap({
     const pathSegments = 5; // Number of arrows to display
     const segmentLength = Math.floor(route.path.length / (pathSegments + 1));
 
-    for (let i = 1; i <= pathSegments && i * segmentLength < route.path.length; i++) {
+    for (
+      let i = 1;
+      i <= pathSegments && i * segmentLength < route.path.length;
+      i++
+    ) {
       const index = i * segmentLength;
       const point = route.path[index];
       const nextPoint = route.path[Math.min(index + 1, route.path.length - 1)];
@@ -350,7 +354,9 @@ export default function CampusMap({
       offset: [0, -15],
       className: "route-label",
     });
-    startLabel.setContent("<div class=\"text-xs font-semibold text-green-700 bg-white px-2 py-1 rounded shadow\">Start</div>");
+    startLabel.setContent(
+      '<div class="text-xs font-semibold text-green-700 bg-white px-2 py-1 rounded shadow">Start</div>',
+    );
     startMarker.bindTooltip(startLabel);
 
     // Add end marker
@@ -370,11 +376,18 @@ export default function CampusMap({
       offset: [0, -15],
       className: "route-label",
     });
-    endLabel.setContent("<div class=\"text-xs font-semibold text-blue-700 bg-white px-2 py-1 rounded shadow\">Destination</div>");
+    endLabel.setContent(
+      '<div class="text-xs font-semibold text-blue-700 bg-white px-2 py-1 rounded shadow">Destination</div>',
+    );
     endMarker.bindTooltip(endLabel);
 
     // Create a feature group with route elements
-    const routeGroup = L.featureGroup([routePolyline, arrowGroup, startMarker, endMarker]);
+    const routeGroup = L.featureGroup([
+      routePolyline,
+      arrowGroup,
+      startMarker,
+      endMarker,
+    ]);
     routeLayerRef.current = routePolyline;
 
     // Add to map
