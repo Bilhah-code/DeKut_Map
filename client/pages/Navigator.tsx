@@ -296,26 +296,35 @@ export default function Navigator() {
         />
 
         {/* Map Controls - Top Right */}
-        <div className="absolute top-4 right-4 flex flex-col gap-2 z-40">
+        <div className="absolute top-6 right-6 flex flex-col gap-3 z-40">
           {/* Basemap Toggle */}
-          <div className="bg-white rounded-lg shadow-md border border-gray-200">
+          <div className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden backdrop-blur-sm">
             <Button
               variant={baseLayerKey === "openstreetmap" ? "default" : "ghost"}
               size="sm"
               onClick={() => setBaseLayerKey("openstreetmap")}
-              className="w-10 h-10 rounded-none flex items-center justify-center"
+              className={`w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all ${
+                baseLayerKey === "openstreetmap"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-white text-gray-700 hover:bg-gray-50"
+              }`}
               title="OpenStreetMap"
             >
-              <MapIcon className="h-4 w-4" />
+              <MapIcon className="h-5 w-5" />
             </Button>
+            <div className="w-full h-px bg-gray-200"></div>
             <Button
               variant={baseLayerKey === "satellite" ? "default" : "ghost"}
               size="sm"
               onClick={() => setBaseLayerKey("satellite")}
-              className="w-10 h-10 rounded-none border-t border-gray-200 flex items-center justify-center"
+              className={`w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all ${
+                baseLayerKey === "satellite"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-white text-gray-700 hover:bg-gray-50"
+              }`}
               title="Satellite"
             >
-              <Satellite className="h-4 w-4" />
+              <Satellite className="h-5 w-5" />
             </Button>
           </div>
 
@@ -323,10 +332,10 @@ export default function Navigator() {
           <Button
             onClick={handleGeolocation}
             size="sm"
-            className="w-10 h-10 rounded-lg shadow-md p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+            className="w-11 h-11 rounded-xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
             title="Get my location"
           >
-            <Crosshair className="h-4 w-4" />
+            <Crosshair className="h-5 w-5" />
           </Button>
 
           {/* Layer Controls */}
@@ -334,10 +343,10 @@ export default function Navigator() {
             <SheetTrigger asChild>
               <Button
                 size="sm"
-                className="w-10 h-10 rounded-lg shadow-md p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+                className="w-11 h-11 rounded-xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
                 title="Layer controls"
               >
-                <Layers className="h-4 w-4" />
+                <Layers className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-72">
