@@ -136,7 +136,7 @@ export default function SpatialSearch({
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-sm text-foreground truncate flex items-center gap-2">
                         <MapPin className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                        {building.name}
+                        {building.name || "Unnamed Building"}
                       </div>
                       {building.descriptio && (
                         <div className="text-xs text-muted-foreground mt-1 line-clamp-1">
