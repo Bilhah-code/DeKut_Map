@@ -354,14 +354,14 @@ export default function CampusMap({
     routeGroup.addLayer(animatedPolyline);
 
     // Add direction arrows along the route
-    const minPoints = Math.min(route.path.length, 20);
+    const minPoints = Math.min(pathToRender.length, 20);
     for (let i = 0; i < minPoints - 1; i++) {
-      const step = Math.floor((route.path.length - 1) / minPoints);
+      const step = Math.floor((pathToRender.length - 1) / minPoints);
       const idx = i * step;
-      if (idx >= route.path.length - 1) break;
+      if (idx >= pathToRender.length - 1) break;
 
-      const point = route.path[idx];
-      const nextPoint = route.path[Math.min(idx + 1, route.path.length - 1)];
+      const point = pathToRender[idx];
+      const nextPoint = pathToRender[Math.min(idx + 1, pathToRender.length - 1)];
 
       const lat1 = point[0];
       const lon1 = point[1];
