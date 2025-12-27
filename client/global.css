@@ -143,6 +143,38 @@
   @apply bg-primary text-primary-foreground;
 }
 
+/* Building tooltip styling */
+.building-tooltip {
+  @apply !bg-transparent !border-0 !p-0 !shadow-none;
+}
+
+.building-tooltip .leaflet-tooltip-content {
+  @apply m-0 p-0;
+}
+
+/* Route direction arrows */
+.route-direction-arrow {
+  @apply pointer-events-none;
+}
+
+/* Route labels for start/destination */
+.route-label {
+  @apply !bg-transparent !border-0 !p-0 !shadow-none;
+}
+
+.route-label .leaflet-tooltip-content {
+  @apply m-0 p-0;
+}
+
+/* Route polyline hover effect */
+.route-polyline {
+  @apply transition-opacity;
+}
+
+.route-polyline:hover {
+  @apply opacity-100;
+}
+
 /* Smooth transitions */
 * {
   @apply transition-colors duration-200;
