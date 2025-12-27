@@ -171,8 +171,8 @@ export default function LocationPicker({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-border/50 overflow-hidden">
-      <div className="p-4 space-y-3">
+    <div className="bg-white rounded-2xl shadow-xl border border-border/40 overflow-hidden backdrop-blur-sm bg-white/95">
+      <div className="p-5 space-y-4">
         {/* Origin Input */}
         <div className="relative z-30">
           <div className="relative">
