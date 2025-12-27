@@ -5,7 +5,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import MapToolbar from "@/components/MapToolbar";
 import CampusMap from "@/components/CampusMap";
 import RoutePanel from "@/components/RoutePanel";
+import LocationPicker from "@/components/LocationPicker";
 import { calculateRoute } from "@/services/routingService";
+import { toast } from "sonner";
 
 interface Building {
   id: string;
@@ -28,6 +30,10 @@ interface Route {
 }
 
 export default function Navigator() {
+  const [origin, setOrigin] = useState<Building | null>(null);
+  const [destination, setDestination] = useState<Building | null>(null);
+  const [isSelectingOriginOnMap, setIsSelectingOriginOnMap] = useState(false);
+  const [isSelectingDestinationOnMap, setIsSelectingDestinationOnMap] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<
     Building | Location | null
   >(null);
@@ -50,6 +56,52 @@ export default function Navigator() {
     distance: 0,
     estimatedTime: 0,
   });
+
+  const handleOriginSelect = (location: Building | null) => {
+    setOrigin(location);
+    setIsSelectingOriginOnMap(false);
+    if (location) {
+      toast.success(`Starting point: ${location.name}`);
+      calculateAndShowRoute(location.coords, destination?.coords);
+    }
+  };
+
+  const handleDestinationSelect = (location: Building | null) => {
+    setDestination(location);
+    setIsSelectingDestinationOnMap(false);
+    if (location) {
+      toast.success(`Destination: ${location.name}`);
+      calculateAndShowRoute(origin?.coords, location.coords);
+    }
+  };
+
+  const calculateAndShowRoute = (startCoords?: [number, number], endCoords?: [number, number]) => {
+    if (!startCoords || !endCoords) {
+      setRoute(null);
+      setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 });
+      return;
+    }
+
+    const calculatedRoute = calculateRoute(startCoords, endCoords);
+    setRoute({
+      start: startCoords,
+      end: endCoords,
+      path: calculatedRoute.routePath || [startCoords, endCoords],
+    });
+    setRoutePanel({
+      isOpen: true,
+      distance: calculatedRoute.distance,
+      estimatedTime: calculatedRoute.estimatedTime,
+    });
+  };
+
+  const handleMapClick = (location: Building) => {
+    if (isSelectingOriginOnMap) {
+      handleOriginSelect(location);
+    } else if (isSelectingDestinationOnMap) {
+      handleDestinationSelect(location);
+    }
+  };
 
   const handleLocationSelect = (location: Building) => {
     setSelectedLocation(location);
