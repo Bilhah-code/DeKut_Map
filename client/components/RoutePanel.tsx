@@ -4,6 +4,7 @@ import {
   MapPin,
   Clock,
   Gauge,
+  CheckCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistance, formatTime } from "@/services/routingService";
@@ -36,17 +37,20 @@ export default function RoutePanel({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-white rounded-lg shadow-lg border border-gray-200 z-40 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        <h2 className="font-bold text-gray-900">Route Details</h2>
+    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-2xl shadow-2xl border-2 border-blue-300 z-40 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+      {/* Header with gradient */}
+      <div className="flex items-center justify-between p-5 border-b-2 border-blue-200 bg-gradient-to-r from-blue-600 to-blue-700">
+        <div className="flex items-center gap-3">
+          <CheckCircle className="h-5 w-5 text-white" />
+          <h2 className="font-bold text-white text-lg">Route Found</h2>
+        </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={onClose}
-          className="h-8 w-8 p-0 hover:bg-gray-100 rounded"
+          className="h-8 w-8 p-0 hover:bg-blue-600 rounded-lg text-white transition-colors"
         >
-          <X className="h-4 w-4 text-gray-600" />
+          <X className="h-4 w-4" />
         </Button>
       </div>
 
