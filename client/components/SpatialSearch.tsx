@@ -28,22 +28,27 @@ export default function SpatialSearch({
   const filteredResults = useMemo(() => {
     if (!searchQuery.trim()) {
       // If no search query, return all buildings sorted by name
-      return buildings.slice().sort((a, b) => a.name.localeCompare(b.name));
+      return buildings
+        .slice()
+        .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     }
     const query = searchQuery.toLowerCase();
     return buildings
       .filter(
         (building) =>
-          building.name.toLowerCase().includes(query) ||
-          building.character.toLowerCase().includes(query) ||
-          building.descriptio.toLowerCase().includes(query),
+          building.name?.toLowerCase().includes(query) ||
+          false ||
+          building.character?.toLowerCase().includes(query) ||
+          false ||
+          building.descriptio?.toLowerCase().includes(query) ||
+          false,
       )
       .sort((a, b) => {
         // Sort by name match relevance
-        const aNameMatch = a.name.toLowerCase().indexOf(query);
-        const bNameMatch = b.name.toLowerCase().indexOf(query);
+        const aNameMatch = (a.name?.toLowerCase() || "").indexOf(query);
+        const bNameMatch = (b.name?.toLowerCase() || "").indexOf(query);
         if (aNameMatch !== bNameMatch) return aNameMatch - bNameMatch;
-        return a.name.localeCompare(b.name);
+        return (a.name || "").localeCompare(b.name || "");
       });
   }, [searchQuery, buildings]);
 
@@ -136,7 +141,7 @@ export default function SpatialSearch({
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-sm text-foreground truncate flex items-center gap-2">
                         <MapPin className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                        {building.name}
+                        {building.name || "Unnamed Building"}
                       </div>
                       {building.descriptio && (
                         <div className="text-xs text-muted-foreground mt-1 line-clamp-1">
