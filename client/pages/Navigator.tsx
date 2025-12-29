@@ -1,22 +1,13 @@
 import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Satellite,
-  Map as MapIcon,
-  Crosshair,
-  Layers,
-  ChevronLeft,
-  Plus,
-  Minus,
-  Home,
-  Maximize2,
-  Ruler,
-} from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Layers, Sheet, SheetContent, SheetTrigger } from "lucide-react";
 import CampusMap from "@/components/CampusMap";
 import RoutePanel from "@/components/RoutePanel";
-import LocationPicker from "@/components/LocationPicker";
 import InformationPanel from "@/components/InformationPanel";
+import BottomSearchSheet from "@/components/BottomSearchSheet";
+import FloatingActionButtons from "@/components/FloatingActionButtons";
+import ModernHeader from "@/components/ModernHeader";
+import { Button } from "@/components/ui/button";
+import { Sheet as SheetComponent, SheetContent as SheetContentComponent, SheetTrigger as SheetTriggerComponent } from "@/components/ui/sheet";
 import { calculateRoute } from "@/services/routingService";
 import { toast } from "sonner";
 
@@ -43,19 +34,12 @@ interface Route {
 export default function Navigator() {
   const [origin, setOrigin] = useState<Building | null>(null);
   const [destination, setDestination] = useState<Building | null>(null);
-  const [isSelectingOriginOnMap, setIsSelectingOriginOnMap] = useState(false);
-  const [isSelectingDestinationOnMap, setIsSelectingDestinationOnMap] =
-    useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<
-    Building | Location | null
-  >(null);
+  const [selectedLocation, setSelectedLocation] = useState<Building | Location | null>(null);
   const [userLocation, setUserLocation] = useState<{
     coords: [number, number];
     accuracy: number;
   } | null>(null);
-  const [baseLayerKey, setBaseLayerKey] = useState<
-    "openstreetmap" | "satellite"
-  >("openstreetmap");
+  const [baseLayerKey, setBaseLayerKey] = useState<"openstreetmap" | "satellite">("openstreetmap");
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [visibleLayers, setVisibleLayers] = useState({
     buildings: true,
@@ -69,10 +53,10 @@ export default function Navigator() {
     estimatedTime: 0,
   });
   const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
+  const [isSearchSheetOpen, setIsSearchSheetOpen] = useState(false);
 
   const handleOriginSelect = (location: Building | null) => {
     setOrigin(location);
-    setIsSelectingOriginOnMap(false);
     if (location) {
       toast.success(`From: ${location.name}`);
       calculateAndShowRoute(location.coords, destination?.coords);
@@ -81,7 +65,6 @@ export default function Navigator() {
 
   const handleDestinationSelect = (location: Building | null) => {
     setDestination(location);
-    setIsSelectingDestinationOnMap(false);
     if (location) {
       toast.success(`To: ${location.name}`);
       calculateAndShowRoute(origin?.coords, location.coords);
@@ -93,27 +76,12 @@ export default function Navigator() {
     endCoords?: [number, number],
   ) => {
     if (!startCoords || !endCoords) {
-      console.log("Missing coordinates for route calculation", {
-        startCoords,
-        endCoords,
-      });
       setRoute(null);
       setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 });
       return;
     }
 
-    console.log("Calculating route", {
-      startCoords,
-      endCoords,
-      buildingsCount: buildings.length,
-    });
-
     const calculatedRoute = calculateRoute(startCoords, endCoords, buildings);
-    console.log("Route calculated:", {
-      distance: calculatedRoute.distance,
-      estimatedTime: calculatedRoute.estimatedTime,
-      pathLength: calculatedRoute.routePath?.length,
-    });
 
     setRoute({
       start: startCoords,
@@ -128,38 +96,8 @@ export default function Navigator() {
   };
 
   const handleMapClick = (location: Building) => {
-    if (isSelectingOriginOnMap) {
-      handleOriginSelect(location);
-    } else if (isSelectingDestinationOnMap) {
-      handleDestinationSelect(location);
-    }
-  };
-
-  const handleLocationSelect = (location: Building) => {
     setSelectedLocation(location);
     setIsInfoPanelOpen(true);
-
-    // If user location exists, calculate route
-    if (userLocation) {
-      const calculatedRoute = calculateRoute(
-        userLocation.coords,
-        location.coords,
-        buildings,
-      );
-      setRoute({
-        start: userLocation.coords,
-        end: location.coords,
-        path: calculatedRoute.routePath || [
-          userLocation.coords,
-          location.coords,
-        ],
-      });
-      setRoutePanel({
-        isOpen: true,
-        distance: calculatedRoute.distance,
-        estimatedTime: calculatedRoute.estimatedTime,
-      });
-    }
   };
 
   const handleGeolocation = () => {
@@ -172,31 +110,11 @@ export default function Navigator() {
             accuracy: accuracy,
           };
           setUserLocation(newLocation);
-
-          // Recalculate route if destination is selected
-          if (selectedLocation && "coords" in selectedLocation) {
-            const calculatedRoute = calculateRoute(
-              newLocation.coords,
-              selectedLocation.coords,
-              buildings,
-            );
-            setRoute({
-              start: newLocation.coords,
-              end: selectedLocation.coords,
-              path: calculatedRoute.routePath || [
-                newLocation.coords,
-                selectedLocation.coords,
-              ],
-            });
-            setRoutePanel({
-              isOpen: true,
-              distance: calculatedRoute.distance,
-              estimatedTime: calculatedRoute.estimatedTime,
-            });
-          }
+          toast.success("Location acquired");
         },
         (error) => {
           console.error("Geolocation error:", error);
+          toast.error("Failed to get location");
         },
       );
     }
@@ -234,97 +152,18 @@ export default function Navigator() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-white">
-      {/* Header with gradient background */}
-      <div className="border-b-2 border-blue-200 shadow-md bg-gradient-to-r from-white via-blue-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          {/* Desktop Layout */}
-          <div className="hidden md:flex items-center justify-between gap-8">
-            {/* Logo/Title */}
-            <div className="flex items-center gap-4 flex-shrink-0">
-              <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-base">DK</span>
-              </div>
-              <div>
-                <h1 className="font-black text-lg text-gray-900 tracking-tight">
-                  DeKUT Navigator
-                </h1>
-                <p className="text-xs text-gray-500 font-medium">
-                  Campus Navigation
-                </p>
-              </div>
-            </div>
-
-            {/* Location Picker */}
-            <div className="flex-1 max-w-2xl">
-              <LocationPicker
-                origin={origin}
-                destination={destination}
-                onOriginSelect={handleOriginSelect}
-                onDestinationSelect={handleDestinationSelect}
-                onOriginMapPick={() =>
-                  setIsSelectingOriginOnMap(!isSelectingOriginOnMap)
-                }
-                onDestinationMapPick={() =>
-                  setIsSelectingDestinationOnMap(!isSelectingDestinationOnMap)
-                }
-                buildings={buildings}
-                isSelectingOriginOnMap={isSelectingOriginOnMap}
-                isSelectingDestinationOnMap={isSelectingDestinationOnMap}
-                distance={routePanel.distance}
-                estimatedTime={routePanel.estimatedTime}
-              />
-            </div>
-          </div>
-
-          {/* Mobile Layout */}
-          <div className="md:hidden space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="relative w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-sm">DK</span>
-              </div>
-              <div>
-                <h1 className="font-black text-base text-gray-900">
-                  DeKUT Navigator
-                </h1>
-                <p className="text-xs text-gray-500 font-medium">
-                  Campus Navigation
-                </p>
-              </div>
-            </div>
-
-            {/* Mobile Location Picker */}
-            <LocationPicker
-              origin={origin}
-              destination={destination}
-              onOriginSelect={handleOriginSelect}
-              onDestinationSelect={handleDestinationSelect}
-              onOriginMapPick={() =>
-                setIsSelectingOriginOnMap(!isSelectingOriginOnMap)
-              }
-              onDestinationMapPick={() =>
-                setIsSelectingDestinationOnMap(!isSelectingDestinationOnMap)
-              }
-              buildings={buildings}
-              isSelectingOriginOnMap={isSelectingOriginOnMap}
-              isSelectingDestinationOnMap={isSelectingDestinationOnMap}
-              distance={routePanel.distance}
-              estimatedTime={routePanel.estimatedTime}
-            />
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-col h-screen bg-gray-50 overflow-hidden">
+      {/* Modern Header */}
+      <ModernHeader
+        origin={origin}
+        destination={destination}
+        distance={routePanel.distance}
+        estimatedTime={routePanel.estimatedTime}
+        onSearchClick={() => setIsSearchSheetOpen(true)}
+      />
 
       {/* Map Container */}
-      <div
-        className="flex-1 relative overflow-hidden"
-        style={{
-          cursor:
-            isSelectingOriginOnMap || isSelectingDestinationOnMap
-              ? "crosshair"
-              : "default",
-        }}
-      >
+      <div className="flex-1 relative overflow-hidden mt-32">
         <CampusMap
           selectedLocation={
             destination && "coords" in destination
@@ -343,58 +182,16 @@ export default function Navigator() {
           route={route || undefined}
         />
 
-        {/* Map Controls - Top Right */}
-        <div className="absolute top-6 right-6 flex flex-col gap-3 z-40">
-          {/* Basemap Toggle */}
-          <div className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden backdrop-blur-sm">
-            <Button
-              variant={baseLayerKey === "openstreetmap" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setBaseLayerKey("openstreetmap")}
-              className={`w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all ${
-                baseLayerKey === "openstreetmap"
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-              title="OpenStreetMap"
-            >
-              <MapIcon className="h-5 w-5" />
-            </Button>
-            <div className="w-full h-px bg-gray-200"></div>
-            <Button
-              variant={baseLayerKey === "satellite" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setBaseLayerKey("satellite")}
-              className={`w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all ${
-                baseLayerKey === "satellite"
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-              title="Satellite"
-            >
-              <Satellite className="h-5 w-5" />
-            </Button>
-          </div>
-
-          {/* Geolocation Button */}
-          <Button
-            onClick={handleGeolocation}
-            size="sm"
-            className="w-11 h-11 rounded-xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
-            title="Get my location"
-          >
-            <Crosshair className="h-5 w-5" />
-          </Button>
-
-          {/* Additional Map Controls */}
-          <div className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden backdrop-blur-sm">
+        {/* Map Controls - Top Left (Zoom, Home, Fullscreen) */}
+        <div className="absolute top-6 left-6 flex flex-col gap-3 z-40">
+          <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden backdrop-blur-sm">
             <Button
               onClick={handleZoomIn}
               size="sm"
               className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-200"
               title="Zoom in"
             >
-              <Plus className="h-5 w-5" />
+              +
             </Button>
             <Button
               onClick={handleZoomOut}
@@ -402,64 +199,48 @@ export default function Navigator() {
               className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-200"
               title="Zoom out"
             >
-              <Minus className="h-5 w-5" />
+              −
             </Button>
             <Button
               onClick={handleResetView}
               size="sm"
-              className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-200"
+              className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600"
               title="Reset view"
             >
-              <Home className="h-5 w-5" />
-            </Button>
-            <Button
-              onClick={handleFullscreen}
-              size="sm"
-              className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600"
-              title="Fullscreen"
-            >
-              <Maximize2 className="h-5 w-5" />
+              🏠
             </Button>
           </div>
 
-          {/* Layer Controls */}
-          <Sheet>
-            <SheetTrigger asChild>
+          {/* Layers Control */}
+          <SheetComponent>
+            <SheetTriggerComponent asChild>
               <Button
                 size="sm"
-                className="w-11 h-11 rounded-xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
+                className="w-11 h-11 rounded-2xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
                 title="Layer controls"
               >
                 <Layers className="h-5 w-5" />
               </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-80 bg-gradient-to-b from-white to-gray-50"
-            >
-              <div className="space-y-5 mt-2">
+            </SheetTriggerComponent>
+            <SheetContentComponent side="left" className="w-80 bg-gradient-to-b from-white to-gray-50">
+              <div className="space-y-5 mt-8">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Map Layers
-                  </h2>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <h2 className="text-2xl font-bold text-gray-900">Map Layers</h2>
+                  <p className="text-xs text-gray-500 mt-2">
                     Toggle layers to customize your view
                   </p>
                 </div>
 
                 {/* Buildings Layer Toggle */}
-                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-blue-300 hover:border-blue-400 transition-all cursor-pointer hover:shadow-md">
+                <div className="flex items-center gap-3 p-4 bg-white rounded-2xl border-2 border-blue-300 hover:border-blue-400 transition-all cursor-pointer hover:shadow-md">
                   <input
                     type="checkbox"
                     id="buildings-toggle"
                     checked={visibleLayers.buildings}
                     onChange={() => toggleLayer("buildings")}
-                    className="w-5 h-5 rounded accent-blue-600"
+                    className="w-5 h-5 rounded accent-blue-600 cursor-pointer"
                   />
-                  <label
-                    htmlFor="buildings-toggle"
-                    className="flex-1 cursor-pointer"
-                  >
+                  <label htmlFor="buildings-toggle" className="flex-1 cursor-pointer">
                     <span className="block text-sm font-bold text-gray-900">
                       Buildings
                     </span>
@@ -470,18 +251,15 @@ export default function Navigator() {
                 </div>
 
                 {/* Roads Layer Toggle */}
-                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-orange-300 hover:border-orange-400 transition-all cursor-pointer hover:shadow-md">
+                <div className="flex items-center gap-3 p-4 bg-white rounded-2xl border-2 border-orange-300 hover:border-orange-400 transition-all cursor-pointer hover:shadow-md">
                   <input
                     type="checkbox"
                     id="roads-toggle"
                     checked={visibleLayers.roads}
                     onChange={() => toggleLayer("roads")}
-                    className="w-5 h-5 rounded accent-orange-600"
+                    className="w-5 h-5 rounded accent-orange-600 cursor-pointer"
                   />
-                  <label
-                    htmlFor="roads-toggle"
-                    className="flex-1 cursor-pointer"
-                  >
+                  <label htmlFor="roads-toggle" className="flex-1 cursor-pointer">
                     <span className="block text-sm font-bold text-gray-900">
                       Roads & Paths
                     </span>
@@ -492,18 +270,15 @@ export default function Navigator() {
                 </div>
 
                 {/* Boundary Layer Toggle */}
-                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-green-300 hover:border-green-400 transition-all cursor-pointer hover:shadow-md">
+                <div className="flex items-center gap-3 p-4 bg-white rounded-2xl border-2 border-green-300 hover:border-green-400 transition-all cursor-pointer hover:shadow-md">
                   <input
                     type="checkbox"
                     id="boundary-toggle"
                     checked={visibleLayers.boundary}
                     onChange={() => toggleLayer("boundary")}
-                    className="w-5 h-5 rounded accent-green-600"
+                    className="w-5 h-5 rounded accent-green-600 cursor-pointer"
                   />
-                  <label
-                    htmlFor="boundary-toggle"
-                    className="flex-1 cursor-pointer"
-                  >
+                  <label htmlFor="boundary-toggle" className="flex-1 cursor-pointer">
                     <span className="block text-sm font-bold text-gray-900">
                       Campus Boundary
                     </span>
@@ -514,11 +289,10 @@ export default function Navigator() {
                 </div>
 
                 {/* Legend */}
-                <div className="mt-7 space-y-4 border-t-2 border-gray-300 pt-5">
+                <div className="mt-8 space-y-4 border-t-2 border-gray-300 pt-6">
                   <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
                     Map Legend
                   </h3>
-
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-3 rounded-full bg-blue-600 shadow-md"></div>
@@ -526,46 +300,23 @@ export default function Navigator() {
                         Buildings
                       </span>
                     </div>
-
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-1 bg-blue-500 rounded-full"></div>
                       <span className="text-sm font-medium text-gray-700">
                         Pedestrian Path
                       </span>
                     </div>
-
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-1 bg-orange-500 rounded-full"></div>
                       <span className="text-sm font-medium text-gray-700">
                         Road
                       </span>
                     </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-4 h-1 border-b-2 border-dashed border-green-600"></div>
-                      <span className="text-sm font-medium text-gray-700">
-                        Campus Boundary
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-green-500 shadow-md"></div>
-                      <span className="text-sm font-medium text-gray-700">
-                        Start Location
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-blue-700 shadow-md"></div>
-                      <span className="text-sm font-medium text-gray-700">
-                        Destination
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>
-            </SheetContent>
-          </Sheet>
+            </SheetContentComponent>
+          </SheetComponent>
         </div>
 
         {/* Route Panel */}
@@ -599,7 +350,29 @@ export default function Navigator() {
           estimatedTime={routePanel.estimatedTime}
           userLocation={userLocation}
         />
+
+        {/* Floating Action Buttons */}
+        <FloatingActionButtons
+          onSearchClick={() => setIsSearchSheetOpen(true)}
+          onNavigateClick={handleGeolocation}
+          onLayersClick={() => {}}
+          onBaseLayerChange={setBaseLayerKey}
+          baseLayerKey={baseLayerKey}
+        />
       </div>
+
+      {/* Bottom Search Sheet */}
+      <BottomSearchSheet
+        isOpen={isSearchSheetOpen}
+        onClose={() => setIsSearchSheetOpen(false)}
+        onOriginSelect={handleOriginSelect}
+        onDestinationSelect={handleDestinationSelect}
+        buildings={buildings}
+        origin={origin}
+        destination={destination}
+        isSelectingOrigin={!destination}
+        isSelectingDestination={!!origin}
+      />
     </div>
   );
 }
