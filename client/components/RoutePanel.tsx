@@ -1,4 +1,5 @@
-import { Loader2, X, MapPin, Clock, Gauge, CheckCircle } from "lucide-react";
+import { useState } from "react";
+import { Loader2, X, MapPin, Clock, Gauge, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Accessibility, Wind, Eye, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistance, formatTime } from "@/services/routingService";
 
@@ -27,6 +28,8 @@ export default function RoutePanel({
   estimatedTime,
   isLoading,
 }: RoutePanelProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   if (!isOpen) return null;
 
   return (
