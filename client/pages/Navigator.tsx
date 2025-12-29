@@ -57,6 +57,7 @@ export default function Navigator() {
     distance: 0,
     estimatedTime: 0,
   });
+  const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
 
   const handleOriginSelect = (location: Building | null) => {
     setOrigin(location);
