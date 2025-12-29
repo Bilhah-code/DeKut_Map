@@ -409,6 +409,8 @@ export default function LocationPicker({
               name: destination.name,
               coords: destination.coords,
             }}
+            distance={distance}
+            estimatedTime={estimatedTime}
             className=""
           />
         </div>
