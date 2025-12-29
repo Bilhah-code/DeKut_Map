@@ -392,6 +392,42 @@ export default function Navigator() {
             <Crosshair className="h-5 w-5" />
           </Button>
 
+          {/* Additional Map Controls */}
+          <div className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden backdrop-blur-sm">
+            <Button
+              onClick={handleZoomIn}
+              size="sm"
+              className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-200"
+              title="Zoom in"
+            >
+              <Plus className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={handleZoomOut}
+              size="sm"
+              className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-200"
+              title="Zoom out"
+            >
+              <Minus className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={handleResetView}
+              size="sm"
+              className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-b border-gray-200"
+              title="Reset view"
+            >
+              <Home className="h-5 w-5" />
+            </Button>
+            <Button
+              onClick={handleFullscreen}
+              size="sm"
+              className="w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+              title="Fullscreen"
+            >
+              <Maximize2 className="h-5 w-5" />
+            </Button>
+          </div>
+
           {/* Layer Controls */}
           <Sheet>
             <SheetTrigger asChild>
