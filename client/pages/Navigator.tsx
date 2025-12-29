@@ -199,6 +199,46 @@ export default function Navigator() {
     (window as any).toggleMapLayer?.(layer);
   };
 
+  const handleZoomIn = () => {
+    const mapElement = document.querySelector(
+      ".leaflet-container"
+    ) as any;
+    if (mapElement && mapElement.__vue__) {
+      mapElement.__vue__.zoomIn();
+    } else {
+      (window as any).L?.map.zoomIn();
+    }
+  };
+
+  const handleZoomOut = () => {
+    const mapElement = document.querySelector(
+      ".leaflet-container"
+    ) as any;
+    if (mapElement && mapElement.__vue__) {
+      mapElement.__vue__.zoomOut();
+    } else {
+      (window as any).L?.map.zoomOut();
+    }
+  };
+
+  const handleResetView = () => {
+    const mapElement = document.querySelector(
+      ".leaflet-container"
+    ) as any;
+    if (mapElement?.leafletMap) {
+      mapElement.leafletMap.setView([-0.3605, 37.0093], 16);
+    }
+  };
+
+  const handleFullscreen = () => {
+    const mapContainer = document.querySelector(
+      ".leaflet-container"
+    )?.parentElement;
+    if (mapContainer?.requestFullscreen) {
+      mapContainer.requestFullscreen();
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-white">
       {/* Header with gradient background */}
