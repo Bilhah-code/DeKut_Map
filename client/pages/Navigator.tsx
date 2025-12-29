@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Satellite, Map as MapIcon, Crosshair, Layers } from "lucide-react";
+import { Satellite, Map as MapIcon, Crosshair, Layers, ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import CampusMap from "@/components/CampusMap";
 import RoutePanel from "@/components/RoutePanel";
 import LocationPicker from "@/components/LocationPicker";
+import InformationPanel from "@/components/InformationPanel";
 import { calculateRoute } from "@/services/routingService";
 import { toast } from "sonner";
 
