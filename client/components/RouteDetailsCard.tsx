@@ -1,4 +1,14 @@
-import { ArrowRight, MapPin, Clock, Gauge, Zap, Wind, AlertCircle, CheckCircle2, Eye } from "lucide-react";
+import {
+  ArrowRight,
+  MapPin,
+  Clock,
+  Gauge,
+  Zap,
+  Wind,
+  AlertCircle,
+  CheckCircle2,
+  Eye,
+} from "lucide-react";
 
 interface RouteDetailsCardProps {
   startLocation?: {
@@ -21,7 +31,10 @@ export default function RouteDetailsCard({
   estimatedTime = 0,
   className = "",
 }: RouteDetailsCardProps) {
-  const pace = estimatedTime > 0 ? Math.round((distance / estimatedTime / 1000) * 60 * 10) / 10 : 0;
+  const pace =
+    estimatedTime > 0
+      ? Math.round((distance / estimatedTime / 1000) * 60 * 10) / 10
+      : 0;
   const calories = Math.round((distance / 1000) * 60);
 
   const formatDistance = (meters: number): string => {
@@ -37,7 +50,9 @@ export default function RouteDetailsCard({
   };
 
   return (
-    <div className={`bg-gradient-to-br from-blue-50 to-white rounded-2xl border-2 border-blue-200 overflow-hidden shadow-lg hover:shadow-xl transition-all ${className}`}>
+    <div
+      className={`bg-gradient-to-br from-blue-50 to-white rounded-2xl border-2 border-blue-200 overflow-hidden shadow-lg hover:shadow-xl transition-all ${className}`}
+    >
       {/* Header Section */}
       <div className="p-5 border-b-2 border-blue-200">
         <div className="flex items-center justify-between mb-4">
@@ -50,9 +65,13 @@ export default function RouteDetailsCard({
 
         {/* Location Path */}
         <div className="flex items-center gap-3 text-sm">
-          <span className="font-semibold text-gray-900 truncate max-w-xs">{startLocation?.name || 'Start'}</span>
+          <span className="font-semibold text-gray-900 truncate max-w-xs">
+            {startLocation?.name || "Start"}
+          </span>
           <ArrowRight className="h-4 w-4 text-blue-500 flex-shrink-0" />
-          <span className="font-semibold text-gray-900 truncate max-w-xs">{destinationLocation?.name || 'End'}</span>
+          <span className="font-semibold text-gray-900 truncate max-w-xs">
+            {destinationLocation?.name || "End"}
+          </span>
         </div>
       </div>
 
@@ -66,7 +85,9 @@ export default function RouteDetailsCard({
               <Gauge className="h-4 w-4 text-orange-600" />
               <span className="text-xs font-bold text-gray-700">Distance</span>
             </div>
-            <p className="text-2xl font-black text-orange-600">{formatDistance(distance)}</p>
+            <p className="text-2xl font-black text-orange-600">
+              {formatDistance(distance)}
+            </p>
           </div>
 
           {/* Time Card */}
@@ -75,7 +96,9 @@ export default function RouteDetailsCard({
               <Clock className="h-4 w-4 text-purple-600" />
               <span className="text-xs font-bold text-gray-700">Time</span>
             </div>
-            <p className="text-2xl font-black text-purple-600">{formatTime(estimatedTime)}</p>
+            <p className="text-2xl font-black text-purple-600">
+              {formatTime(estimatedTime)}
+            </p>
           </div>
         </div>
 
@@ -87,7 +110,9 @@ export default function RouteDetailsCard({
               <Wind className="h-3.5 w-3.5 text-indigo-600" />
               <span className="text-xs font-bold text-gray-700">Pace</span>
             </div>
-            <p className="text-lg font-bold text-indigo-600">{pace.toFixed(1)}</p>
+            <p className="text-lg font-bold text-indigo-600">
+              {pace.toFixed(1)}
+            </p>
             <p className="text-xs text-gray-600">km/h</p>
           </div>
 
@@ -107,7 +132,9 @@ export default function RouteDetailsCard({
               <MapPin className="h-3.5 w-3.5 text-emerald-600" />
               <span className="text-xs font-bold text-gray-700">Steps</span>
             </div>
-            <p className="text-lg font-bold text-emerald-600">~{Math.round(distance / 0.75)}</p>
+            <p className="text-lg font-bold text-emerald-600">
+              ~{Math.round(distance / 0.75)}
+            </p>
             <p className="text-xs text-gray-600">est.</p>
           </div>
         </div>
@@ -122,14 +149,18 @@ export default function RouteDetailsCard({
           <div className="flex items-start gap-3 p-3 bg-blue-100 rounded-lg border border-blue-300">
             <CheckCircle2 className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
             <div className="text-xs">
-              <p className="font-semibold text-gray-900">Wheelchair Accessible</p>
+              <p className="font-semibold text-gray-900">
+                Wheelchair Accessible
+              </p>
               <p className="text-gray-700">Paved pathways</p>
             </div>
           </div>
           <div className="flex items-start gap-3 p-3 bg-amber-100 rounded-lg border border-amber-300">
             <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <div className="text-xs">
-              <p className="font-semibold text-gray-900">Optimal Walking Route</p>
+              <p className="font-semibold text-gray-900">
+                Optimal Walking Route
+              </p>
               <p className="text-gray-700">Follow blue highlighted path</p>
             </div>
           </div>
@@ -138,7 +169,10 @@ export default function RouteDetailsCard({
 
       {/* Footer Info */}
       <div className="px-5 py-3 bg-gray-100 text-xs text-gray-600 border-t-2 border-gray-200">
-        <p>Times are based on average walking pace (~5 km/h). Actual time may vary.</p>
+        <p>
+          Times are based on average walking pace (~5 km/h). Actual time may
+          vary.
+        </p>
       </div>
     </div>
   );

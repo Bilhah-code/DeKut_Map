@@ -3,6 +3,7 @@
 ## ✅ Issues Fixed
 
 ### 1. **Missing Location Information on Map Click**
+
 - **Problem**: When clicking a point on the map, location details were not displayed
 - **Solution**: Created a new `InformationPanel` component that displays all location details in a side panel
 - **Features**:
@@ -13,14 +14,16 @@
   - Updates automatically when a location is selected
 
 ### 2. **Zoom Controls Disappearing**
+
 - **Problem**: Zoom in/out controls kept disappearing from the map
-- **Solution**: 
+- **Solution**:
   - Explicitly enabled zoom controls in CampusMap initialization
   - Added CSS rules to ensure controls stay visible with high z-index
   - Set `visibility: visible` and `opacity: 1` to prevent hiding
   - Applied proper styling to match the app design
 
 ### 3. **Poor UI Layout**
+
 - **Problem**: Information was not well organized on the screen
 - **Solution**:
   - Created a dedicated side panel (right side) for location information
@@ -30,9 +33,11 @@
 ## 🎨 New Features Added
 
 ### 1. **Information Panel (Right Side)**
+
 **Location**: `client/components/InformationPanel.tsx`
 
 Displays when a location is clicked on the map:
+
 - 📍 **Location Details**: Name, character, description
 - 📅 **Current Date & Time**: Real-time date and time display
 - 📊 **Route Information**: Distance, travel time, speed
@@ -40,13 +45,16 @@ Displays when a location is clicked on the map:
 - 🎯 **Actions**: Navigate and Share buttons
 
 ### 2. **Enhanced Map Toolbar**
+
 **Features Added**:
+
 - ➕ **Zoom In Button**: Increases map zoom level
 - ➖ **Zoom Out Button**: Decreases map zoom level
 - 🏠 **Reset View Button**: Returns map to default center and zoom (DeKUT Campus)
 - 📺 **Fullscreen Button**: Enables fullscreen map view
 
 **Visual Design**:
+
 - Grouped controls in a compact toolbar
 - Rounded corners and modern styling
 - Smooth hover effects with color transitions
@@ -54,7 +62,9 @@ Displays when a location is clicked on the map:
 - Matches the app's color scheme
 
 ### 3. **Metadata Display Box**
+
 In the Information Panel, displays:
+
 - ⏰ **Distance**: How far the destination is
 - ⏱️ **Estimated Time**: How long it takes to walk there
 - 🚶 **Walking Speed**: Calculated pace in km/h
@@ -64,12 +74,14 @@ In the Information Panel, displays:
 ## 📋 Files Modified
 
 ### 1. `client/components/InformationPanel.tsx` ✨ (NEW)
+
 - 240 lines
 - Displays location information in a side panel
 - Shows metadata with date, time, distance, and duration
 - Responsive design that slides in from the right
 
 ### 2. `client/pages/Navigator.tsx`
+
 - Added `InformationPanel` import
 - Added state: `isInfoPanelOpen`
 - Updated `handleLocationSelect` to open the panel
@@ -82,6 +94,7 @@ In the Information Panel, displays:
 - Integrated InformationPanel into the layout
 
 ### 3. `client/components/CampusMap.tsx`
+
 - Enabled Leaflet zoom controls explicitly
 - Added scale control to the map
 - Exposed window functions:
@@ -91,6 +104,7 @@ In the Information Panel, displays:
   - `toggleMapLayer()` - Toggle visibility of layers
 
 ### 4. `client/global.css`
+
 - Enhanced Leaflet control styling
 - Made zoom controls always visible with proper z-index
 - Applied custom styling to match app design
@@ -102,18 +116,19 @@ In the Information Panel, displays:
 
 ## 🎯 Key Improvements
 
-| Feature | Before | After |
-|---------|--------|-------|
-| Location Info | Hidden/Missing | Visible in side panel |
-| Zoom Controls | Disappearing | Always visible |
-| Map Tools | Limited | Zoom in/out, Reset view, Fullscreen |
-| Metadata Display | None | Shows date, time, distance, speed |
-| UI Organization | Overlapping | Side panel layout |
-| Information Accessibility | Hidden | Easy access in dedicated panel |
+| Feature                   | Before         | After                               |
+| ------------------------- | -------------- | ----------------------------------- |
+| Location Info             | Hidden/Missing | Visible in side panel               |
+| Zoom Controls             | Disappearing   | Always visible                      |
+| Map Tools                 | Limited        | Zoom in/out, Reset view, Fullscreen |
+| Metadata Display          | None           | Shows date, time, distance, speed   |
+| UI Organization           | Overlapping    | Side panel layout                   |
+| Information Accessibility | Hidden         | Easy access in dedicated panel      |
 
 ## 🎮 How to Use
 
 ### Clicking a Location on the Map
+
 1. Click any building/location on the campus map
 2. A side panel will open on the right showing:
    - Location name and details
@@ -123,13 +138,15 @@ In the Information Panel, displays:
    - Navigation options
 
 ### Map Controls
+
 - **➕ Zoom In**: Click to zoom in one level
-- **➖ Zoom Out**: Click to zoom out one level  
+- **➖ Zoom Out**: Click to zoom out one level
 - **🏠 Reset View**: Click to return to default campus view
 - **📺 Fullscreen**: Click to view map in fullscreen mode
 - **🔲 Layer Controls**: Toggle buildings, roads, and boundary visibility
 
 ## 📱 Responsive Design
+
 - Side panel slides in from the right
 - Adapts to different screen sizes
 - Map controls remain accessible on all devices
@@ -138,6 +155,7 @@ In the Information Panel, displays:
 ## 🔧 Technical Details
 
 ### InformationPanel Props
+
 ```typescript
 {
   isOpen: boolean;           // Panel visibility
@@ -159,14 +177,16 @@ In the Information Panel, displays:
 ```
 
 ### Window Functions (CampusMap)
+
 ```javascript
-window.mapZoomIn()     // Zoom in
-window.mapZoomOut()    // Zoom out
-window.mapResetView()  // Reset to default view
-window.toggleMapLayer(layer)  // Toggle layer visibility
+window.mapZoomIn(); // Zoom in
+window.mapZoomOut(); // Zoom out
+window.mapResetView(); // Reset to default view
+window.toggleMapLayer(layer); // Toggle layer visibility
 ```
 
 ## ✨ Visual Design Enhancements
+
 - Modern gradient backgrounds
 - Color-coded metric boxes (distance, time, pace)
 - Smooth animations and transitions
@@ -175,6 +195,7 @@ window.toggleMapLayer(layer)  // Toggle layer visibility
 - High contrast for readability
 
 ## 🚀 Performance
+
 - All controls use efficient event handlers
 - No performance impact from new panel
 - Lazy loading of information data

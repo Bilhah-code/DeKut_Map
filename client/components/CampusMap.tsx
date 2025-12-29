@@ -83,14 +83,18 @@ export default function CampusMap({
       }).setView(defaultCenter, defaultZoom);
 
       // Ensure zoom controls are always visible and positioned correctly
-      L.control.zoom({
-        position: "topleft",
-      }).addTo(mapRef.current);
+      L.control
+        .zoom({
+          position: "topleft",
+        })
+        .addTo(mapRef.current);
 
       // Add fullscreen-like functionality with a scale control
-      L.control.scale({
-        position: "bottomleft",
-      }).addTo(mapRef.current);
+      L.control
+        .scale({
+          position: "bottomleft",
+        })
+        .addTo(mapRef.current);
     }
 
     // Add base layer

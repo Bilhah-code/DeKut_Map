@@ -1,4 +1,13 @@
-import { X, MapPin, Navigation, Clock, Calendar, Gauge, Share2, Heart } from "lucide-react";
+import {
+  X,
+  MapPin,
+  Navigation,
+  Clock,
+  Calendar,
+  Gauge,
+  Share2,
+  Heart,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface InformationPanelProps {
@@ -155,7 +164,9 @@ export default function InformationPanel({
             <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-200">
               <div className="flex items-center gap-2">
                 <Gauge className="h-4 w-4 text-orange-600" />
-                <span className="text-xs font-bold text-gray-700">Distance</span>
+                <span className="text-xs font-bold text-gray-700">
+                  Distance
+                </span>
               </div>
               <span className="text-lg font-black text-orange-600">
                 {distance > 0 ? formatDistance(distance) : "—"}
@@ -208,7 +219,9 @@ export default function InformationPanel({
         {/* Info Message */}
         <div className="bg-blue-50 border-2 border-blue-300 rounded-xl p-4">
           <p className="text-xs text-blue-900 leading-relaxed">
-            <span className="font-bold">ℹ️ Info:</span> Select a starting location to calculate distance and estimated travel time to this destination.
+            <span className="font-bold">ℹ️ Info:</span> Select a starting
+            location to calculate distance and estimated travel time to this
+            destination.
           </p>
         </div>
       </div>

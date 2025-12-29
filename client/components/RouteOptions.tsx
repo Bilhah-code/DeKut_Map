@@ -40,13 +40,33 @@ export default function RouteOptions({
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "easy":
-        return { bg: "bg-green-100", border: "border-green-300", text: "text-green-700", dot: "bg-green-500" };
+        return {
+          bg: "bg-green-100",
+          border: "border-green-300",
+          text: "text-green-700",
+          dot: "bg-green-500",
+        };
       case "moderate":
-        return { bg: "bg-amber-100", border: "border-amber-300", text: "text-amber-700", dot: "bg-amber-500" };
+        return {
+          bg: "bg-amber-100",
+          border: "border-amber-300",
+          text: "text-amber-700",
+          dot: "bg-amber-500",
+        };
       case "hard":
-        return { bg: "bg-red-100", border: "border-red-300", text: "text-red-700", dot: "bg-red-500" };
+        return {
+          bg: "bg-red-100",
+          border: "border-red-300",
+          text: "text-red-700",
+          dot: "bg-red-500",
+        };
       default:
-        return { bg: "bg-gray-100", border: "border-gray-300", text: "text-gray-700", dot: "bg-gray-500" };
+        return {
+          bg: "bg-gray-100",
+          border: "border-gray-300",
+          text: "text-gray-700",
+          dot: "bg-gray-500",
+        };
     }
   };
 
@@ -79,7 +99,9 @@ export default function RouteOptions({
                     {route.isRecommended && (
                       <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 rounded-full">
                         <CheckCircle2 className="h-3 w-3 text-green-600" />
-                        <span className="text-xs font-bold text-green-700">Recommended</span>
+                        <span className="text-xs font-bold text-green-700">
+                          Recommended
+                        </span>
                       </span>
                     )}
                   </div>
@@ -99,19 +121,31 @@ export default function RouteOptions({
                   <div className="flex items-center justify-center gap-1 mb-1">
                     <Gauge className="h-3 w-3 text-orange-600" />
                   </div>
-                  <p className="text-xs font-bold text-orange-700">{formatDistance(route.distance)}</p>
+                  <p className="text-xs font-bold text-orange-700">
+                    {formatDistance(route.distance)}
+                  </p>
                 </div>
                 <div className="p-2 bg-purple-100 rounded-lg text-center">
                   <div className="flex items-center justify-center gap-1 mb-1">
                     <Clock className="h-3 w-3 text-purple-600" />
                   </div>
-                  <p className="text-xs font-bold text-purple-700">{formatTime(route.estimatedTime)}</p>
+                  <p className="text-xs font-bold text-purple-700">
+                    {formatTime(route.estimatedTime)}
+                  </p>
                 </div>
-                <div className={`p-2 rounded-lg text-center ${difficultyColors.bg}`}>
+                <div
+                  className={`p-2 rounded-lg text-center ${difficultyColors.bg}`}
+                >
                   <div className="flex items-center justify-center gap-1 mb-1">
-                    <div className={`w-2 h-2 rounded-full ${difficultyColors.dot}`}></div>
+                    <div
+                      className={`w-2 h-2 rounded-full ${difficultyColors.dot}`}
+                    ></div>
                   </div>
-                  <p className={`text-xs font-bold capitalize ${difficultyColors.text}`}>{route.difficulty}</p>
+                  <p
+                    className={`text-xs font-bold capitalize ${difficultyColors.text}`}
+                  >
+                    {route.difficulty}
+                  </p>
                 </div>
               </div>
 
@@ -142,7 +176,8 @@ export default function RouteOptions({
       <div className="flex gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
         <AlertCircle className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
         <p className="text-xs text-blue-900">
-          <span className="font-bold">Tip:</span> Select a route to navigate and see detailed directions on the map.
+          <span className="font-bold">Tip:</span> Select a route to navigate and
+          see detailed directions on the map.
         </p>
       </div>
     </div>

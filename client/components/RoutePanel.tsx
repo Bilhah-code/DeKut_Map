@@ -1,5 +1,19 @@
 import { useState } from "react";
-import { Loader2, X, MapPin, Clock, Gauge, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Accessibility, Wind, Eye, Zap } from "lucide-react";
+import {
+  Loader2,
+  X,
+  MapPin,
+  Clock,
+  Gauge,
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  AlertCircle,
+  Accessibility,
+  Wind,
+  Eye,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistance, formatTime } from "@/services/routingService";
 import RouteOptions from "@/components/RouteOptions";
@@ -68,7 +82,10 @@ export default function RoutePanel({
   if (!isOpen) return null;
 
   // Calculate additional metrics
-  const pace = estimatedTime && distance ? Math.round((distance / estimatedTime / 1000) * 60 * 10) / 10 : 0;
+  const pace =
+    estimatedTime && distance
+      ? Math.round((distance / estimatedTime / 1000) * 60 * 10) / 10
+      : 0;
   const calories = distance ? Math.round((distance / 1000) * 60) : 0;
 
   return (
@@ -223,15 +240,23 @@ export default function RoutePanel({
                   <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
                     <Accessibility className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-semibold text-gray-900">Wheelchair Accessible</p>
-                      <p className="text-xs text-gray-600">Mostly paved paths</p>
+                      <p className="text-xs font-semibold text-gray-900">
+                        Wheelchair Accessible
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        Mostly paved paths
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
                     <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-semibold text-gray-900">Best For Walking</p>
-                      <p className="text-xs text-gray-600">Follow the blue path on map</p>
+                      <p className="text-xs font-semibold text-gray-900">
+                        Best For Walking
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        Follow the blue path on map
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -240,7 +265,10 @@ export default function RoutePanel({
               {/* Pro Tip Box */}
               <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-xl p-4">
                 <p className="text-xs text-blue-900 leading-relaxed">
-                  <span className="font-bold">💡 Pro Tip:</span> The estimated time assumes a typical walking pace of ~5 km/h on accessible paths. Actual time may vary based on terrain and personal pace.
+                  <span className="font-bold">💡 Pro Tip:</span> The estimated
+                  time assumes a typical walking pace of ~5 km/h on accessible
+                  paths. Actual time may vary based on terrain and personal
+                  pace.
                 </p>
               </div>
 
@@ -249,9 +277,7 @@ export default function RoutePanel({
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="w-full flex items-center justify-between p-4 bg-gray-100 hover:bg-gray-200 rounded-xl border-2 border-gray-300 transition-all font-semibold text-gray-900"
               >
-                <span className="flex items-center gap-2">
-                  More Details
-                </span>
+                <span className="flex items-center gap-2">More Details</span>
                 {isExpanded ? (
                   <ChevronUp className="h-4 w-4" />
                 ) : (
@@ -277,15 +303,23 @@ export default function RoutePanel({
                     </h4>
                     <div className="space-y-2">
                       <div className="flex items-center gap-3 text-xs">
-                        <span className="inline-block w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-xs">1</span>
-                        <span className="text-gray-700 font-medium flex-1">Start - {startLocation?.name || 'Starting Point'}</span>
+                        <span className="inline-block w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-xs">
+                          1
+                        </span>
+                        <span className="text-gray-700 font-medium flex-1">
+                          Start - {startLocation?.name || "Starting Point"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-3 text-xs ml-3">
                         <div className="w-0.5 h-8 bg-gradient-to-b from-green-500 to-blue-500"></div>
                       </div>
                       <div className="flex items-center gap-3 text-xs">
-                        <span className="inline-block w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">2</span>
-                        <span className="text-gray-700 font-medium flex-1">End - {destinationLocation?.name || 'Destination'}</span>
+                        <span className="inline-block w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                          2
+                        </span>
+                        <span className="text-gray-700 font-medium flex-1">
+                          End - {destinationLocation?.name || "Destination"}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -295,7 +329,10 @@ export default function RoutePanel({
                     <Button className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2 h-auto rounded-xl shadow-md">
                       Start Navigation
                     </Button>
-                    <Button variant="outline" className="flex-1 border-2 border-gray-300 text-gray-900 font-semibold py-2 h-auto rounded-xl hover:bg-gray-100 transition-colors">
+                    <Button
+                      variant="outline"
+                      className="flex-1 border-2 border-gray-300 text-gray-900 font-semibold py-2 h-auto rounded-xl hover:bg-gray-100 transition-colors"
+                    >
                       Share Route
                     </Button>
                   </div>
