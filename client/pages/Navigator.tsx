@@ -515,6 +515,20 @@ export default function Navigator() {
           distance={routePanel.distance}
           estimatedTime={routePanel.estimatedTime}
         />
+
+        {/* Information Panel */}
+        <InformationPanel
+          isOpen={isInfoPanelOpen}
+          onClose={() => setIsInfoPanelOpen(false)}
+          selectedLocation={
+            selectedLocation && "coords" in selectedLocation
+              ? selectedLocation
+              : undefined
+          }
+          distance={routePanel.distance}
+          estimatedTime={routePanel.estimatedTime}
+          userLocation={userLocation}
+        />
       </div>
     </div>
   );
