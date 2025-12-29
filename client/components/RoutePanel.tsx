@@ -261,10 +261,20 @@ export default function RoutePanel({
 
               {/* Expanded Details */}
               {isExpanded && (
-                <div className="space-y-3 pb-2">
+                <div className="space-y-5 pb-2">
+                  {/* Route Options Section */}
+                  <RouteOptions
+                    routes={alternativeRoutes}
+                    selectedRouteId={selectedRouteId}
+                    onSelectRoute={setSelectedRouteId}
+                  />
+
                   {/* Waypoints Section */}
                   <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-4 border-2 border-slate-300">
-                    <h4 className="text-sm font-bold text-gray-900 mb-3">Route Waypoints</h4>
+                    <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-blue-600" />
+                      Route Waypoints
+                    </h4>
                     <div className="space-y-2">
                       <div className="flex items-center gap-3 text-xs">
                         <span className="inline-block w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-xs">1</span>
@@ -282,10 +292,10 @@ export default function RoutePanel({
 
                   {/* Quick Actions */}
                   <div className="flex gap-2">
-                    <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 h-auto rounded-xl">
+                    <Button className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2 h-auto rounded-xl shadow-md">
                       Start Navigation
                     </Button>
-                    <Button variant="outline" className="flex-1 border-2 border-gray-300 text-gray-900 font-semibold py-2 h-auto rounded-xl hover:bg-gray-100">
+                    <Button variant="outline" className="flex-1 border-2 border-gray-300 text-gray-900 font-semibold py-2 h-auto rounded-xl hover:bg-gray-100 transition-colors">
                       Share Route
                     </Button>
                   </div>
