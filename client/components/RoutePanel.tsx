@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Loader2, X, MapPin, Clock, Gauge, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Accessibility, Wind, Eye, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDistance, formatTime } from "@/services/routingService";
+import RouteOptions from "@/components/RouteOptions";
+import type { RouteOption } from "@/components/RouteOptions";
 
 interface RoutePanelProps {
   isOpen: boolean;
