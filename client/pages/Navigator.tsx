@@ -126,6 +126,7 @@ export default function Navigator() {
 
   const handleLocationSelect = (location: Building) => {
     setSelectedLocation(location);
+    setIsInfoPanelOpen(true);
 
     // If user location exists, calculate route
     if (userLocation) {
