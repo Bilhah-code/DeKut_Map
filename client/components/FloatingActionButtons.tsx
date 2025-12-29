@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Plus, Navigation, Layers, Settings, X, Satellite, Map as MapIcon } from "lucide-react";
+import {
+  Plus,
+  Navigation,
+  Layers,
+  Settings,
+  X,
+  Satellite,
+  Map as MapIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FloatingActionButtonsProps {
@@ -35,7 +43,9 @@ export default function FloatingActionButtons({
               title="Start Navigation"
             >
               <Navigation className="h-5 w-5 text-blue-600 group-hover:scale-110 transition-transform" />
-              <span className="font-bold text-sm text-gray-900 mr-2">Navigate</span>
+              <span className="font-bold text-sm text-gray-900 mr-2">
+                Navigate
+              </span>
             </button>
           </div>
 
@@ -50,7 +60,9 @@ export default function FloatingActionButtons({
               title="Toggle Layers"
             >
               <Layers className="h-5 w-5 text-purple-600 group-hover:scale-110 transition-transform" />
-              <span className="font-bold text-sm text-gray-900 mr-2">Layers</span>
+              <span className="font-bold text-sm text-gray-900 mr-2">
+                Layers
+              </span>
             </button>
           </div>
 
@@ -112,11 +124,7 @@ export default function FloatingActionButtons({
         }`}
         title={isExpanded ? "Close menu" : "Open menu"}
       >
-        {isExpanded ? (
-          <X className="h-6 w-6" />
-        ) : (
-          <Plus className="h-6 w-6" />
-        )}
+        {isExpanded ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
       </button>
     </div>
   );

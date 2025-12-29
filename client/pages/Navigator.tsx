@@ -7,7 +7,11 @@ import BottomSearchSheet from "@/components/BottomSearchSheet";
 import FloatingActionButtons from "@/components/FloatingActionButtons";
 import ModernHeader from "@/components/ModernHeader";
 import { Button } from "@/components/ui/button";
-import { Sheet as SheetComponent, SheetContent as SheetContentComponent, SheetTrigger as SheetTriggerComponent } from "@/components/ui/sheet";
+import {
+  Sheet as SheetComponent,
+  SheetContent as SheetContentComponent,
+  SheetTrigger as SheetTriggerComponent,
+} from "@/components/ui/sheet";
 import { calculateRoute } from "@/services/routingService";
 import { toast } from "sonner";
 
@@ -34,12 +38,16 @@ interface Route {
 export default function Navigator() {
   const [origin, setOrigin] = useState<Building | null>(null);
   const [destination, setDestination] = useState<Building | null>(null);
-  const [selectedLocation, setSelectedLocation] = useState<Building | Location | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<
+    Building | Location | null
+  >(null);
   const [userLocation, setUserLocation] = useState<{
     coords: [number, number];
     accuracy: number;
   } | null>(null);
-  const [baseLayerKey, setBaseLayerKey] = useState<"openstreetmap" | "satellite">("openstreetmap");
+  const [baseLayerKey, setBaseLayerKey] = useState<
+    "openstreetmap" | "satellite"
+  >("openstreetmap");
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [visibleLayers, setVisibleLayers] = useState({
     buildings: true,
@@ -222,10 +230,15 @@ export default function Navigator() {
                 <Layers className="h-5 w-5" />
               </Button>
             </SheetTriggerComponent>
-            <SheetContentComponent side="left" className="w-80 bg-gradient-to-b from-white to-gray-50">
+            <SheetContentComponent
+              side="left"
+              className="w-80 bg-gradient-to-b from-white to-gray-50"
+            >
               <div className="space-y-5 mt-8">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Map Layers</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Map Layers
+                  </h2>
                   <p className="text-xs text-gray-500 mt-2">
                     Toggle layers to customize your view
                   </p>
@@ -240,7 +253,10 @@ export default function Navigator() {
                     onChange={() => toggleLayer("buildings")}
                     className="w-5 h-5 rounded accent-blue-600 cursor-pointer"
                   />
-                  <label htmlFor="buildings-toggle" className="flex-1 cursor-pointer">
+                  <label
+                    htmlFor="buildings-toggle"
+                    className="flex-1 cursor-pointer"
+                  >
                     <span className="block text-sm font-bold text-gray-900">
                       Buildings
                     </span>
@@ -259,7 +275,10 @@ export default function Navigator() {
                     onChange={() => toggleLayer("roads")}
                     className="w-5 h-5 rounded accent-orange-600 cursor-pointer"
                   />
-                  <label htmlFor="roads-toggle" className="flex-1 cursor-pointer">
+                  <label
+                    htmlFor="roads-toggle"
+                    className="flex-1 cursor-pointer"
+                  >
                     <span className="block text-sm font-bold text-gray-900">
                       Roads & Paths
                     </span>
@@ -278,7 +297,10 @@ export default function Navigator() {
                     onChange={() => toggleLayer("boundary")}
                     className="w-5 h-5 rounded accent-green-600 cursor-pointer"
                   />
-                  <label htmlFor="boundary-toggle" className="flex-1 cursor-pointer">
+                  <label
+                    htmlFor="boundary-toggle"
+                    className="flex-1 cursor-pointer"
+                  >
                     <span className="block text-sm font-bold text-gray-900">
                       Campus Boundary
                     </span>

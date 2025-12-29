@@ -35,12 +35,16 @@ export default function BottomSearchSheet({
   isSelectingDestination,
 }: BottomSearchSheetProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"from" | "to">(isSelectingOrigin ? "from" : "to");
+  const [activeTab, setActiveTab] = useState<"from" | "to">(
+    isSelectingOrigin ? "from" : "to",
+  );
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const filteredBuildings = useMemo(() => {
     if (!searchQuery.trim()) {
-      return buildings.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      return buildings.sort((a, b) =>
+        (a.name || "").localeCompare(b.name || ""),
+      );
     }
     const query = searchQuery.toLowerCase();
     return buildings
@@ -157,7 +161,9 @@ export default function BottomSearchSheet({
               {origin && activeTab === "to" && (
                 <div className="px-3 py-2 bg-green-100 border-2 border-green-300 rounded-lg flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-green-600" />
-                  <span className="text-sm font-bold text-green-700">{origin.name}</span>
+                  <span className="text-sm font-bold text-green-700">
+                    {origin.name}
+                  </span>
                   <button
                     onClick={() => onOriginSelect(null)}
                     className="ml-1 hover:text-green-800"
@@ -169,7 +175,9 @@ export default function BottomSearchSheet({
               {destination && activeTab === "from" && (
                 <div className="px-3 py-2 bg-blue-100 border-2 border-blue-300 rounded-lg flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-bold text-blue-700">{destination.name}</span>
+                  <span className="text-sm font-bold text-blue-700">
+                    {destination.name}
+                  </span>
                   <button
                     onClick={() => onDestinationSelect(null)}
                     className="ml-1 hover:text-blue-800"
@@ -199,9 +207,13 @@ export default function BottomSearchSheet({
                     <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
                       {building.name}
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1">{building.character}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {building.character}
+                    </p>
                     {building.descriptio && (
-                      <p className="text-xs text-gray-600 mt-2 line-clamp-2">{building.descriptio}</p>
+                      <p className="text-xs text-gray-600 mt-2 line-clamp-2">
+                        {building.descriptio}
+                      </p>
                     )}
                   </div>
                   <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-blue-500 flex-shrink-0 mt-1 transition-all" />
@@ -212,7 +224,9 @@ export default function BottomSearchSheet({
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Search className="h-12 w-12 text-gray-200 mb-4" />
               <p className="text-gray-500 font-medium">No locations found</p>
-              <p className="text-xs text-gray-400 mt-1">Try searching for a different location</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Try searching for a different location
+              </p>
             </div>
           )}
         </div>

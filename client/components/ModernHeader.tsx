@@ -46,8 +46,12 @@ export default function ModernHeader({
               <span className="text-white font-black text-sm">DK</span>
             </div>
             <div>
-              <h1 className="font-black text-lg text-gray-900">DeKUT Navigator</h1>
-              <p className="text-xs text-gray-500 font-medium">Campus Navigation</p>
+              <h1 className="font-black text-lg text-gray-900">
+                DeKUT Navigator
+              </h1>
+              <p className="text-xs text-gray-500 font-medium">
+                Campus Navigation
+              </p>
             </div>
           </div>
 
@@ -59,18 +63,26 @@ export default function ModernHeader({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 text-xs mb-2">
                     <MapPin className="h-3.5 w-3.5 text-blue-600 flex-shrink-0" />
-                    <span className="font-bold text-gray-700 truncate">{origin.name}</span>
+                    <span className="font-bold text-gray-700 truncate">
+                      {origin.name}
+                    </span>
                     <span className="text-gray-400">→</span>
-                    <span className="font-bold text-gray-700 truncate">{destination.name}</span>
+                    <span className="font-bold text-gray-700 truncate">
+                      {destination.name}
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1.5">
                       <Navigation className="h-3 w-3 text-orange-600" />
-                      <span className="text-xs font-bold text-orange-600">{formatDistance(distance)}</span>
+                      <span className="text-xs font-bold text-orange-600">
+                        {formatDistance(distance)}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-3 w-3 text-purple-600" />
-                      <span className="text-xs font-bold text-purple-600">{formatTime(estimatedTime)}</span>
+                      <span className="text-xs font-bold text-purple-600">
+                        {formatTime(estimatedTime)}
+                      </span>
                     </div>
                   </div>
                 </div>
