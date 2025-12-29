@@ -77,7 +77,24 @@ export default function CampusMap({
   // Initialize map and load GeoJSON
   useEffect(() => {
     if (!mapRef.current) {
-      mapRef.current = L.map("map").setView(defaultCenter, defaultZoom);
+      mapRef.current = L.map("map", {
+        zoomControl: true,
+        attributionControl: true,
+      }).setView(defaultCenter, defaultZoom);
+
+      // Ensure zoom controls are always visible and positioned correctly
+      L.control
+        .zoom({
+          position: "topleft",
+        })
+        .addTo(mapRef.current);
+
+      // Add fullscreen-like functionality with a scale control
+      L.control
+        .scale({
+          position: "bottomleft",
+        })
+        .addTo(mapRef.current);
     }
 
     // Add base layer
@@ -489,7 +506,7 @@ export default function CampusMap({
     }
   }, [route]);
 
-  // Expose layer visibility control
+  // Expose layer visibility control and map controls
   useEffect(() => {
     (window as any).toggleMapLayer = (
       layer: "buildings" | "roads" | "boundary",
@@ -498,6 +515,24 @@ export default function CampusMap({
         ...prev,
         [layer]: !prev[layer],
       }));
+    };
+
+    (window as any).mapZoomIn = () => {
+      if (mapRef.current) {
+        mapRef.current.zoomIn();
+      }
+    };
+
+    (window as any).mapZoomOut = () => {
+      if (mapRef.current) {
+        mapRef.current.zoomOut();
+      }
+    };
+
+    (window as any).mapResetView = () => {
+      if (mapRef.current) {
+        mapRef.current.setView([-0.3605, 37.0093], 16);
+      }
     };
   }, []);
 

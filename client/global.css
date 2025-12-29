@@ -125,13 +125,29 @@
   @apply font-sans;
 }
 
+/* Ensure Leaflet controls are always visible */
+.leaflet-control-zoom,
+.leaflet-control-scale,
+.leaflet-control-attribution {
+  @apply !z-50;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
-  @apply !bg-white !text-foreground hover:!bg-muted;
+  @apply !bg-white !text-foreground !border-2 !border-gray-200 !rounded-lg hover:!bg-blue-50 hover:!text-blue-600 !shadow-md !w-10 !h-10 !leading-10;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.leaflet-control-scale {
+  @apply !bg-white !border-2 !border-gray-200 !rounded-lg !shadow-md;
 }
 
 .leaflet-control-attribution {
-  @apply !text-xs !text-muted-foreground;
+  @apply !text-xs !text-muted-foreground !bg-white !border-2 !border-gray-200 !rounded-lg;
 }
 
 /* Search results styling */
