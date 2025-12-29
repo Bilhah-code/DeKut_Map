@@ -31,6 +31,39 @@ export default function RoutePanel({
   isLoading,
 }: RoutePanelProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedRouteId, setSelectedRouteId] = useState("primary");
+
+  // Generate alternative routes
+  const alternativeRoutes: RouteOption[] = [
+    {
+      id: "primary",
+      name: "Shortest Route",
+      description: "Fastest way to reach your destination",
+      distance: distance || 0,
+      estimatedTime: estimatedTime || 0,
+      difficulty: "easy",
+      highlights: ["Paved pathway", "Accessible", "Well-lit"],
+      isRecommended: true,
+    },
+    {
+      id: "scenic",
+      name: "Scenic Route",
+      description: "More enjoyable walk with interesting views",
+      distance: Math.round((distance || 0) * 1.15),
+      estimatedTime: Math.round((estimatedTime || 0) * 1.15),
+      difficulty: "easy",
+      highlights: ["Beautiful views", "Landscaped areas", "Garden pathways"],
+    },
+    {
+      id: "accessible",
+      name: "Most Accessible",
+      description: "Optimized for wheelchair and mobility device users",
+      distance: Math.round((distance || 0) * 1.08),
+      estimatedTime: Math.round((estimatedTime || 0) * 1.15),
+      difficulty: "easy",
+      highlights: ["Wheelchair accessible", "Ramps available", "Rest areas"],
+    },
+  ];
 
   if (!isOpen) return null;
 
