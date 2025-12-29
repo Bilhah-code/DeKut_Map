@@ -36,6 +36,8 @@ export default function LocationPicker({
   buildings = [],
   isSelectingOriginOnMap = false,
   isSelectingDestinationOnMap = false,
+  distance = 0,
+  estimatedTime = 0,
 }: LocationPickerProps) {
   const [originSearchQuery, setOriginSearchQuery] = useState("");
   const [destinationSearchQuery, setDestinationSearchQuery] = useState("");
