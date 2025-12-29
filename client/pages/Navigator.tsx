@@ -200,42 +200,25 @@ export default function Navigator() {
   };
 
   const handleZoomIn = () => {
-    const mapElement = document.querySelector(
-      ".leaflet-container"
-    ) as any;
-    if (mapElement && mapElement.__vue__) {
-      mapElement.__vue__.zoomIn();
-    } else {
-      (window as any).L?.map.zoomIn();
-    }
+    (window as any).mapZoomIn?.();
   };
 
   const handleZoomOut = () => {
-    const mapElement = document.querySelector(
-      ".leaflet-container"
-    ) as any;
-    if (mapElement && mapElement.__vue__) {
-      mapElement.__vue__.zoomOut();
-    } else {
-      (window as any).L?.map.zoomOut();
-    }
+    (window as any).mapZoomOut?.();
   };
 
   const handleResetView = () => {
-    const mapElement = document.querySelector(
-      ".leaflet-container"
-    ) as any;
-    if (mapElement?.leafletMap) {
-      mapElement.leafletMap.setView([-0.3605, 37.0093], 16);
-    }
+    (window as any).mapResetView?.();
   };
 
   const handleFullscreen = () => {
     const mapContainer = document.querySelector(
       ".leaflet-container"
-    )?.parentElement;
+    )?.parentElement?.parentElement;
     if (mapContainer?.requestFullscreen) {
-      mapContainer.requestFullscreen();
+      mapContainer.requestFullscreen().catch(() => {
+        toast.error("Fullscreen not available");
+      });
     }
   };
 
