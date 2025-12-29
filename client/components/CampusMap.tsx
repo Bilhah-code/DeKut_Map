@@ -502,7 +502,7 @@ export default function CampusMap({
     }
   }, [route]);
 
-  // Expose layer visibility control
+  // Expose layer visibility control and map controls
   useEffect(() => {
     (window as any).toggleMapLayer = (
       layer: "buildings" | "roads" | "boundary",
@@ -511,6 +511,24 @@ export default function CampusMap({
         ...prev,
         [layer]: !prev[layer],
       }));
+    };
+
+    (window as any).mapZoomIn = () => {
+      if (mapRef.current) {
+        mapRef.current.zoomIn();
+      }
+    };
+
+    (window as any).mapZoomOut = () => {
+      if (mapRef.current) {
+        mapRef.current.zoomOut();
+      }
+    };
+
+    (window as any).mapResetView = () => {
+      if (mapRef.current) {
+        mapRef.current.setView([-0.3605, 37.0093], 16);
+      }
     };
   }, []);
 
