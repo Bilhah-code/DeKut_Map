@@ -234,6 +234,8 @@ export default function Navigator() {
                 buildings={buildings}
                 isSelectingOriginOnMap={isSelectingOriginOnMap}
                 isSelectingDestinationOnMap={isSelectingDestinationOnMap}
+                distance={routePanel.distance}
+                estimatedTime={routePanel.estimatedTime}
               />
             </div>
           </div>
