@@ -22,6 +22,8 @@ interface LocationPickerProps {
   buildings?: Building[];
   isSelectingOriginOnMap?: boolean;
   isSelectingDestinationOnMap?: boolean;
+  distance?: number;
+  estimatedTime?: number;
 }
 
 export default function LocationPicker({
