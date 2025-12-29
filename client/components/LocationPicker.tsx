@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef } from "react";
-import { X, ArrowRightLeft, ChevronRight, MapPin, Locate } from "lucide-react";
+import { X, ArrowRightLeft, ChevronRight, MapPin, Locate, Route as RouteIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import RouteDetailsCard from "@/components/RouteDetailsCard";
 
 interface Building {
   id: string;
