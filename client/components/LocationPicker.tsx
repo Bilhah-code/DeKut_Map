@@ -392,6 +392,23 @@ export default function LocationPicker({
             )}
         </div>
       </div>
+
+      {/* Route Details Card - Shows when both locations are selected */}
+      {origin && destination && (
+        <div className="mt-5">
+          <RouteDetailsCard
+            startLocation={{
+              name: origin.name,
+              coords: origin.coords,
+            }}
+            destinationLocation={{
+              name: destination.name,
+              coords: destination.coords,
+            }}
+            className=""
+          />
+        </div>
+      )}
     </div>
   );
 }
