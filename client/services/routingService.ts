@@ -1,10 +1,24 @@
 // Enhanced routing service for campus navigation
-// Calculates distance, estimated walking time, and provides optimal route paths using Dijkstra's algorithm
+// Calculates distance, estimated walking time, and provides optimal route paths using actual road networks
 
 interface Building {
   id: string;
   name: string;
   coords: [number, number];
+}
+
+interface RoadSegment {
+  id: string;
+  points: [number, number][]; // all points along the road
+  startPoint: [number, number];
+  endPoint: [number, number];
+  length: number; // meters
+}
+
+interface RoadNetwork {
+  segments: RoadSegment[];
+  nodes: Map<string, [number, number]>; // key: "lat,lon", value: coordinates
+  nodeConnections: Map<string, Set<string>>; // which nodes connect to which
 }
 
 interface Graph {
