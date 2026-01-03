@@ -30,7 +30,7 @@ export default function RoutePanel({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-2xl shadow-2xl border-2 border-blue-300 z-40 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <div className="w-full h-full bg-gradient-to-br from-white via-blue-50 to-blue-100 overflow-hidden flex flex-col">
       {/* Header with gradient */}
       <div className="flex items-center justify-between p-5 border-b-2 border-blue-200 bg-gradient-to-r from-blue-600 to-blue-700">
         <div className="flex items-center gap-3">
