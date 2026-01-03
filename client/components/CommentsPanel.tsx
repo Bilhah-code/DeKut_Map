@@ -24,14 +24,16 @@ export default function CommentsPanel({
     {
       id: "1",
       userName: "Sarah K.",
-      message: "Great navigation app! The routes are accurate and easy to follow.",
+      message:
+        "Great navigation app! The routes are accurate and easy to follow.",
       timestamp: new Date(Date.now() - 3600000),
       rating: 5,
     },
     {
       id: "2",
       userName: "James M.",
-      message: "Helpful for finding shortcuts across campus. Very intuitive interface.",
+      message:
+        "Helpful for finding shortcuts across campus. Very intuitive interface.",
       timestamp: new Date(Date.now() - 7200000),
       rating: 4,
     },
@@ -182,7 +184,7 @@ export default function CommentsPanel({
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 const commentInput = document.querySelector(
-                  'textarea[placeholder="Share your feedback..."]'
+                  'textarea[placeholder="Share your feedback..."]',
                 ) as HTMLTextAreaElement;
                 if (commentInput) commentInput.focus();
               }

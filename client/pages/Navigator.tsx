@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Satellite, Map as MapIcon, Crosshair, Layers, MessageCircle } from "lucide-react";
+import {
+  Satellite,
+  Map as MapIcon,
+  Crosshair,
+  Layers,
+  MessageCircle,
+} from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import CampusMap from "@/components/CampusMap";
 import RoutePanel from "@/components/RoutePanel";
@@ -516,7 +522,9 @@ export default function Navigator() {
                 setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })
               }
               startLocation={
-                origin ? { name: origin.name, coords: origin.coords } : undefined
+                origin
+                  ? { name: origin.name, coords: origin.coords }
+                  : undefined
               }
               destinationLocation={
                 destination
@@ -547,7 +555,9 @@ export default function Navigator() {
                 setShowComments(false);
               }}
               startLocation={
-                origin ? { name: origin.name, coords: origin.coords } : undefined
+                origin
+                  ? { name: origin.name, coords: origin.coords }
+                  : undefined
               }
               destinationLocation={
                 destination

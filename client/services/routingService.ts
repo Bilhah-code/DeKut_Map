@@ -258,15 +258,17 @@ export const dijkstraShortestPath = (
     unvisited.delete(current);
 
     // Check neighbors
-    graph[current].neighbors.forEach(({ id: neighborId, distance: edgeDistance }) => {
-      if (unvisited.has(neighborId)) {
-        const newDistance = distances[current!] + edgeDistance;
-        if (newDistance < distances[neighborId]) {
-          distances[neighborId] = newDistance;
-          previous[neighborId] = current;
+    graph[current].neighbors.forEach(
+      ({ id: neighborId, distance: edgeDistance }) => {
+        if (unvisited.has(neighborId)) {
+          const newDistance = distances[current!] + edgeDistance;
+          if (newDistance < distances[neighborId]) {
+            distances[neighborId] = newDistance;
+            previous[neighborId] = current;
+          }
         }
-      }
-    });
+      },
+    );
   }
 
   return null;
@@ -348,8 +350,7 @@ export const calculateRoute = (
           distToEnd: calculateDistance(segment.endPoint, snappedEnd),
         }))
         .sort(
-          (a, b) =>
-            a.distToStart + a.distToEnd - (b.distToStart + b.distToEnd),
+          (a, b) => a.distToStart + a.distToEnd - (b.distToStart + b.distToEnd),
         );
 
       // Use first few segments to build route
@@ -360,8 +361,7 @@ export const calculateRoute = (
           // Avoid duplicate points
           if (
             pathSegments.length === 0 ||
-            calculateDistance(pathSegments[pathSegments.length - 1], point) >
-              1
+            calculateDistance(pathSegments[pathSegments.length - 1], point) > 1
           ) {
             pathSegments.push(point);
           }
@@ -412,7 +412,11 @@ export const calculateRoute = (
     }
 
     // Get shortest path through graph
-    const pathResult = dijkstraShortestPath(graph, nearestStart.id, nearestEnd.id);
+    const pathResult = dijkstraShortestPath(
+      graph,
+      nearestStart.id,
+      nearestEnd.id,
+    );
 
     if (pathResult && pathResult.path.length > 1) {
       const coordPath: [number, number][] = [startCoords];
