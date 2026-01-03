@@ -56,6 +56,7 @@ export default function Navigator() {
     distance: 0,
     estimatedTime: 0,
   });
+  const [showComments, setShowComments] = useState(true);
 
   const handleOriginSelect = (location: Building | null) => {
     setOrigin(location);
