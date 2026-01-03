@@ -1,10 +1,24 @@
 // Enhanced routing service for campus navigation
-// Calculates distance, estimated walking time, and provides optimal route paths using Dijkstra's algorithm
+// Calculates distance, estimated walking time, and provides optimal route paths using actual road networks
 
 interface Building {
   id: string;
   name: string;
   coords: [number, number];
+}
+
+interface RoadSegment {
+  id: string;
+  points: [number, number][]; // all points along the road
+  startPoint: [number, number];
+  endPoint: [number, number];
+  length: number; // meters
+}
+
+interface RoadNetwork {
+  segments: RoadSegment[];
+  nodes: Map<string, [number, number]>; // key: "lat,lon", value: coordinates
+  nodeConnections: Map<string, Set<string>>; // which nodes connect to which
 }
 
 interface Graph {
@@ -47,6 +61,119 @@ export const calculateDistance = (
 
 const toRadians = (degrees: number): number => {
   return (degrees * Math.PI) / 180;
+};
+
+// Helper function to find nearest point on a line segment
+const findNearestPointOnSegment = (
+  point: [number, number],
+  lineStart: [number, number],
+  lineEnd: [number, number],
+): [number, number] => {
+  const [px, py] = point;
+  const [x1, y1] = lineStart;
+  const [x2, y2] = lineEnd;
+
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lengthSquared = dx * dx + dy * dy;
+
+  if (lengthSquared === 0) return lineStart;
+
+  let t = ((px - x1) * dx + (py - y1) * dy) / lengthSquared;
+  t = Math.max(0, Math.min(1, t));
+
+  return [x1 + t * dx, y1 + t * dy];
+};
+
+// Build road network from GeoJSON data
+const buildRoadNetwork = (geojsonData: any): RoadNetwork => {
+  const network: RoadNetwork = {
+    segments: [],
+    nodes: new Map(),
+    nodeConnections: new Map(),
+  };
+
+  if (!geojsonData || !geojsonData.features) return network;
+
+  geojsonData.features.forEach((feature: any, index: number) => {
+    const geometry = feature.geometry;
+    if (!geometry || !geometry.coordinates) return;
+
+    const coordinates = geometry.coordinates;
+    let allPoints: [number, number][] = [];
+
+    // Handle both LineString and MultiLineString
+    if (geometry.type === "MultiLineString") {
+      coordinates.forEach((lineString: any) => {
+        lineString.forEach((coord: any) => {
+          allPoints.push([coord[1], coord[0]]); // GeoJSON is [lon, lat], we need [lat, lon]
+        });
+      });
+    } else if (geometry.type === "LineString") {
+      coordinates.forEach((coord: any) => {
+        allPoints.push([coord[1], coord[0]]);
+      });
+    }
+
+    if (allPoints.length < 2) return;
+
+    const roadSegment: RoadSegment = {
+      id: `road-${index}`,
+      points: allPoints,
+      startPoint: allPoints[0],
+      endPoint: allPoints[allPoints.length - 1],
+      length: calculatePathDistance(allPoints),
+    };
+
+    network.segments.push(roadSegment);
+
+    // Add nodes (endpoints and intermediate points) to network
+    allPoints.forEach((point) => {
+      const nodeKey = `${point[0].toFixed(8)},${point[1].toFixed(8)}`;
+      if (!network.nodes.has(nodeKey)) {
+        network.nodes.set(nodeKey, point);
+        network.nodeConnections.set(nodeKey, new Set());
+      }
+    });
+
+    // Connect consecutive points
+    for (let i = 0; i < allPoints.length - 1; i++) {
+      const node1Key = `${allPoints[i][0].toFixed(8)},${allPoints[i][1].toFixed(8)}`;
+      const node2Key = `${allPoints[i + 1][0].toFixed(8)},${allPoints[i + 1][1].toFixed(8)}`;
+      network.nodeConnections.get(node1Key)?.add(node2Key);
+      network.nodeConnections.get(node2Key)?.add(node1Key);
+    }
+  });
+
+  return network;
+};
+
+// Snap a coordinate to the nearest point on the road network
+const snapToRoadNetwork = (
+  point: [number, number],
+  roadNetwork: RoadNetwork,
+  maxDistance = 100, // meters
+): [number, number] => {
+  let nearest = point;
+  let minDistance = Infinity;
+
+  roadNetwork.segments.forEach((segment) => {
+    for (let i = 0; i < segment.points.length - 1; i++) {
+      const nearestOnSegment = findNearestPointOnSegment(
+        point,
+        segment.points[i],
+        segment.points[i + 1],
+      );
+      const dist = calculateDistance(point, nearestOnSegment);
+
+      if (dist < minDistance && dist <= maxDistance) {
+        minDistance = dist;
+        nearest = nearestOnSegment;
+      }
+    }
+  });
+
+  return nearest;
 };
 
 // Build a graph from buildings - connect nearby buildings (within ~500 meters for campus navigation)
@@ -131,15 +258,17 @@ export const dijkstraShortestPath = (
     unvisited.delete(current);
 
     // Check neighbors
-    graph[current].neighbors.forEach(({ id: neighborId, distance: edgeDistance }) => {
-      if (unvisited.has(neighborId)) {
-        const newDistance = distances[current!] + edgeDistance;
-        if (newDistance < distances[neighborId]) {
-          distances[neighborId] = newDistance;
-          previous[neighborId] = current;
+    graph[current].neighbors.forEach(
+      ({ id: neighborId, distance: edgeDistance }) => {
+        if (unvisited.has(neighborId)) {
+          const newDistance = distances[current!] + edgeDistance;
+          if (newDistance < distances[neighborId]) {
+            distances[neighborId] = newDistance;
+            previous[neighborId] = current;
+          }
         }
-      }
-    });
+      },
+    );
   }
 
   return null;
@@ -182,17 +311,81 @@ export const findNearestPointOnPath = (
 };
 
 // Calculate route between two locations
-// Uses Dijkstra's algorithm if a graph is provided for shortest path
+// Attempts to use actual road network if available, otherwise uses building-based pathfinding
 export const calculateRoute = (
   startCoords: [number, number],
   endCoords: [number, number],
   buildings?: Building[],
+  roadNetwork?: RoadNetwork,
 ): RouteResult => {
   let distance = calculateDistance(startCoords, endCoords);
   let routePath: [number, number][] = [startCoords, endCoords];
 
-  // If buildings provided, find shortest path through the campus graph
-  if (buildings && buildings.length > 0) {
+  // If road network is available, snap coordinates to roads and calculate path
+  if (roadNetwork && roadNetwork.segments.length > 0) {
+    console.log("Using road network for route calculation");
+    try {
+      // Snap start and end coordinates to nearest road
+      const snappedStart = snapToRoadNetwork(startCoords, roadNetwork);
+      const snappedEnd = snapToRoadNetwork(endCoords, roadNetwork);
+
+      console.log("Snapped coordinates:", {
+        originalStart: startCoords,
+        snappedStart,
+        originalEnd: endCoords,
+        snappedEnd,
+      });
+
+      // Create a simplified path using the snapped coordinates
+      // Find all road segments between start and end
+      const pathSegments: [number, number][] = [];
+      let currentPoint = snappedStart;
+      pathSegments.push(startCoords); // Include original start
+
+      // Find segments that roughly connect to our destination
+      const segmentsByDistance = roadNetwork.segments
+        .map((segment) => ({
+          segment,
+          distToStart: calculateDistance(currentPoint, segment.startPoint),
+          distToEnd: calculateDistance(segment.endPoint, snappedEnd),
+        }))
+        .sort(
+          (a, b) => a.distToStart + a.distToEnd - (b.distToStart + b.distToEnd),
+        );
+
+      // Use first few segments to build route
+      const maxSegments = Math.min(5, segmentsByDistance.length);
+      for (let i = 0; i < maxSegments; i++) {
+        const seg = segmentsByDistance[i].segment.points;
+        seg.forEach((point) => {
+          // Avoid duplicate points
+          if (
+            pathSegments.length === 0 ||
+            calculateDistance(pathSegments[pathSegments.length - 1], point) > 1
+          ) {
+            pathSegments.push(point);
+          }
+        });
+      }
+
+      pathSegments.push(snappedEnd);
+      pathSegments.push(endCoords); // Include original end
+
+      routePath = pathSegments;
+      distance = calculatePathDistance(routePath);
+
+      console.log("Road network route calculated:", {
+        pathLength: routePath.length,
+        distance,
+      });
+    } catch (error) {
+      console.error("Error calculating route with road network:", error);
+      // Fall back to building-based routing
+    }
+  }
+
+  // Fallback: If buildings provided, find shortest path through the campus graph
+  if (buildings && buildings.length > 0 && routePath.length <= 2) {
     console.log("Building campus graph with", buildings.length, "buildings");
     const graph = buildCampusGraph(buildings);
 
@@ -206,7 +399,6 @@ export const calculateRoute = (
         nearestStart = building;
       }
     }
-    console.log("Nearest start building:", nearestStart.name, "distance:", minStartDist);
 
     // Find nearest building to end
     let nearestEnd = buildings[0];
@@ -218,21 +410,21 @@ export const calculateRoute = (
         nearestEnd = building;
       }
     }
-    console.log("Nearest end building:", nearestEnd.name, "distance:", minEndDist);
 
     // Get shortest path through graph
-    const pathResult = dijkstraShortestPath(graph, nearestStart.id, nearestEnd.id);
-    console.log("Dijkstra result:", pathResult);
+    const pathResult = dijkstraShortestPath(
+      graph,
+      nearestStart.id,
+      nearestEnd.id,
+    );
 
     if (pathResult && pathResult.path.length > 1) {
-      // Build coordinate path from building IDs
       const coordPath: [number, number][] = [startCoords];
 
       for (let i = 1; i < pathResult.path.length; i++) {
         const buildingId = pathResult.path[i];
         const building = buildings.find((b) => b.id === buildingId);
         if (building) {
-          console.log("Adding waypoint:", building.name);
           coordPath.push(building.coords);
         }
       }
@@ -240,12 +432,6 @@ export const calculateRoute = (
       coordPath.push(endCoords);
       routePath = coordPath;
       distance = calculatePathDistance(routePath);
-      console.log("Final route path length:", coordPath.length, "distance:", distance);
-    } else {
-      // Fallback to straight line if no path found
-      console.log("No shortest path found, using straight line");
-      routePath = [startCoords, endCoords];
-      distance = calculateDistance(startCoords, endCoords);
     }
   }
 

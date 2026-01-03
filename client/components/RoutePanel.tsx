@@ -30,12 +30,12 @@ export default function RoutePanel({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-2xl shadow-2xl border-2 border-blue-300 z-40 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <div className="w-full h-full bg-gradient-to-br from-white via-blue-50 to-blue-100 overflow-hidden flex flex-col">
       {/* Header with gradient */}
-      <div className="flex items-center justify-between p-5 border-b-2 border-blue-200 bg-gradient-to-r from-blue-600 to-blue-700">
+      <div className="flex items-center justify-between p-5 border-b-2 border-blue-200 bg-gradient-to-r from-blue-600 to-blue-700 flex-shrink-0">
         <div className="flex items-center gap-3">
           <CheckCircle className="h-5 w-5 text-white" />
-          <h2 className="font-bold text-white text-lg">Route Found</h2>
+          <h2 className="font-bold text-white text-lg">Route Information</h2>
         </div>
         <Button
           variant="ghost"
@@ -48,7 +48,7 @@ export default function RoutePanel({
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12 gap-3">
             <div className="relative">
