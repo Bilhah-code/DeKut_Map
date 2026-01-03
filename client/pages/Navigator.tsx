@@ -199,9 +199,9 @@ export default function Navigator() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-white">
-      {/* Header with gradient background */}
-      <div className="border-b-2 border-blue-200 shadow-md bg-gradient-to-r from-white via-blue-50 to-white">
+    <div className="flex flex-col h-screen bg-white">
+      {/* Header with Location Picker */}
+      <div className="border-b-2 border-gray-200 shadow-md bg-gradient-to-r from-white via-blue-50 to-white">
         <div className="max-w-7xl mx-auto px-4 py-4">
           {/* Desktop Layout */}
           <div className="hidden md:flex items-center justify-between gap-8">
@@ -242,18 +242,29 @@ export default function Navigator() {
 
           {/* Mobile Layout */}
           <div className="md:hidden space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="relative w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-sm">DK</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="relative w-11 h-11 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
+                  <span className="text-white font-black text-sm">DK</span>
+                </div>
+                <div>
+                  <h1 className="font-black text-base text-gray-900">
+                    DeKUT Navigator
+                  </h1>
+                  <p className="text-xs text-gray-500 font-medium">
+                    Campus Navigation
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="font-black text-base text-gray-900">
-                  DeKUT Navigator
-                </h1>
-                <p className="text-xs text-gray-500 font-medium">
-                  Campus Navigation
-                </p>
-              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowComments(!showComments)}
+                className="h-10 w-10 p-0 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                title="Toggle comments"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </Button>
             </div>
 
             {/* Mobile Location Picker */}
@@ -276,241 +287,286 @@ export default function Navigator() {
         </div>
       </div>
 
-      {/* Map Container */}
-      <div
-        className="flex-1 relative overflow-hidden"
-        style={{
-          cursor:
-            isSelectingOriginOnMap || isSelectingDestinationOnMap
-              ? "crosshair"
-              : "default",
-        }}
-      >
-        <CampusMap
-          selectedLocation={
-            destination && "coords" in destination
-              ? {
-                  id: parseInt(destination.id),
-                  name: destination.name,
-                  coords: destination.coords,
-                }
-              : undefined
-          }
-          userLocation={userLocation || undefined}
-          onLocationSelect={handleMapClick}
-          baseLayerKey={baseLayerKey}
-          onBaseLayerChange={setBaseLayerKey}
-          onBuildingsLoaded={setBuildings}
-          route={route || undefined}
-        />
+      {/* Main Content Area - Split Layout */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Map Section */}
+        <div
+          className="flex-1 relative overflow-hidden md:border-r-2 md:border-gray-200"
+          style={{
+            cursor:
+              isSelectingOriginOnMap || isSelectingDestinationOnMap
+                ? "crosshair"
+                : "default",
+          }}
+        >
+          <CampusMap
+            selectedLocation={
+              destination && "coords" in destination
+                ? {
+                    id: parseInt(destination.id),
+                    name: destination.name,
+                    coords: destination.coords,
+                  }
+                : undefined
+            }
+            userLocation={userLocation || undefined}
+            onLocationSelect={handleMapClick}
+            baseLayerKey={baseLayerKey}
+            onBaseLayerChange={setBaseLayerKey}
+            onBuildingsLoaded={setBuildings}
+            route={route || undefined}
+          />
 
-        {/* Map Controls - Top Right */}
-        <div className="absolute top-6 right-6 flex flex-col gap-3 z-40">
-          {/* Basemap Toggle */}
-          <div className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden backdrop-blur-sm">
-            <Button
-              variant={baseLayerKey === "openstreetmap" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setBaseLayerKey("openstreetmap")}
-              className={`w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all ${
-                baseLayerKey === "openstreetmap"
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-              title="OpenStreetMap"
-            >
-              <MapIcon className="h-5 w-5" />
-            </Button>
-            <div className="w-full h-px bg-gray-200"></div>
-            <Button
-              variant={baseLayerKey === "satellite" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setBaseLayerKey("satellite")}
-              className={`w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all ${
-                baseLayerKey === "satellite"
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-              title="Satellite"
-            >
-              <Satellite className="h-5 w-5" />
-            </Button>
-          </div>
-
-          {/* Geolocation Button */}
-          <Button
-            onClick={handleGeolocation}
-            size="sm"
-            className="w-11 h-11 rounded-xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
-            title="Get my location"
-          >
-            <Crosshair className="h-5 w-5" />
-          </Button>
-
-          {/* Layer Controls */}
-          <Sheet>
-            <SheetTrigger asChild>
+          {/* Map Controls - Top Right */}
+          <div className="absolute top-6 right-6 flex flex-col gap-3 z-40">
+            {/* Basemap Toggle */}
+            <div className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden backdrop-blur-sm">
               <Button
+                variant={baseLayerKey === "openstreetmap" ? "default" : "ghost"}
                 size="sm"
-                className="w-11 h-11 rounded-xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
-                title="Layer controls"
+                onClick={() => setBaseLayerKey("openstreetmap")}
+                className={`w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all ${
+                  baseLayerKey === "openstreetmap"
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                }`}
+                title="OpenStreetMap"
               >
-                <Layers className="h-5 w-5" />
+                <MapIcon className="h-5 w-5" />
               </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-80 bg-gradient-to-b from-white to-gray-50"
+              <div className="w-full h-px bg-gray-200"></div>
+              <Button
+                variant={baseLayerKey === "satellite" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setBaseLayerKey("satellite")}
+                className={`w-11 h-11 rounded-none flex items-center justify-center border-0 transition-all ${
+                  baseLayerKey === "satellite"
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                }`}
+                title="Satellite"
+              >
+                <Satellite className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Geolocation Button */}
+            <Button
+              onClick={handleGeolocation}
+              size="sm"
+              className="w-11 h-11 rounded-xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
+              title="Get my location"
             >
-              <div className="space-y-5 mt-2">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Map Layers
-                  </h2>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Toggle layers to customize your view
-                  </p>
-                </div>
+              <Crosshair className="h-5 w-5" />
+            </Button>
 
-                {/* Buildings Layer Toggle */}
-                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-blue-300 hover:border-blue-400 transition-all cursor-pointer hover:shadow-md">
-                  <input
-                    type="checkbox"
-                    id="buildings-toggle"
-                    checked={visibleLayers.buildings}
-                    onChange={() => toggleLayer("buildings")}
-                    className="w-5 h-5 rounded accent-blue-600"
-                  />
-                  <label
-                    htmlFor="buildings-toggle"
-                    className="flex-1 cursor-pointer"
-                  >
-                    <span className="block text-sm font-bold text-gray-900">
-                      Buildings
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      Campus structures
-                    </span>
-                  </label>
-                </div>
+            {/* Layer Controls */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  size="sm"
+                  className="w-11 h-11 rounded-xl shadow-lg p-0 flex items-center justify-center bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-2 border-gray-200 transition-all"
+                  title="Layer controls"
+                >
+                  <Layers className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="w-80 bg-gradient-to-b from-white to-gray-50"
+              >
+                <div className="space-y-5 mt-2">
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">
+                      Map Layers
+                    </h2>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Toggle layers to customize your view
+                    </p>
+                  </div>
 
-                {/* Roads Layer Toggle */}
-                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-orange-300 hover:border-orange-400 transition-all cursor-pointer hover:shadow-md">
-                  <input
-                    type="checkbox"
-                    id="roads-toggle"
-                    checked={visibleLayers.roads}
-                    onChange={() => toggleLayer("roads")}
-                    className="w-5 h-5 rounded accent-orange-600"
-                  />
-                  <label
-                    htmlFor="roads-toggle"
-                    className="flex-1 cursor-pointer"
-                  >
-                    <span className="block text-sm font-bold text-gray-900">
-                      Roads & Paths
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      Pedestrian and vehicle routes
-                    </span>
-                  </label>
-                </div>
-
-                {/* Boundary Layer Toggle */}
-                <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-green-300 hover:border-green-400 transition-all cursor-pointer hover:shadow-md">
-                  <input
-                    type="checkbox"
-                    id="boundary-toggle"
-                    checked={visibleLayers.boundary}
-                    onChange={() => toggleLayer("boundary")}
-                    className="w-5 h-5 rounded accent-green-600"
-                  />
-                  <label
-                    htmlFor="boundary-toggle"
-                    className="flex-1 cursor-pointer"
-                  >
-                    <span className="block text-sm font-bold text-gray-900">
-                      Campus Boundary
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      Campus perimeter
-                    </span>
-                  </label>
-                </div>
-
-                {/* Legend */}
-                <div className="mt-7 space-y-4 border-t-2 border-gray-300 pt-5">
-                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
-                    Map Legend
-                  </h3>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-blue-600 shadow-md"></div>
-                      <span className="text-sm font-medium text-gray-700">
+                  {/* Buildings Layer Toggle */}
+                  <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-blue-300 hover:border-blue-400 transition-all cursor-pointer hover:shadow-md">
+                    <input
+                      type="checkbox"
+                      id="buildings-toggle"
+                      checked={visibleLayers.buildings}
+                      onChange={() => toggleLayer("buildings")}
+                      className="w-5 h-5 rounded accent-blue-600"
+                    />
+                    <label
+                      htmlFor="buildings-toggle"
+                      className="flex-1 cursor-pointer"
+                    >
+                      <span className="block text-sm font-bold text-gray-900">
                         Buildings
                       </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-4 h-1 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm font-medium text-gray-700">
-                        Pedestrian Path
+                      <span className="text-xs text-gray-500">
+                        Campus structures
                       </span>
-                    </div>
+                    </label>
+                  </div>
 
-                    <div className="flex items-center gap-3">
-                      <div className="w-4 h-1 bg-orange-500 rounded-full"></div>
-                      <span className="text-sm font-medium text-gray-700">
-                        Road
+                  {/* Roads Layer Toggle */}
+                  <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-orange-300 hover:border-orange-400 transition-all cursor-pointer hover:shadow-md">
+                    <input
+                      type="checkbox"
+                      id="roads-toggle"
+                      checked={visibleLayers.roads}
+                      onChange={() => toggleLayer("roads")}
+                      className="w-5 h-5 rounded accent-orange-600"
+                    />
+                    <label
+                      htmlFor="roads-toggle"
+                      className="flex-1 cursor-pointer"
+                    >
+                      <span className="block text-sm font-bold text-gray-900">
+                        Roads & Paths
                       </span>
-                    </div>
+                      <span className="text-xs text-gray-500">
+                        Pedestrian and vehicle routes
+                      </span>
+                    </label>
+                  </div>
 
-                    <div className="flex items-center gap-3">
-                      <div className="w-4 h-1 border-b-2 border-dashed border-green-600"></div>
-                      <span className="text-sm font-medium text-gray-700">
+                  {/* Boundary Layer Toggle */}
+                  <div className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-green-300 hover:border-green-400 transition-all cursor-pointer hover:shadow-md">
+                    <input
+                      type="checkbox"
+                      id="boundary-toggle"
+                      checked={visibleLayers.boundary}
+                      onChange={() => toggleLayer("boundary")}
+                      className="w-5 h-5 rounded accent-green-600"
+                    />
+                    <label
+                      htmlFor="boundary-toggle"
+                      className="flex-1 cursor-pointer"
+                    >
+                      <span className="block text-sm font-bold text-gray-900">
                         Campus Boundary
                       </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-green-500 shadow-md"></div>
-                      <span className="text-sm font-medium text-gray-700">
-                        Start Location
+                      <span className="text-xs text-gray-500">
+                        Campus perimeter
                       </span>
-                    </div>
+                    </label>
+                  </div>
 
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-blue-700 shadow-md"></div>
-                      <span className="text-sm font-medium text-gray-700">
-                        Destination
-                      </span>
+                  {/* Legend */}
+                  <div className="mt-7 space-y-4 border-t-2 border-gray-300 pt-5">
+                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                      Map Legend
+                    </h3>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 rounded-full bg-blue-600 shadow-md"></div>
+                        <span className="text-sm font-medium text-gray-700">
+                          Buildings
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-1 bg-blue-500 rounded-full"></div>
+                        <span className="text-sm font-medium text-gray-700">
+                          Pedestrian Path
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-1 bg-orange-500 rounded-full"></div>
+                        <span className="text-sm font-medium text-gray-700">
+                          Road
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-1 border-b-2 border-dashed border-green-600"></div>
+                        <span className="text-sm font-medium text-gray-700">
+                          Campus Boundary
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 rounded-full bg-green-500 shadow-md"></div>
+                        <span className="text-sm font-medium text-gray-700">
+                          Start Location
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 rounded-full bg-blue-700 shadow-md"></div>
+                        <span className="text-sm font-medium text-gray-700">
+                          Destination
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
 
-        {/* Route Panel */}
-        <RoutePanel
-          isOpen={routePanel.isOpen}
-          onClose={() =>
-            setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })
-          }
-          startLocation={
-            origin ? { name: origin.name, coords: origin.coords } : undefined
-          }
-          destinationLocation={
-            destination
-              ? { name: destination.name, coords: destination.coords }
-              : undefined
-          }
-          distance={routePanel.distance}
-          estimatedTime={routePanel.estimatedTime}
-        />
+        {/* Comments/Route Info Section - Desktop Only */}
+        <div className="hidden md:flex w-full md:w-96 flex-col bg-white border-l-2 border-gray-200">
+          {routePanel.isOpen ? (
+            <RoutePanel
+              isOpen={true}
+              onClose={() =>
+                setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 })
+              }
+              startLocation={
+                origin ? { name: origin.name, coords: origin.coords } : undefined
+              }
+              destinationLocation={
+                destination
+                  ? { name: destination.name, coords: destination.coords }
+                  : undefined
+              }
+              distance={routePanel.distance}
+              estimatedTime={routePanel.estimatedTime}
+            />
+          ) : (
+            <CommentsPanel
+              routeName={
+                destination ? destination.name : "Select a destination"
+              }
+            />
+          )}
+        </div>
       </div>
+
+      {/* Mobile Comments Panel - Slide-up Drawer */}
+      {showComments && (
+        <div className="md:hidden absolute bottom-0 left-0 right-0 max-h-1/2 bg-white border-t-2 border-gray-200 rounded-t-2xl shadow-2xl overflow-hidden z-50 animate-in slide-in-from-bottom">
+          {routePanel.isOpen ? (
+            <RoutePanel
+              isOpen={true}
+              onClose={() => {
+                setRoutePanel({ isOpen: false, distance: 0, estimatedTime: 0 });
+                setShowComments(false);
+              }}
+              startLocation={
+                origin ? { name: origin.name, coords: origin.coords } : undefined
+              }
+              destinationLocation={
+                destination
+                  ? { name: destination.name, coords: destination.coords }
+                  : undefined
+              }
+              distance={routePanel.distance}
+              estimatedTime={routePanel.estimatedTime}
+            />
+          ) : (
+            <CommentsPanel
+              routeName={
+                destination ? destination.name : "Select a destination"
+              }
+              onClose={() => setShowComments(false)}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }
