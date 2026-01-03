@@ -63,6 +63,119 @@ const toRadians = (degrees: number): number => {
   return (degrees * Math.PI) / 180;
 };
 
+// Helper function to find nearest point on a line segment
+const findNearestPointOnSegment = (
+  point: [number, number],
+  lineStart: [number, number],
+  lineEnd: [number, number],
+): [number, number] => {
+  const [px, py] = point;
+  const [x1, y1] = lineStart;
+  const [x2, y2] = lineEnd;
+
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lengthSquared = dx * dx + dy * dy;
+
+  if (lengthSquared === 0) return lineStart;
+
+  let t = ((px - x1) * dx + (py - y1) * dy) / lengthSquared;
+  t = Math.max(0, Math.min(1, t));
+
+  return [x1 + t * dx, y1 + t * dy];
+};
+
+// Build road network from GeoJSON data
+const buildRoadNetwork = (geojsonData: any): RoadNetwork => {
+  const network: RoadNetwork = {
+    segments: [],
+    nodes: new Map(),
+    nodeConnections: new Map(),
+  };
+
+  if (!geojsonData || !geojsonData.features) return network;
+
+  geojsonData.features.forEach((feature: any, index: number) => {
+    const geometry = feature.geometry;
+    if (!geometry || !geometry.coordinates) return;
+
+    const coordinates = geometry.coordinates;
+    let allPoints: [number, number][] = [];
+
+    // Handle both LineString and MultiLineString
+    if (geometry.type === "MultiLineString") {
+      coordinates.forEach((lineString: any) => {
+        lineString.forEach((coord: any) => {
+          allPoints.push([coord[1], coord[0]]); // GeoJSON is [lon, lat], we need [lat, lon]
+        });
+      });
+    } else if (geometry.type === "LineString") {
+      coordinates.forEach((coord: any) => {
+        allPoints.push([coord[1], coord[0]]);
+      });
+    }
+
+    if (allPoints.length < 2) return;
+
+    const roadSegment: RoadSegment = {
+      id: `road-${index}`,
+      points: allPoints,
+      startPoint: allPoints[0],
+      endPoint: allPoints[allPoints.length - 1],
+      length: calculatePathDistance(allPoints),
+    };
+
+    network.segments.push(roadSegment);
+
+    // Add nodes (endpoints and intermediate points) to network
+    allPoints.forEach((point) => {
+      const nodeKey = `${point[0].toFixed(8)},${point[1].toFixed(8)}`;
+      if (!network.nodes.has(nodeKey)) {
+        network.nodes.set(nodeKey, point);
+        network.nodeConnections.set(nodeKey, new Set());
+      }
+    });
+
+    // Connect consecutive points
+    for (let i = 0; i < allPoints.length - 1; i++) {
+      const node1Key = `${allPoints[i][0].toFixed(8)},${allPoints[i][1].toFixed(8)}`;
+      const node2Key = `${allPoints[i + 1][0].toFixed(8)},${allPoints[i + 1][1].toFixed(8)}`;
+      network.nodeConnections.get(node1Key)?.add(node2Key);
+      network.nodeConnections.get(node2Key)?.add(node1Key);
+    }
+  });
+
+  return network;
+};
+
+// Snap a coordinate to the nearest point on the road network
+const snapToRoadNetwork = (
+  point: [number, number],
+  roadNetwork: RoadNetwork,
+  maxDistance = 100, // meters
+): [number, number] => {
+  let nearest = point;
+  let minDistance = Infinity;
+
+  roadNetwork.segments.forEach((segment) => {
+    for (let i = 0; i < segment.points.length - 1; i++) {
+      const nearestOnSegment = findNearestPointOnSegment(
+        point,
+        segment.points[i],
+        segment.points[i + 1],
+      );
+      const dist = calculateDistance(point, nearestOnSegment);
+
+      if (dist < minDistance && dist <= maxDistance) {
+        minDistance = dist;
+        nearest = nearestOnSegment;
+      }
+    }
+  });
+
+  return nearest;
+};
+
 // Build a graph from buildings - connect nearby buildings (within ~500 meters for campus navigation)
 export const buildCampusGraph = (buildings: Building[]): Graph => {
   const graph: Graph = {};
